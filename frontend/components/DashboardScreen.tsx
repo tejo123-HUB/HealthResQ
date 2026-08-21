@@ -12,6 +12,7 @@ import { SegmentedControl } from "@/components/hig/SegmentedControl";
 import { SeverityBadge } from "@/components/hig/SeverityBadge";
 import { RiskMap } from "@/components/RiskMap";
 import { intelligence } from "@/lib/api/intelligence";
+import { ops } from "@/lib/api/ops";
 import type { Scope, ScopeLevel } from "@/lib/api/types";
 
 type Tab = "OVERVIEW" | "RISK_MAP" | "EXPLORER" | "FEDERATION";
@@ -25,14 +26,25 @@ type Tab = "OVERVIEW" | "RISK_MAP" | "EXPLORER" | "FEDERATION";
  * ships — this component doesn't know or care. */
 export function DashboardScreen({ level, scopeId }: { level: ScopeLevel; scopeId: string }) {
   const [tab, setTab] = useState<Tab>("OVERVIEW");
+  const [productId, setProductId] = useState<string | null>(null);
   const {
     data: summary,
     isLoading: summaryLoading,
     error: summaryError,
     mutate: retrySummary,
   } = useSWR(["scope-summary", level], () => intelligence.getScopeSummary(level));
-  const { data: markers } = useSWR(["risk-markers"], () => intelligence.getRiskMarkers());
-  const { data: explorer } = useSWR(["explorer"], () => intelligence.getResourceExplorer());
+  // Only fetched while the matching tab is open — risk-map is cheap (reads persisted alerts),
+  // but resource-explorer recomputes a forecast per facility per call, so it's also scoped to
+  // exactly one product at a time (see lib/api/intelligence.ts).
+  const { data: markers } = useSWR(tab === "RISK_MAP" ? ["risk-markers"] : null, () => intelligence.getRiskMarkers());
+  const { data: products } = useSWR(["products"], () => ops.listProducts());
+  const activeProductId = productId ?? products?.[0]?.id ?? null;
+  const { data: explorer, isLoading: explorerLoading } = useSWR(
+    tab === "EXPLORER" && activeProductId ? ["explorer", activeProductId] : null,
+    () => intelligence.getResourceExplorer(activeProductId!)
+  );
+  const { data: facilities } = useSWR(tab === "EXPLORER" ? ["facilities"] : null, () => ops.listFacilities());
+  const facilityName = (facilityId: string) => facilities?.find((f) => f.id === facilityId)?.name ?? facilityId;
 
   const scope: Scope = { level, id: scopeId };
 
@@ -107,20 +119,33 @@ export function DashboardScreen({ level, scopeId }: { level: ScopeLevel; scopeId
           </div>
         )}
 
-        {tab === "EXPLORER" && explorer && (
-          <ListGroup title="Resource explorer">
-            {explorer.map((row, i) => (
-              <ListRow
-                key={i}
-                label={`${row.resource} · ${row.facilityId}`}
-                value={
-                  <span className={row.deficit > 0 ? "text-tint-red" : ""}>
-                    stock {row.currentStock} / demand {row.forecastDemand} / deficit {row.deficit}
-                  </span>
-                }
+        {tab === "EXPLORER" && (
+          <div className="flex flex-col gap-3">
+            {products && products.length > 0 && (
+              <SegmentedControl
+                value={activeProductId!}
+                onChange={setProductId}
+                options={products.map((p) => ({ value: p.id, label: p.name }))}
               />
-            ))}
-          </ListGroup>
+            )}
+            {explorerLoading && <p className="text-footnote text-label-secondary">Computing forecast…</p>}
+            {explorer && (
+              <ListGroup title="Resource explorer">
+                {explorer.facilities.map((row) => (
+                  <ListRow
+                    key={row.facilityId}
+                    label={facilityName(row.facilityId)}
+                    value={
+                      <span className={row.deficit > 0 ? "text-tint-red" : ""}>
+                        stock {Math.round(row.currentStock)} / demand {Math.round(row.forecastDemand)} / deficit{" "}
+                        {Math.round(row.deficit)}
+                      </span>
+                    }
+                  />
+                ))}
+              </ListGroup>
+            )}
+          </div>
         )}
 
         {tab === "FEDERATION" && <FederationPanel />}

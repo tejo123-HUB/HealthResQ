@@ -5,7 +5,9 @@
    so there's no flash of the wrong theme on repeat visits. */
 
 :root {
-  --bg: #ffffff;
+  /* A cool white, not stark/pure white — a faint blue-gray undertone, consistent everywhere the
+     app renders its base background (html/body in globals.css). */
+  --bg: #f9fafb;
   --bg-secondary: #f2f2f7;
   --bg-tertiary: #e5e5ea;
 
@@ -31,18 +33,10 @@
   --fill-regular: rgba(255, 255, 255, 0.7);
   --fill-thin: rgba(255, 255, 255, 0.55);
 
-  /* Decorative brand accents sampled from logo.png — used only for brand moments (login page
-     background, loading-screen ring, the Nav mark's backdrop). Never used for status/severity
-     meaning; that stays on the --tint-* set above. */
+  /* Decorative brand accent sampled from logo.png — used only for the loading-screen pulse ring.
+     Never used for status/severity meaning; that stays on the --tint-* set above. */
   --brand-teal: #14919b;
-  --brand-green: #6ebe44;
-  --brand-orange: #f5821f;
-  --brand-gold: #f9a825;
-
   --brand-teal-wash: rgba(20, 145, 155, 0.16);
-  --brand-green-wash: rgba(110, 190, 68, 0.16);
-  --brand-orange-wash: rgba(245, 130, 31, 0.16);
-  --brand-gold-wash: rgba(249, 168, 37, 0.16);
 
   --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Segoe UI",
     Roboto, Helvetica, Arial, sans-serif;
@@ -76,12 +70,5 @@
   --fill-thin: rgba(28, 28, 30, 0.55);
 
   --brand-teal: #2bb3bd;
-  --brand-green: #86d15a;
-  --brand-orange: #ff9d47;
-  --brand-gold: #ffc247;
-
   --brand-teal-wash: rgba(43, 179, 189, 0.22);
-  --brand-green-wash: rgba(134, 209, 90, 0.22);
-  --brand-orange-wash: rgba(255, 157, 71, 0.22);
-  --brand-gold-wash: rgba(255, 194, 71, 0.22);
 }
