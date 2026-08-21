@@ -58,20 +58,43 @@ export function RiskMap({ markers, onSelect }: { markers: RiskMarker[]; onSelect
     if (!map) return;
 
     const markerInstances = located.map((m) => {
-      const el = document.createElement("button");
-      el.style.width = "16px";
-      el.style.height = "16px";
-      el.style.borderRadius = "50%";
-      el.style.border = "2px solid white";
-      el.style.background = SEVERITY_COLOR[m.worstSeverity];
-      el.style.cursor = "pointer";
-      el.title = `${m.facilityName} — ${m.worstSeverity}`;
-      el.onclick = () => onSelect?.(m);
-      return new maplibregl.Marker({ element: el }).setLngLat([m.location.lng, m.location.lat]).addTo(map);
+      const wrap = document.createElement("button");
+      wrap.style.position = "relative";
+      wrap.style.width = "16px";
+      wrap.style.height = "16px";
+      wrap.style.cursor = "pointer";
+      wrap.style.transition = "transform 150ms ease-out";
+      wrap.title = `${m.facilityName} — ${m.worstSeverity}`;
+      wrap.onmouseenter = () => (wrap.style.transform = "scale(1.35)");
+      wrap.onmouseleave = () => (wrap.style.transform = "scale(1)");
+      wrap.onclick = () => onSelect?.(m);
+
+      // A CRITICAL facility gets a pulsing ring so it's found on the map before anything else —
+      // same visual language as SeverityBadge's glow-pulse and LoadingScreen's pulse-ring.
+      if (m.worstSeverity === "CRITICAL") {
+        const ring = document.createElement("span");
+        ring.className = "animate-pulse-ring";
+        ring.style.position = "absolute";
+        ring.style.inset = "0";
+        ring.style.borderRadius = "50%";
+        ring.style.background = SEVERITY_COLOR.CRITICAL;
+        wrap.appendChild(ring);
+      }
+
+      const dot = document.createElement("span");
+      dot.style.position = "absolute";
+      dot.style.inset = "0";
+      dot.style.borderRadius = "50%";
+      dot.style.border = "2px solid white";
+      dot.style.background = SEVERITY_COLOR[m.worstSeverity];
+      dot.style.boxShadow = "0 1px 3px rgba(0,0,0,0.35)";
+      wrap.appendChild(dot);
+
+      return new maplibregl.Marker({ element: wrap }).setLngLat([m.location.lng, m.location.lat]).addTo(map);
     });
 
     return () => markerInstances.forEach((mk) => mk.remove());
   }, [located, onSelect]);
 
-  return <div ref={containerRef} className="w-full h-80 rounded-hig overflow-hidden border border-separator" />;
+  return <div ref={containerRef} className="w-full h-80 rounded-hig overflow-hidden border border-separator shadow-card animate-fade-in-up" />;
 }

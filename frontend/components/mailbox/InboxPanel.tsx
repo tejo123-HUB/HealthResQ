@@ -49,7 +49,7 @@ export function InboxPanel({ unitId }: { unitId: string }) {
           key={message.raw.id}
           onClick={() => open(message)}
           style={{ animationDelay: `${i * 50}ms` }}
-          className="px-4 py-3 flex items-center justify-between gap-3 cursor-pointer transition-hig active:bg-fill-regular animate-fade-in-up"
+          className="px-4 py-3 flex items-center justify-between gap-3 cursor-pointer transition-hig hover:bg-fill-thin active:bg-fill-regular animate-fade-in-up"
         >
           <div className="min-w-0">
             {message.raw.status === "UNRECOVERABLE_KEY_LOST" ? (

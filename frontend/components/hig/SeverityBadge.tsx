@@ -29,7 +29,10 @@ const SEVERITY_ICON: Record<Severity, Parameters<typeof Icon>[0]["name"]> = {
 export function SeverityBadge({ severity, label }: { severity: Severity; label: string }) {
   return (
     <span
-      className={`inline-flex items-center gap-1 text-caption1 font-semibold rounded-full pl-1.5 pr-2.5 py-1 ${SEVERITY_CLASSES[severity]}`}
+      key={severity}
+      className={`inline-flex items-center gap-1 text-caption1 font-semibold rounded-full pl-1.5 pr-2.5 py-1 animate-pop-in ${
+        severity === "CRITICAL" ? "animate-glow-pulse" : ""
+      } ${SEVERITY_CLASSES[severity]}`}
     >
       <Icon name={SEVERITY_ICON[severity]} className="w-3.5 h-3.5" />
       {label}

@@ -59,7 +59,7 @@ function ActionComposer() {
               required
               value={destinationFacilityId}
               onChange={(e) => setDestinationFacilityId(e.target.value)}
-              className="text-body bg-bg-secondary rounded-hig px-3 py-2 border border-separator"
+              className="text-body bg-bg-secondary rounded-hig px-3 py-2 border border-separator outline-none transition-hig focus:border-tint-blue focus:ring-2 focus:ring-tint-blue-wash"
             >
               <option value="" disabled>
                 Select a facility
@@ -77,7 +77,7 @@ function ActionComposer() {
               required
               value={productId}
               onChange={(e) => setProductId(e.target.value)}
-              className="text-body bg-bg-secondary rounded-hig px-3 py-2 border border-separator"
+              className="text-body bg-bg-secondary rounded-hig px-3 py-2 border border-separator outline-none transition-hig focus:border-tint-blue focus:ring-2 focus:ring-tint-blue-wash"
             >
               <option value="" disabled>
                 Select a resource
@@ -96,7 +96,7 @@ function ActionComposer() {
               min={1}
               value={quantity}
               onChange={(e) => setQuantity(Number(e.target.value))}
-              className="text-body bg-bg-secondary rounded-hig px-3 py-2 border border-separator"
+              className="text-body bg-bg-secondary rounded-hig px-3 py-2 border border-separator outline-none transition-hig focus:border-tint-blue focus:ring-2 focus:ring-tint-blue-wash"
             />
           </label>
           <label className="flex flex-col gap-1">
@@ -105,12 +105,23 @@ function ActionComposer() {
               required
               value={reason}
               onChange={(e) => setReason(e.target.value)}
-              className="text-body bg-bg-secondary rounded-hig px-3 py-2 border border-separator"
+              className="text-body bg-bg-secondary rounded-hig px-3 py-2 border border-separator outline-none transition-hig focus:border-tint-blue focus:ring-2 focus:ring-tint-blue-wash"
               rows={3}
             />
           </label>
-          <Button type="submit" disabled={submitting}>
-            {submitting ? "Submitting…" : "Submit for review"}
+          <Button type="submit" disabled={submitting} className="flex items-center justify-center gap-2">
+            {submitting ? (
+              <>
+                <span className="flex items-center gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-white/80 animate-bounce-dot" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-white/80 animate-bounce-dot [animation-delay:0.15s]" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-white/80 animate-bounce-dot [animation-delay:0.3s]" />
+                </span>
+                Submitting…
+              </>
+            ) : (
+              "Submit for review"
+            )}
           </Button>
           {submitError && <ErrorBanner message={submitError} />}
         </form>

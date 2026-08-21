@@ -21,7 +21,7 @@ export function Nav() {
     <nav className="sticky top-0 z-10 backdrop-blur-xl bg-fill-thick border-b border-separator">
       <div className="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
         <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center overflow-hidden shrink-0 ring-1 ring-separator">
+          <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center overflow-hidden shrink-0 ring-1 ring-separator shadow-sm">
             <Image src="/logo.png" alt="HealthResQ" width={32} height={32} />
           </div>
           <div>
@@ -33,7 +33,7 @@ export function Nav() {
           <button
             onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
             aria-label="Toggle theme"
-            className="w-11 h-11 flex items-center justify-center rounded-hig text-label-secondary active:bg-fill-regular active:scale-90 transition-hig overflow-hidden"
+            className="w-11 h-11 flex items-center justify-center rounded-hig text-label-secondary hover:bg-fill-thin active:bg-fill-regular active:scale-90 transition-hig overflow-hidden"
           >
             <span key={theme} className="animate-scale-in inline-flex">
               <Icon name={themeIcon} />
@@ -42,7 +42,7 @@ export function Nav() {
           <button
             onClick={logout}
             aria-label="Sign out"
-            className="w-11 h-11 flex items-center justify-center rounded-hig text-tint-red active:bg-fill-regular active:scale-90 transition-hig"
+            className="w-11 h-11 flex items-center justify-center rounded-hig text-tint-red hover:bg-tint-red-wash active:bg-fill-regular active:scale-90 transition-hig"
           >
             <Icon name="signOut" />
           </button>

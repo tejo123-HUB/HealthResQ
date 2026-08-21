@@ -45,7 +45,7 @@ export function FacilityHome() {
       {statsFailed && <ErrorBanner message="Couldn't load today's summary." />}
 
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        <StatCard icon="chart" label="OPD visits today" value={opdVisits} loading={footfallLoading} index={0} />
+        <StatCard icon="chart" label="OPD visits today" numericValue={opdVisits} loading={footfallLoading} index={0} />
         <StatCard
           icon="bed"
           label="Beds occupied"
@@ -56,14 +56,15 @@ export function FacilityHome() {
         <StatCard
           icon="checkCircle"
           label="Staff present"
-          value={capacity ? capacity.staff.reduce((s, r) => s + r.present, 0) : "—"}
+          numericValue={capacity ? capacity.staff.reduce((s, r) => s + r.present, 0) : undefined}
+          value={capacity ? undefined : "—"}
           loading={capacityLoading}
           index={2}
         />
         <StatCard
           icon="alert"
           label="Low-stock products"
-          value={lowStockCount}
+          numericValue={lowStockCount}
           tone={lowStockCount > 0 ? "warning" : "default"}
           loading={inventoryLoading}
           index={3}

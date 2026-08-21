@@ -11,6 +11,7 @@ import { ConfirmSheet } from "@/components/hig/ConfirmSheet";
 import { ErrorBanner } from "@/components/hig/ErrorBanner";
 import { Icon } from "@/components/hig/Icon";
 import { recommendationSeverity, SeverityBadge } from "@/components/hig/SeverityBadge";
+import { Skeleton } from "@/components/hig/Skeleton";
 import { ApiError } from "@/lib/api/client";
 import { command, type DecisionAction } from "@/lib/api/command";
 
@@ -29,7 +30,17 @@ function DecisionScreen() {
   const [unresolvedQuantity, setUnresolvedQuantity] = useState(0);
 
   if (isLoading) {
-    return <p className="text-body text-label-secondary">Loading…</p>;
+    return (
+      <div className="flex flex-col gap-6 max-w-2xl">
+        <Skeleton className="h-5 w-24" />
+        <div className="flex items-center justify-between">
+          <Skeleton className="h-8 w-40" />
+          <Skeleton className="h-6 w-24 rounded-full" />
+        </div>
+        <Skeleton className="h-20 w-full rounded-hig" />
+        <Skeleton className="h-32 w-full rounded-hig" />
+      </div>
+    );
   }
   if (error || !recommendation) {
     return <ErrorBanner message="Couldn't load this recommendation." onRetry={() => mutate()} />;
@@ -84,7 +95,7 @@ function DecisionScreen() {
               key={e}
               label={
                 <span className="flex items-center gap-2">
-                  <Icon name="checkCircle" className="w-4.5 h-4.5 text-tint-green" />
+                  <Icon name="checkCircle" className="w-4.5 h-4.5 text-tint-green animate-pop-in" />
                   {e}
                 </span>
               }
@@ -130,7 +141,7 @@ function DecisionScreen() {
                   min={1}
                   value={unresolvedQuantity || ""}
                   onChange={(e) => setUnresolvedQuantity(Number(e.target.value))}
-                  className="text-body bg-bg-secondary rounded-hig px-3 py-2 border border-separator"
+                  className="text-body bg-bg-secondary rounded-hig px-3 py-2 border border-separator outline-none transition-hig focus:border-tint-blue focus:ring-2 focus:ring-tint-blue-wash"
                 />
               </label>
               <div className="flex items-center gap-3">

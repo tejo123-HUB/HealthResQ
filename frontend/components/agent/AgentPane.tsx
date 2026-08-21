@@ -40,7 +40,7 @@ export function AgentPane({ scope }: { scope: Scope }) {
 
   return (
     <aside className="flex flex-col gap-4 lg:w-80 shrink-0">
-      <div className="bg-bg rounded-hig border border-separator p-4">
+      <div className="bg-bg rounded-hig border border-separator border-l-[3px] border-l-tint-blue shadow-card p-4 animate-fade-in-up">
         <div className="flex items-center gap-2 mb-2 text-tint-blue">
           <Icon name="flag" className="w-4.5 h-4.5" />
           <span className="text-footnote font-semibold uppercase">AI suggestion</span>
@@ -51,8 +51,12 @@ export function AgentPane({ scope }: { scope: Scope }) {
             <p className="text-footnote text-label-secondary mt-1">
               {topRecommendation.resource} · {topRecommendation.requiredAuthority} approval
             </p>
-            <Link href={`/recommendations/${topRecommendation.id}`} className="text-footnote text-tint-blue mt-2 inline-block">
-              Review full recommendation →
+            <Link
+              href={`/recommendations/${topRecommendation.id}`}
+              className="text-footnote text-tint-blue mt-2 inline-flex items-center gap-0.5 group"
+            >
+              Review full recommendation
+              <Icon name="chevronRight" className="w-3 h-3 transition-transform group-hover:translate-x-0.5" />
             </Link>
           </>
         ) : (
@@ -60,7 +64,7 @@ export function AgentPane({ scope }: { scope: Scope }) {
         )}
       </div>
 
-      <div className="bg-bg rounded-hig border border-separator flex flex-col flex-1 min-h-[320px]">
+      <div className="bg-bg rounded-hig border border-separator shadow-card flex flex-col flex-1 min-h-[320px] animate-fade-in-up [animation-delay:60ms]">
         <div className="px-4 py-3 border-b border-separator text-footnote text-label-secondary uppercase">
           Ask about this
         </div>
@@ -73,8 +77,8 @@ export function AgentPane({ scope }: { scope: Scope }) {
           {messages.map((m, i) => (
             <div
               key={i}
-              className={`text-body rounded-hig px-3 py-2 max-w-[85%] animate-fade-in-up ${
-                m.role === "user" ? "bg-tint-blue text-white self-end" : "bg-bg-secondary text-label self-start"
+              className={`text-body rounded-hig px-3 py-2 max-w-[85%] shadow-card ${
+                m.role === "user" ? "bg-tint-blue text-white self-end animate-slide-in-right" : "bg-bg-secondary text-label self-start animate-slide-in-left"
               }`}
             >
               {m.text}
@@ -93,13 +97,13 @@ export function AgentPane({ scope }: { scope: Scope }) {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Ask a question…"
-            className="flex-1 text-body bg-bg-secondary rounded-hig px-3 min-h-[40px] border border-separator"
+            className="flex-1 text-body bg-bg-secondary rounded-hig px-3 min-h-[40px] border border-separator outline-none transition-hig focus:border-tint-blue focus:ring-2 focus:ring-tint-blue-wash"
           />
           <button
             type="submit"
             disabled={sending || !input.trim()}
             aria-label="Send"
-            className="w-10 h-10 shrink-0 flex items-center justify-center rounded-hig bg-tint-blue text-white disabled:opacity-40 active:opacity-70 active:scale-90 transition-hig"
+            className="w-10 h-10 shrink-0 flex items-center justify-center rounded-hig bg-tint-blue text-white disabled:opacity-40 enabled:hover:shadow-card-hover active:opacity-70 active:scale-90 transition-hig"
           >
             <Icon name="chevronRight" className="w-5 h-5" />
           </button>

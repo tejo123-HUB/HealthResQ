@@ -66,90 +66,95 @@ export function DashboardScreen({ level, scopeId }: { level: ScopeLevel; scopeId
             <Link
               href="/orders/new"
               aria-label="Compose new action"
-              className="w-11 h-11 flex items-center justify-center rounded-hig bg-tint-blue text-white active:opacity-70 active:scale-90 transition-hig"
+              className="w-11 h-11 flex items-center justify-center rounded-hig bg-tint-blue text-white hover:shadow-card-hover active:opacity-70 active:scale-90 transition-hig"
             >
               <Icon name="plus" className="w-5 h-5" />
             </Link>
           </div>
         </div>
 
-        {tab === "OVERVIEW" && (
-          <>
-            {summaryError && <ErrorBanner message="Couldn't load the scope summary." onRetry={() => retrySummary()} />}
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-              <StatCard
-                icon="building"
-                label="Facilities in scope"
-                value={summary?.facilityCount}
-                loading={summaryLoading}
-                index={0}
-              />
-              <StatCard
-                icon="alert"
-                label="Total deficit"
-                value={summary?.deficitTotal.toLocaleString()}
-                tone={summary && summary.deficitTotal > 0 ? "warning" : "default"}
-                loading={summaryLoading}
-                index={1}
-              />
-              <StatCard
-                icon="flag"
-                label="Pending recommendations"
-                value={summary?.pendingRecommendations}
-                tone="accent"
-                href="/recommendations"
-                loading={summaryLoading}
-                index={2}
-              />
+        <div key={tab} className="flex flex-col gap-6 animate-fade-in-up">
+          {tab === "OVERVIEW" && (
+            <>
+              {summaryError && <ErrorBanner message="Couldn't load the scope summary." onRetry={() => retrySummary()} />}
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                <StatCard
+                  icon="building"
+                  label="Facilities in scope"
+                  numericValue={summary?.facilityCount}
+                  loading={summaryLoading}
+                  index={0}
+                />
+                <StatCard
+                  icon="alert"
+                  label="Total deficit"
+                  numericValue={summary?.deficitTotal}
+                  tone={summary && summary.deficitTotal > 0 ? "warning" : "default"}
+                  loading={summaryLoading}
+                  index={1}
+                />
+                <StatCard
+                  icon="flag"
+                  label="Pending recommendations"
+                  numericValue={summary?.pendingRecommendations}
+                  tone="accent"
+                  href="/recommendations"
+                  loading={summaryLoading}
+                  index={2}
+                />
+              </div>
+
+              {summary && (
+                <ListGroup title="Alerts by severity">
+                  <ListRow label={<SeverityBadge severity="NORMAL" label="Normal" />} value={summary.alertCounts.normal} />
+                  <ListRow label={<SeverityBadge severity="WATCH" label="Watch" />} value={summary.alertCounts.watch} />
+                  <ListRow label={<SeverityBadge severity="HIGH" label="High" />} value={summary.alertCounts.high} />
+                  <ListRow label={<SeverityBadge severity="CRITICAL" label="Critical" />} value={summary.alertCounts.critical} />
+                </ListGroup>
+              )}
+            </>
+          )}
+
+          {tab === "RISK_MAP" && markers && <RiskMap markers={markers} />}
+
+          {tab === "EXPLORER" && (
+            <div className="flex flex-col gap-3">
+              {products && products.length > 0 && (
+                <SegmentedControl
+                  value={activeProductId!}
+                  onChange={setProductId}
+                  options={products.map((p) => ({ value: p.id, label: p.name }))}
+                />
+              )}
+              {explorerLoading && (
+                <p className="text-footnote text-label-secondary flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-label-tertiary animate-bounce-dot" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-label-tertiary animate-bounce-dot [animation-delay:0.15s]" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-label-tertiary animate-bounce-dot [animation-delay:0.3s]" />
+                  Computing forecast…
+                </p>
+              )}
+              {explorer && (
+                <ListGroup title="Resource explorer">
+                  {explorer.facilities.map((row) => (
+                    <ListRow
+                      key={row.facilityId}
+                      label={facilityName(row.facilityId)}
+                      value={
+                        <span className={row.deficit > 0 ? "text-tint-red" : ""}>
+                          stock {Math.round(row.currentStock)} / demand {Math.round(row.forecastDemand)} / deficit{" "}
+                          {Math.round(row.deficit)}
+                        </span>
+                      }
+                    />
+                  ))}
+                </ListGroup>
+              )}
             </div>
+          )}
 
-            {summary && (
-              <ListGroup title="Alerts by severity">
-                <ListRow label={<SeverityBadge severity="NORMAL" label="Normal" />} value={summary.alertCounts.normal} />
-                <ListRow label={<SeverityBadge severity="WATCH" label="Watch" />} value={summary.alertCounts.watch} />
-                <ListRow label={<SeverityBadge severity="HIGH" label="High" />} value={summary.alertCounts.high} />
-                <ListRow label={<SeverityBadge severity="CRITICAL" label="Critical" />} value={summary.alertCounts.critical} />
-              </ListGroup>
-            )}
-          </>
-        )}
-
-        {tab === "RISK_MAP" && markers && (
-          <div className="animate-fade-in-up">
-            <RiskMap markers={markers} />
-          </div>
-        )}
-
-        {tab === "EXPLORER" && (
-          <div className="flex flex-col gap-3">
-            {products && products.length > 0 && (
-              <SegmentedControl
-                value={activeProductId!}
-                onChange={setProductId}
-                options={products.map((p) => ({ value: p.id, label: p.name }))}
-              />
-            )}
-            {explorerLoading && <p className="text-footnote text-label-secondary">Computing forecast…</p>}
-            {explorer && (
-              <ListGroup title="Resource explorer">
-                {explorer.facilities.map((row) => (
-                  <ListRow
-                    key={row.facilityId}
-                    label={facilityName(row.facilityId)}
-                    value={
-                      <span className={row.deficit > 0 ? "text-tint-red" : ""}>
-                        stock {Math.round(row.currentStock)} / demand {Math.round(row.forecastDemand)} / deficit{" "}
-                        {Math.round(row.deficit)}
-                      </span>
-                    }
-                  />
-                ))}
-              </ListGroup>
-            )}
-          </div>
-        )}
-
-        {tab === "FEDERATION" && <FederationPanel />}
+          {tab === "FEDERATION" && <FederationPanel />}
+        </div>
       </div>
 
       <AgentPane scope={scope} />

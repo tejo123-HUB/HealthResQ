@@ -65,9 +65,9 @@ export function BedGrid({
               style={{ animationDelay: `${i * 30}ms` }}
               className={`transition-hig rounded-hig aspect-square flex flex-col items-center justify-center gap-1 min-h-[88px] animate-fade-in-up ${
                 bed.occupied
-                  ? "bg-tint-red-wash text-tint-red"
-                  : "bg-tint-green-wash text-tint-green active:opacity-70 active:scale-95"
-              } ${disabled ? "opacity-50 cursor-not-allowed" : ""}`}
+                  ? "bg-tint-red-wash text-tint-red hover:bg-tint-red-wash-strong"
+                  : "bg-tint-green-wash text-tint-green hover:brightness-95 active:opacity-70 active:scale-95"
+              } ${disabled ? "opacity-50 cursor-not-allowed" : "hover:-translate-y-0.5 hover:shadow-card"}`}
             >
               <Icon name="bed" className="w-7 h-7" />
               <span className="text-subhead font-semibold">{bed.code}</span>

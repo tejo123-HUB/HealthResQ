@@ -53,7 +53,7 @@ export default function LoginPage() {
           </div>
 
           <div className="w-full animate-fade-in-up" style={{ animationDelay: "150ms" }}>
-            <Card className="shadow-sm">
+            <Card>
               <form onSubmit={onSubmit} className="flex flex-col gap-4">
                 <label className="flex flex-col gap-1">
                   <span className="text-footnote text-label-secondary">Username</span>

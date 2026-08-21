@@ -20,7 +20,7 @@ export function WardList({
           className={`transition-hig text-subhead rounded-hig px-3 py-2 border ${
             selectedWardId === w.id
               ? "bg-tint-blue-wash text-tint-blue border-tint-blue"
-              : "bg-bg text-label border-separator"
+              : "bg-bg text-label border-separator hover:bg-fill-thin"
           }`}
         >
           {w.name}
