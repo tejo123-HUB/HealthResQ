@@ -4,7 +4,9 @@ from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
+from backend.agent.routes import router as agent_router
 from backend.comm.routes import router as comm_router
+from backend.command.routes import router as command_router
 from backend.db import engine
 from backend.intelligence.api import router as intelligence_router
 from backend.intelligence.graph.schema import ensure_graph_ready
@@ -40,6 +42,8 @@ def create_app() -> FastAPI:
     app.include_router(ops_router)
     app.include_router(intelligence_router)
     app.include_router(comm_router)
+    app.include_router(command_router)
+    app.include_router(agent_router)
 
     @app.exception_handler(HTTPException)
     async def http_exception_handler(_request: Request, exc: HTTPException) -> JSONResponse:

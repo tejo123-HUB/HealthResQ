@@ -337,7 +337,11 @@ class AtomicInstruction(Base):
     __tablename__ = "atomic_instructions"
 
     id: Mapped[uuid.UUID] = _uuid_pk()
-    recommendation_id: Mapped[uuid.UUID | None] = mapped_column(UUID(as_uuid=True), nullable=True)
+    # No ForeignKey("recommendations.id") here: backend/ops must not import backend/command (the
+    # dependency runs the other way — CMD-08 populates this column, see backend/command/service.py
+    # ::decompose_and_dispatch). The FK constraint itself is still added, by column name, in the
+    # Alembic migration that creates the recommendations table.
+    recommendation_id: Mapped[uuid.UUID | None] = mapped_column(UUID(as_uuid=True), nullable=True, index=True)
     recipient_facility_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("facilities.id"), nullable=False, index=True)
     # See healthresq-interface-shapes.md's Instruction type note: added by Direction 1 so OPS-07's
     # "stock decrements on DISPATCH" acceptance criterion has a product to act on.

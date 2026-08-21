@@ -22,8 +22,9 @@ type Tab = "OVERVIEW" | "RISK_MAP" | "EXPLORER" | "FEDERATION";
  * (Federation only applies at NATIONAL) instead of separate nav destinations. Composing a new
  * action is a single icon button here rather than a persistent nav pill. Data lives in the main
  * column; the AI suggestion + chat side pane (AgentPane) is where it gets discussed — always
- * present, not a modal. Data is fixture-backed via lib/api/intelligence.ts until Direction 2
- * ships — this component doesn't know or care. */
+ * present, not a modal. Data comes from the real backend via lib/api/intelligence.ts (INT-13) and
+ * lib/api/command.ts (CMD-09) — this component doesn't know or care which direction owns which
+ * endpoint. */
 export function DashboardScreen({ level, scopeId }: { level: ScopeLevel; scopeId: string }) {
   const [tab, setTab] = useState<Tab>("OVERVIEW");
   const [productId, setProductId] = useState<string | null>(null);
@@ -96,7 +97,7 @@ export function DashboardScreen({ level, scopeId }: { level: ScopeLevel; scopeId
                 label="Pending recommendations"
                 value={summary?.pendingRecommendations}
                 tone="accent"
-                href="/recommendations/REC-204"
+                href="/recommendations"
                 loading={summaryLoading}
                 index={2}
               />

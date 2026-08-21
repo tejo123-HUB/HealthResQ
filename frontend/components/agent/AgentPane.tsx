@@ -2,21 +2,26 @@
 
 import Link from "next/link";
 import { useState, type FormEvent } from "react";
+import useSWR from "swr";
 import { Icon } from "@/components/hig/Icon";
 import { agent } from "@/lib/api/agent";
+import { command } from "@/lib/api/command";
 import type { Scope } from "@/lib/api/types";
-import { FIXTURE_RECOMMENDATION } from "@/lib/fixtures/recommendation";
 
 type ChatMessage = { role: "user" | "agent"; text: string };
 
 /** Data lives in the main column; this pane is where the authority discusses it — the top AI
- * suggestion plus a chat thread for "what about instead…" questions (AGT-01, via the fixture-
- * backed `lib/api/agent.ts` facade until Direction 3 ships). One persistent surface, not a modal,
- * so a question is always one tap away without leaving the workspace. */
+ * suggestion (the most recent pending recommendation in the caller's own scope, per CMD-09) plus
+ * a chat thread for "what about instead…" questions (AGT-01). One persistent surface, not a
+ * modal, so a question is always one tap away without leaving the workspace. */
 export function AgentPane({ scope }: { scope: Scope }) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
   const [sending, setSending] = useState(false);
+  const { data: pending } = useSWR(["pending-recommendations", scope.level, scope.id], () =>
+    command.listRecommendations("PENDING_REVIEW,OUTDATED")
+  );
+  const topRecommendation = pending?.[0];
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
@@ -26,7 +31,7 @@ export function AgentPane({ scope }: { scope: Scope }) {
     setMessages((m) => [...m, { role: "user", text: question }]);
     setSending(true);
     try {
-      const reply = await agent.ask(scope, question);
+      const reply = await agent.ask(scope, question, topRecommendation ? { recommendationId: topRecommendation.id } : undefined);
       setMessages((m) => [...m, { role: "agent", text: reply.answer }]);
     } finally {
       setSending(false);
@@ -40,13 +45,19 @@ export function AgentPane({ scope }: { scope: Scope }) {
           <Icon name="flag" className="w-4.5 h-4.5" />
           <span className="text-footnote font-semibold uppercase">AI suggestion</span>
         </div>
-        <p className="text-body">{FIXTURE_RECOMMENDATION.problem}</p>
-        <p className="text-footnote text-label-secondary mt-1">
-          {FIXTURE_RECOMMENDATION.resource} · {FIXTURE_RECOMMENDATION.requiredAuthority} approval
-        </p>
-        <Link href={`/recommendations/${FIXTURE_RECOMMENDATION.id}`} className="text-footnote text-tint-blue mt-2 inline-block">
-          Review full recommendation →
-        </Link>
+        {topRecommendation ? (
+          <>
+            <p className="text-body">{topRecommendation.problem}</p>
+            <p className="text-footnote text-label-secondary mt-1">
+              {topRecommendation.resource} · {topRecommendation.requiredAuthority} approval
+            </p>
+            <Link href={`/recommendations/${topRecommendation.id}`} className="text-footnote text-tint-blue mt-2 inline-block">
+              Review full recommendation →
+            </Link>
+          </>
+        ) : (
+          <p className="text-body text-label-secondary">No pending recommendations right now.</p>
+        )}
       </div>
 
       <div className="bg-bg rounded-hig border border-separator flex flex-col flex-1 min-h-[320px]">

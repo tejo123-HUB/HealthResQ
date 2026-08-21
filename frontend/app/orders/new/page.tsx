@@ -1,20 +1,24 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useState, type FormEvent } from "react";
 import useSWR from "swr";
 import { AuthGuard } from "@/components/AuthGuard";
 import { BackButton } from "@/components/hig/BackButton";
 import { Button } from "@/components/hig/Button";
 import { Card } from "@/components/hig/Card";
+import { ErrorBanner } from "@/components/hig/ErrorBanner";
+import { ApiError } from "@/lib/api/client";
 import { ops } from "@/lib/api/ops";
 import { command } from "@/lib/api/command";
 import { useAuth } from "@/lib/auth/AuthContext";
 
 /** CMD-07: an authority composes a recommendation directly, restricted to facilities/units in
  * their own scope (real facility list, via GET /facilities — legitimately scoped for a
- * DISTRICT/STATE/NATIONAL caller under OPS-02). The submission itself is a stub — CMD-01's real
- * lifecycle and INT feasibility validation don't exist until Direction 2/3 ship. */
+ * DISTRICT/STATE/NATIONAL caller under OPS-02). Runs the same INT feasibility validation and
+ * CMD-01 lifecycle as an agent-drafted recommendation (origin=HUMAN) before it can be approved. */
 function ActionComposer() {
+  const router = useRouter();
   const { scope } = useAuth();
   const { data: facilities } = useSWR(["facilities", scope?.level, scope?.id], () => ops.listFacilities());
   const { data: products } = useSWR(["products"], () => ops.listProducts());
@@ -23,15 +27,18 @@ function ActionComposer() {
   const [productId, setProductId] = useState("");
   const [quantity, setQuantity] = useState(100);
   const [reason, setReason] = useState("");
-  const [submitted, setSubmitted] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
     setSubmitting(true);
+    setSubmitError(null);
     try {
-      await command.composeAction({ destinationFacilityId, productId, quantity, reason });
-      setSubmitted(true);
+      const recommendation = await command.composeAction({ destinationFacilityId, productId, quantity, reason });
+      router.push(`/recommendations/${recommendation.id}`);
+    } catch (err) {
+      setSubmitError(err instanceof ApiError ? err.message : "That submission couldn't be completed.");
     } finally {
       setSubmitting(false);
     }
@@ -105,11 +112,7 @@ function ActionComposer() {
           <Button type="submit" disabled={submitting}>
             {submitting ? "Submitting…" : "Submit for review"}
           </Button>
-          {submitted && (
-            <p className="text-footnote text-tint-green">
-              Recorded (stub — no real CMD-01 recommendation exists until Direction 2/3 ship).
-            </p>
-          )}
+          {submitError && <ErrorBanner message={submitError} />}
         </form>
       </Card>
     </div>

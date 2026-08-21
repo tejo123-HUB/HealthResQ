@@ -60,3 +60,23 @@ const RISK_SEVERITY: Record<string, Severity> = {
 export function riskSeverity(status: string): Severity {
   return RISK_SEVERITY[status] ?? "NEUTRAL";
 }
+
+// CMD-01's Recommendation.status — a DRAFT/PENDING_REVIEW recommendation is awaiting a decision
+// (WATCH), OUTDATED needs recalculation before it can proceed (CRITICAL, same urgency as a
+// BLOCKED instruction), REJECTED/ESCALATED are settled-elsewhere outcomes (NEUTRAL, not a
+// failure of this row), and APPROVED/MODIFIED/EXECUTING/COMPLETED are all success states.
+const RECOMMENDATION_SEVERITY: Record<string, Severity> = {
+  DRAFT: "WATCH",
+  PENDING_REVIEW: "WATCH",
+  OUTDATED: "CRITICAL",
+  APPROVED: "SUCCESS",
+  MODIFIED: "SUCCESS",
+  EXECUTING: "SUCCESS",
+  COMPLETED: "SUCCESS",
+  REJECTED: "NEUTRAL",
+  ESCALATED: "NEUTRAL",
+};
+
+export function recommendationSeverity(status: string): Severity {
+  return RECOMMENDATION_SEVERITY[status] ?? "NEUTRAL";
+}
