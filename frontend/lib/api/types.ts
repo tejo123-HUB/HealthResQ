@@ -5,6 +5,7 @@ export type ScopeLevel = "FACILITY" | "DISTRICT" | "STATE" | "NATIONAL";
 export type Scope = { level: ScopeLevel; id: string };
 
 export type FacilityType = "PHC" | "SHC" | "WAREHOUSE" | "REFERRAL_HOSPITAL";
+export type Location = { lat: number; lng: number };
 export type Facility = {
   id: string;
   type: FacilityType;
@@ -12,6 +13,7 @@ export type Facility = {
   districtId: string;
   stateId: string;
   countryId: string;
+  location: Location | null;
 };
 
 export type District = { id: string; name: string; facilityIds: string[] };
@@ -106,6 +108,31 @@ export type Referral = {
 };
 
 export type ReferenceIndicator = { indicatorCode: string; country: string; value: number; year: number };
+
+// --- Intelligence (backend/intelligence) — healthresq-interface-shapes.md §7 ---------------------
+
+export type Severity = "NORMAL" | "WATCH" | "HIGH" | "CRITICAL";
+export type RiskMarker = {
+  facilityId: string;
+  facilityName: string;
+  facilityType: string;
+  worstSeverity: Severity;
+  alerts: { facilityId: string; productId: string; severity: string }[];
+  location: Location | null;
+};
+
+export type ResourceRollup = {
+  productId: string;
+  totalCurrentStock: number;
+  totalDeficit: number;
+  facilities: {
+    facilityId: string;
+    currentStock: number;
+    forecastDemand: number;
+    projectedStock: number;
+    deficit: number;
+  }[];
+};
 
 // --- COMM (backend/comm) -----------------------------------------------------------------------
 

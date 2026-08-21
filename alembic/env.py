@@ -7,6 +7,7 @@ from backend.audit import models as audit_models  # noqa: F401 - registers Audit
 from backend.comm import models as comm_models  # noqa: F401 - registers COMM models on Base.metadata
 from backend.config import settings
 from backend.db import Base
+from backend.intelligence import models as intelligence_models  # noqa: F401 - registers INT models
 from backend.ops import models as ops_models  # noqa: F401 - registers OPS models on Base.metadata
 
 config = context.config

@@ -37,6 +37,11 @@ class LoginResponse(CamelModel):
 FacilityTypeLiteral = Literal["PHC", "SHC", "WAREHOUSE", "REFERRAL_HOSPITAL"]
 
 
+class Location(CamelModel):
+    lat: float
+    lng: float
+
+
 class Facility(CamelModel):
     id: str
     type: FacilityTypeLiteral
@@ -44,6 +49,7 @@ class Facility(CamelModel):
     district_id: str
     state_id: str
     country_id: str
+    location: Location | None = None
 
 
 class District(CamelModel):

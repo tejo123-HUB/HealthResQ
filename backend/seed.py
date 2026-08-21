@@ -1,7 +1,8 @@
 """Seed data for local/dev use: one country, a handful of states/districts, ~20 PHCs plus a few
-SHCs and warehouses, a product catalog, demo users per role/scope, 30 days of operational history
-for every facility (so Direction 2's forecasting has real history to run against), and a couple of
-sample atomic_instructions rows so OPS-06/07's inbox endpoints are demonstrably non-empty.
+SHCs and warehouses, a product catalog, demo users per role/scope, 90 days of operational history
+for every facility (enough weekly cycles for INT-01's SARIMA/cross-validation candidates to be
+eligible, not just the recent-average floor case), and a couple of sample atomic_instructions rows
+so OPS-06/07's inbox endpoints are demonstrably non-empty.
 
 Run with: python -m backend.seed
 """
@@ -11,10 +12,12 @@ from datetime import date, datetime, timedelta, timezone
 
 from backend.audit.service import log_event
 from backend.comm import models as comm_models
+from backend.config import settings
 from backend.db import Base, SessionLocal, engine
+from backend.intelligence.graph.build import sync_graph_from_ops
+from backend.intelligence.graph.schema import ensure_graph_ready
 from backend.ops import models
 from backend.ops.security import hash_password
-from backend.config import settings
 
 random.seed(42)
 
@@ -26,10 +29,19 @@ STATES = {
     "Karnataka": ["Bengaluru Urban", "Mysuru"],
 }
 
+# Approximate real-world state centroids (degrees) — facilities jitter around these so INT-06's
+# graph edges get a genuine haversine distance instead of a synthetic hash-based one.
+STATE_CENTROIDS = {
+    "Andhra Pradesh": (16.5062, 80.6480),
+    "Maharashtra": (19.7515, 75.7139),
+    "Karnataka": (15.3173, 75.7139),
+}
+COORDINATE_JITTER_DEGREES = 0.6  # ~65km spread — keeps facilities within their state, not exact
+
 PHC_COUNT = 20
 SHC_COUNT = 4
 WAREHOUSE_COUNT = 4
-HISTORY_DAYS = 30
+HISTORY_DAYS = 90  # INT-01's SARIMA/cross-validation candidates need enough weekly cycles to be eligible
 
 
 def slugify(name: str) -> str:
@@ -38,6 +50,7 @@ def slugify(name: str) -> str:
 
 def run() -> None:
     Base.metadata.create_all(engine)  # no-op once alembic migrations have run; safe either way
+    ensure_graph_ready(engine)  # INT-06: extension/graph must exist before sync_graph_from_ops runs
     db = SessionLocal()
 
     try:
@@ -82,8 +95,17 @@ def run() -> None:
 
         def make_facility(name: str, ftype: models.FacilityType, district: models.District) -> models.Facility:
             state, ctry = district_state_country(district)
+            centroid_lat, centroid_lng = STATE_CENTROIDS[state.name]
+            lat = centroid_lat + random.uniform(-COORDINATE_JITTER_DEGREES, COORDINATE_JITTER_DEGREES)
+            lng = centroid_lng + random.uniform(-COORDINATE_JITTER_DEGREES, COORDINATE_JITTER_DEGREES)
             f = models.Facility(
-                type=ftype, name=name, district_id=district.id, state_id=state.id, country_id=ctry.id
+                type=ftype,
+                name=name,
+                district_id=district.id,
+                state_id=state.id,
+                country_id=ctry.id,
+                latitude=round(lat, 6),
+                longitude=round(lng, 6),
             )
             db.add(f)
             db.flush()
@@ -296,6 +318,10 @@ def run() -> None:
             )
 
         log_event(db, actor_user_id=None, action="SEED", entity_type="database", entity_id="seed", details={"facilities": len(facilities)})
+
+        # INT-06: keep the persisted graph in sync with the geography/facilities just created —
+        # same transaction as everything above, so a failure here rolls back the whole seed too.
+        sync_graph_from_ops(db)
 
         db.commit()
         print(f"Seeded {len(facilities)} facilities ({PHC_COUNT} PHC, {SHC_COUNT} SHC, {WAREHOUSE_COUNT} warehouse), "

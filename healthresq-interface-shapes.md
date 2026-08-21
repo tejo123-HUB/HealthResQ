@@ -88,7 +88,10 @@ type Scope = { level: "FACILITY"|"DISTRICT"|"STATE"|"NATIONAL", id: string }
 
 type Facility = {
   id: string, type: "PHC"|"SHC"|"WAREHOUSE"|"REFERRAL_HOSPITAL",
-  name: string, districtId: string, stateId: string, countryId: string
+  name: string, districtId: string, stateId: string, countryId: string,
+  // Added by Direction 2: OPS-01's facilities.latitude/longitude columns. Nullable — a facility
+  // seeded/inserted before this field existed, or entered without coordinates, has `location: null`.
+  location: { lat: number, lng: number } | null
 }
 
 type FootfallEntry = {
@@ -288,7 +291,63 @@ Copy these verbatim into every direction's own tests and stub responses.
 
 ---
 
-## 7. Change discipline
+## 7. `INT-13` REST surface — Direction 2 → Direction 4
+
+Not part of the original Contract Freeze (Section 2 only froze INT's tool functions/graph schema
+for Direction 3's in-process use and Direction 4's stub). Added once built, per the "edit the
+shapes doc, don't fork it" rule — this is INT's own outward HTTP surface to the Web Application,
+the same way `OPS-09` is OPS's. Every route requires the caller's normal auth bearer token and is
+scoped to exactly that token's own scope (no narrowing query param, unlike `OPS-09`'s
+`/facilities`).
+
+```
+GET  /intelligence/risk-map                                  → RiskMarker[]
+GET  /intelligence/resource-explorer?product_id=...            → ResourceRollup
+POST /intelligence/graph-view   { movements: Movement[] }        → ScopedGraphView
+GET  /intelligence/hex-map?resolution=5                          → HexCell[]
+GET  /intelligence/fhir/locations                                  → FHIR R4 Bundle (see note below)
+```
+
+```ts
+type RiskMarker = {
+  facilityId: string, facilityName: string, facilityType: string,
+  worstSeverity: "NORMAL"|"WATCH"|"HIGH"|"CRITICAL",
+  alerts: { facilityId: string, productId: string, severity: string }[],
+  location: { lat: number, lng: number } | null
+}
+
+type ResourceRollup = {
+  productId: string, totalCurrentStock: number, totalDeficit: number,
+  facilities: { facilityId: string, currentStock: number, forecastDemand: number,
+                projectedStock: number, deficit: number }[]
+}
+
+type Movement = { from: string, to: string, quantity: number }
+// Callers pass the `movements` array from `generate_redistribution_options`'s result directly —
+// this endpoint takes a movement set, never a `recommendationId` (that's Direction 3's object).
+
+type ScopedGraphView = {
+  nodes: { id: string, type: string, districtId: string, location: { lat: number, lng: number } | null }[],
+  edges: { from: string, to: string, quantity: number }[]
+}
+
+// H3 hexagonal regional rollup (resolution 0-15; default 5, ~9.85km edge). Facilities with no
+// recorded `location` aren't binned into any cell — see RiskMarker's note above.
+type HexCell = {
+  hexId: string, resolution: number, facilityCount: number, facilityIds: string[],
+  worstSeverity: "NORMAL"|"WATCH"|"HIGH"|"CRITICAL",
+  boundary: { lat: number, lng: number }[]
+}
+```
+
+`GET /intelligence/fhir/locations` returns a standard HL7 FHIR R4 `Bundle` (`resourceType:
+"Bundle", type: "collection"`) of `Location` resources, not a HealthResQ-specific shape — see
+`backend/intelligence/interop/fhir_export.py`. Read-only export surface for external/government
+platform integration, not a FHIR server (no `_search`, no writes, `Location` only).
+
+---
+
+## 8. Change discipline
 
 Any change to a shape above requires a short sync between the owning direction and every "used by" direction listed in `healthresq-development-directions.md`'s interface table — edit this file, don't fork a second copy of a shape.
 

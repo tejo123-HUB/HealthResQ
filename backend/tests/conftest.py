@@ -11,6 +11,8 @@ from backend.audit import models as audit_models  # noqa: F401 - registers Audit
 from backend.comm import models as comm_models  # noqa: F401 - registers COMM models on Base.metadata
 from backend.config import settings
 from backend.db import Base, get_db
+from backend.intelligence import models as intelligence_models  # noqa: F401 - registers INT models
+from backend.intelligence.graph.schema import ensure_graph_ready
 from backend.ops import models
 from backend.ops.security import create_access_token, hash_password
 
@@ -32,6 +34,7 @@ def test_engine():
 
     engine = create_engine(_test_url)
     Base.metadata.create_all(engine)
+    ensure_graph_ready(engine)
     yield engine
     engine.dispose()
 
@@ -96,10 +99,18 @@ def geo(db):
     return {"country": country, "state": state, "district_a": district_a, "district_b": district_b}
 
 
-def make_facility(db, geo, *, name: str, ftype: models.FacilityType, district=None) -> models.Facility:
+def make_facility(
+    db, geo, *, name: str, ftype: models.FacilityType, district=None, latitude=None, longitude=None
+) -> models.Facility:
     district = district or geo["district_a"]
     f = models.Facility(
-        type=ftype, name=name, district_id=district.id, state_id=geo["state"].id, country_id=geo["country"].id
+        type=ftype,
+        name=name,
+        district_id=district.id,
+        state_id=geo["state"].id,
+        country_id=geo["country"].id,
+        latitude=latitude,
+        longitude=longitude,
     )
     db.add(f)
     db.flush()
