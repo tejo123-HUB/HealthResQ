@@ -1,0 +1,40 @@
+services:
+  db:
+    image: postgis/postgis:16-3.4
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-healthresq}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-healthresq}
+      POSTGRES_DB: ${POSTGRES_DB:-healthresq}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - healthresq_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-healthresq}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-healthresq}:${POSTGRES_PASSWORD:-healthresq}@db:5432/${POSTGRES_DB:-healthresq}
+      JWT_SECRET: ${JWT_SECRET:-dev-only-secret-change-me}
+      JWT_EXPIRY_MINUTES: ${JWT_EXPIRY_MINUTES:-480}
+      REFERENCE_INDICATOR_MODE: ${REFERENCE_INDICATOR_MODE:-mock}
+      REFERENCE_INDICATOR_REFRESH_DAYS: ${REFERENCE_INDICATOR_REFRESH_DAYS:-7}
+      GHO_BASE_URL: ${GHO_BASE_URL:-https://ghoapi.azureedge.net/api}
+    ports:
+      - "8000:8000"
+    command: >
+      sh -c "alembic upgrade head && uvicorn backend.app:app --host 0.0.0.0 --port 8000"
+
+volumes:
+  healthresq_pgdata:

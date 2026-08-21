@@ -22,10 +22,23 @@ POST   /instructions/{id}/status                          → Instruction
 GET    /warehouses/{id}                                    → Warehouse
 POST   /warehouses/{id}/orders/{orderId}/status              → Order
 
+GET    /facilities/{id}/wards                                  → Ward[]     // added by Direction 1:
+GET    /wards/{id}/beds                                          → Bed[]     // OPS-11 needs a way for
+                                                                              // an operator to discover
+                                                                              // wards/beds before admitting
+                                                                              // a patient into one — the
+                                                                              // original surface had no
+                                                                              // read path for either.
 POST   /facilities/{id}/admissions                            → Admission
 POST   /admissions/{id}/discharge                                → Admission
 POST   /facilities/{id}/ot-schedule                                → OTSlot
 POST   /referrals                                                    → Referral
+POST   /referrals/{id}/status                                          → Referral   // added by Direction 1:
+                                                                                     // OPS-13 requires a
+                                                                                     // trackable OPEN→ACKNOWLEDGED→
+                                                                                     // CLOSED lifecycle; the
+                                                                                     // original surface only had
+                                                                                     // creation, no transition.
 
 GET    /reference-indicators?indicator=...                            → ReferenceIndicator[]
 ```
@@ -58,14 +71,36 @@ type CapacityStatus = {
 
 type Instruction = {
   id: string, recommendationId: string, recipientFacilityId: string,
+  // productId added by Direction 1 (OPS-07): the original shape had no structured product
+  // reference, which makes "warehouse stock decrements on DISPATCH" (OPS-07 AC) unimplementable
+  // without parsing free text out of `action`. Nullable so a non-stock instruction still fits.
+  productId: string|null,
   action: string, quantity: number, deadline: string,
   status: "ACKNOWLEDGED"|"READY"|"DISPATCHED"|"IN_PROGRESS"|"COMPLETED"|"BLOCKED"
 }
 
+type Ward = { id: string, facilityId: string, name: string }
+type Bed = { id: string, facilityId: string, wardId: string, code: string, occupied: boolean }
 type Admission = { id: string, facilityId: string, wardId: string, bedId: string, admittedAt: string, dischargedAt: string|null }
 type OTSlot = { id: string, facilityId: string, wardId: string, start: string, end: string, status: "SCHEDULED"|"IN_PROGRESS"|"COMPLETED"|"CANCELLED" }
 type Referral = { id: string, sourceFacilityId: string, destFacilityId: string, reason: string, urgency: "ROUTINE"|"URGENT", status: "OPEN"|"ACKNOWLEDGED"|"CLOSED" }
 type ReferenceIndicator = { indicatorCode: string, country: string, value: number, year: number }
+
+// Added by Direction 1 (OPS-01/07) — filling shapes referenced but not yet defined above.
+
+type District = { id: string, name: string, facilityIds: string[] }
+type State = { id: string, name: string, districts: District[] }
+type Country = { id: string, name: string, states: State[] }
+
+type Warehouse = {
+  id: string, name: string, districtId: string, stateId: string, countryId: string,
+  inventory: { productId: string, currentStock: number }[],
+  orders: Instruction[]   // instructions addressed to this warehouse; same object OPS-06 calls Instruction
+}
+
+// A warehouse "order" (OPS-07) is the same underlying object as a facility Instruction (OPS-06),
+// addressed through a warehouse-specific route for UX reasons only — not a separate entity.
+type Order = Instruction
 ```
 
 ---
@@ -137,6 +172,7 @@ type Recommendation = {
 
 type AtomicInstruction = {
   id: string, recommendationId: string, recipientFacilityId: string,
+  productId: string|null,   // added by Direction 1 — see Section 1's Instruction type note
   action: string, quantity: number, deadline: string,
   status: "ACKNOWLEDGED"|"IN_PROGRESS"|"COMPLETED"|"BLOCKED"
 }
@@ -193,3 +229,5 @@ Copy these verbatim into every direction's own tests and stub responses.
 ## 6. Change discipline
 
 Any change to a shape above requires a short sync between the owning direction and every "used by" direction listed in `healthresq-development-directions.md`'s interface table — edit this file, don't fork a second copy of a shape.
+
+**Known inconsistency (flagged, not resolved):** Section 1's `Instruction.status` (`ACKNOWLEDGED|READY|DISPATCHED|IN_PROGRESS|COMPLETED|BLOCKED`) is a superset of Section 3's `AtomicInstruction.status` (`ACKNOWLEDGED|IN_PROGRESS|COMPLETED|BLOCKED` — missing `READY`/`DISPATCHED`), even though `healthresq-architecture.md`'s glossary states they're the same object under two names. Direction 1's `atomic_instructions` table (OPS-06/07, built ahead of `CMD-08`) uses the Section 1 superset, since `OPS-06`/`OPS-07`'s feature text explicitly requires the `READY`/`DISPATCHED` transitions. Direction 3 should reconcile Section 3's type to match when building `CMD-08`, rather than the table being narrowed later.
