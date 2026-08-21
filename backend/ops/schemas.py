@@ -167,12 +167,21 @@ class InstructionStatusUpdate(CamelModel):
     status: InstructionStatusLiteral
 
 
-# --- Warehouses (OPS-07) --------------------------------------------------------------------------
+# --- Products & inventory positions (OPS-04/07, read paths added by Direction 1) -------------------
 
 
-class WarehouseInventoryLine(CamelModel):
+class Product(CamelModel):
+    id: str
+    name: str
+    unit: str
+
+
+class InventoryPositionLine(CamelModel):
     product_id: str
     current_stock: int
+
+
+# --- Warehouses (OPS-07) --------------------------------------------------------------------------
 
 
 class Warehouse(CamelModel):
@@ -181,7 +190,7 @@ class Warehouse(CamelModel):
     district_id: str
     state_id: str
     country_id: str
-    inventory: list[WarehouseInventoryLine]
+    inventory: list[InventoryPositionLine]
     orders: list[Instruction]
 
 

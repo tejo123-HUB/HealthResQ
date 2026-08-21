@@ -23,3 +23,62 @@ def test_every_facility_resolves_to_exactly_one_country_chain(client, db, role_a
     assert country["id"] == str(geo["country"].id)
     assert state["id"] == str(geo["state"].id)
     assert district["id"] == str(geo["district_a"].id)
+
+
+def test_district_user_hierarchy_excludes_sibling_district(client, db, role_authority, geo):
+    """OPS-02 acceptance criterion: authority scope queries never return cross-branch data.
+    A DISTRICT-scoped user's hierarchy response must not include a sibling district's facility,
+    even though both districts share the same state/country."""
+    facility_in_a = make_facility(db, geo, name="PHC-A", ftype=models.FacilityType.PHC, district=geo["district_a"])
+    facility_in_b = make_facility(db, geo, name="PHC-B", ftype=models.FacilityType.PHC, district=geo["district_b"])
+    token = make_user_token(db, role_authority, models.ScopeLevel.DISTRICT, geo["district_a"].id)
+
+    resp = client.get("/geography/hierarchy", headers=auth_headers(token))
+    assert resp.status_code == 200
+    countries = resp.json()
+
+    all_districts = [d for c in countries for s in c["states"] for d in s["districts"]]
+    assert len(all_districts) == 1
+    assert all_districts[0]["id"] == str(geo["district_a"].id)
+    assert str(facility_in_a.id) in all_districts[0]["facilityIds"]
+    assert str(facility_in_b.id) not in all_districts[0]["facilityIds"]
+
+
+def test_facility_user_hierarchy_shows_only_own_facility(client, db, role_operator, geo):
+    facility_a = make_facility(db, geo, name="PHC-Mine", ftype=models.FacilityType.PHC, district=geo["district_a"])
+    facility_b = make_facility(db, geo, name="PHC-NotMine", ftype=models.FacilityType.PHC, district=geo["district_a"])
+    token = make_user_token(db, role_operator, models.ScopeLevel.FACILITY, facility_a.id)
+
+    resp = client.get("/geography/hierarchy", headers=auth_headers(token))
+    countries = resp.json()
+    all_facility_ids = [f for c in countries for s in c["states"] for d in s["districts"] for f in d["facilityIds"]]
+    assert all_facility_ids == [str(facility_a.id)]
+    assert str(facility_b.id) not in all_facility_ids
+
+
+def test_state_user_can_narrow_facilities_to_own_district(client, db, role_authority, geo):
+    """A STATE user narrowing to one of their own districts must succeed — previously this
+    incorrectly 403'd because only FACILITY-level narrowing was supported."""
+    facility = make_facility(db, geo, name="PHC-Narrow", ftype=models.FacilityType.PHC, district=geo["district_a"])
+    token = make_user_token(db, role_authority, models.ScopeLevel.STATE, geo["state"].id)
+
+    resp = client.get(f"/facilities?scope=DISTRICT:{geo['district_a'].id}", headers=auth_headers(token))
+    assert resp.status_code == 200
+    ids = [f["id"] for f in resp.json()]
+    assert str(facility.id) in ids
+
+
+def test_state_user_cannot_narrow_to_district_outside_their_state(client, db, role_authority, geo):
+    other_country = models.Country(name="Other-Country")
+    db.add(other_country)
+    db.flush()
+    other_state = models.State(name="Other-State", country_id=other_country.id)
+    db.add(other_state)
+    db.flush()
+    other_district = models.District(name="Other-District", state_id=other_state.id)
+    db.add(other_district)
+    db.flush()
+
+    token = make_user_token(db, role_authority, models.ScopeLevel.STATE, geo["state"].id)
+    resp = client.get(f"/facilities?scope=DISTRICT:{other_district.id}", headers=auth_headers(token))
+    assert resp.status_code == 403

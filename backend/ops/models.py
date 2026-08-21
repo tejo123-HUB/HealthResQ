@@ -131,10 +131,10 @@ class Facility(Base):
     id: Mapped[uuid.UUID] = _uuid_pk()
     type: Mapped[FacilityType] = mapped_column(Enum(FacilityType, name="facility_type"), nullable=False)
     name: Mapped[str] = mapped_column(String, nullable=False)
-    district_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("districts.id"), nullable=False)
+    district_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("districts.id"), nullable=False, index=True)
     # Denormalized for cheap OPS-02 scope checks without joining up the hierarchy every request.
-    state_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("states.id"), nullable=False)
-    country_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("countries.id"), nullable=False)
+    state_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("states.id"), nullable=False, index=True)
+    country_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("countries.id"), nullable=False, index=True)
 
     district: Mapped["District"] = relationship(back_populates="facilities")
 
@@ -162,7 +162,7 @@ class UserScope(Base):
     __tablename__ = "user_scopes"
 
     id: Mapped[uuid.UUID] = _uuid_pk()
-    user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id"), nullable=False)
+    user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id"), nullable=False, index=True)
     level: Mapped[ScopeLevel] = mapped_column(Enum(ScopeLevel, name="scope_level"), nullable=False)
     # Heterogeneous target (facility/district/state/country id depending on level) — not a single FK.
     scope_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), nullable=False)
@@ -185,8 +185,8 @@ class InventoryTransaction(Base):
     __tablename__ = "inventory_transactions"
 
     id: Mapped[uuid.UUID] = _uuid_pk()
-    facility_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("facilities.id"), nullable=False)
-    product_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("products.id"), nullable=False)
+    facility_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("facilities.id"), nullable=False, index=True)
+    product_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("products.id"), nullable=False, index=True)
     type: Mapped[TransactionType] = mapped_column(Enum(TransactionType, name="transaction_type"), nullable=False)
     quantity: Mapped[int] = mapped_column(Integer, nullable=False)
     batch: Mapped[str | None] = mapped_column(String, nullable=True)
@@ -216,7 +216,7 @@ class PatientActivity(Base):
     __table_args__ = (UniqueConstraint("facility_id", "date", "shift", name="uq_patient_activity_slot"),)
 
     id: Mapped[uuid.UUID] = _uuid_pk()
-    facility_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("facilities.id"), nullable=False)
+    facility_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("facilities.id"), nullable=False, index=True)
     date: Mapped[date] = mapped_column(Date, nullable=False)
     shift: Mapped[str] = mapped_column(String, nullable=False)
     opd_visits: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
@@ -234,7 +234,7 @@ class BedStatus(Base):
     __tablename__ = "bed_status"
 
     id: Mapped[uuid.UUID] = _uuid_pk()
-    facility_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("facilities.id"), nullable=False)
+    facility_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("facilities.id"), nullable=False, index=True)
     total: Mapped[int] = mapped_column(Integer, nullable=False)
     occupied: Mapped[int] = mapped_column(Integer, nullable=False)
     observed_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, default=_now)
@@ -244,7 +244,7 @@ class StaffAttendance(Base):
     __tablename__ = "staff_attendance"
 
     id: Mapped[uuid.UUID] = _uuid_pk()
-    facility_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("facilities.id"), nullable=False)
+    facility_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("facilities.id"), nullable=False, index=True)
     role: Mapped[str] = mapped_column(String, nullable=False)
     scheduled: Mapped[int] = mapped_column(Integer, nullable=False)
     present: Mapped[int] = mapped_column(Integer, nullable=False)
@@ -256,7 +256,7 @@ class EquipmentStatus(Base):
     __tablename__ = "equipment_status"
 
     id: Mapped[uuid.UUID] = _uuid_pk()
-    facility_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("facilities.id"), nullable=False)
+    facility_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("facilities.id"), nullable=False, index=True)
     type: Mapped[EquipmentType] = mapped_column(Enum(EquipmentType, name="equipment_type"), nullable=False)
     status: Mapped[EquipmentStatusValue] = mapped_column(
         Enum(EquipmentStatusValue, name="equipment_status_value"), nullable=False
@@ -271,7 +271,7 @@ class Ward(Base):
     __tablename__ = "wards"
 
     id: Mapped[uuid.UUID] = _uuid_pk()
-    facility_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("facilities.id"), nullable=False)
+    facility_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("facilities.id"), nullable=False, index=True)
     name: Mapped[str] = mapped_column(String, nullable=False)
 
 
@@ -282,8 +282,8 @@ class Bed(Base):
     __tablename__ = "beds"
 
     id: Mapped[uuid.UUID] = _uuid_pk()
-    facility_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("facilities.id"), nullable=False)
-    ward_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("wards.id"), nullable=False)
+    facility_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("facilities.id"), nullable=False, index=True)
+    ward_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("wards.id"), nullable=False, index=True)
     code: Mapped[str] = mapped_column(String, nullable=False)
     occupied: Mapped[bool] = mapped_column(nullable=False, default=False)
 
@@ -292,7 +292,7 @@ class Admission(Base):
     __tablename__ = "admissions"
 
     id: Mapped[uuid.UUID] = _uuid_pk()
-    facility_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("facilities.id"), nullable=False)
+    facility_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("facilities.id"), nullable=False, index=True)
     ward_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("wards.id"), nullable=False)
     bed_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("beds.id"), nullable=False)
     admitted_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, default=_now)
@@ -303,8 +303,8 @@ class OTSchedule(Base):
     __tablename__ = "ot_schedules"
 
     id: Mapped[uuid.UUID] = _uuid_pk()
-    facility_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("facilities.id"), nullable=False)
-    ward_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("wards.id"), nullable=False)
+    facility_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("facilities.id"), nullable=False, index=True)
+    ward_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("wards.id"), nullable=False, index=True)
     start: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
     end: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
     status: Mapped[OTSlotStatus] = mapped_column(
@@ -333,7 +333,7 @@ class AtomicInstruction(Base):
 
     id: Mapped[uuid.UUID] = _uuid_pk()
     recommendation_id: Mapped[uuid.UUID | None] = mapped_column(UUID(as_uuid=True), nullable=True)
-    recipient_facility_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("facilities.id"), nullable=False)
+    recipient_facility_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("facilities.id"), nullable=False, index=True)
     # See healthresq-interface-shapes.md's Instruction type note: added by Direction 1 so OPS-07's
     # "stock decrements on DISPATCH" acceptance criterion has a product to act on.
     product_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("products.id"), nullable=True)

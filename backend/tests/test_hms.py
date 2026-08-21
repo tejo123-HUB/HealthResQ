@@ -71,6 +71,30 @@ def test_ot_slots_cannot_overlap_in_same_facility(client, db, role_operator, geo
     assert resp.status_code == 200
 
 
+def test_ot_slot_duration_must_be_a_multiple_of_the_configured_granularity(client, db, role_operator, geo):
+    """OPS-12 acceptance criterion: slot granularity is a configuration value defaulting to 30
+    minutes — a duration that isn't a multiple of it must be rejected."""
+    shc = make_facility(db, geo, name="SHC-OT-Gran", ftype=models.FacilityType.SHC)
+    ward = models.Ward(facility_id=shc.id, name="OT-Ward")
+    db.add(ward)
+    db.flush()
+    token = make_user_token(db, role_operator, models.ScopeLevel.FACILITY, shc.id)
+
+    resp = client.post(
+        f"/facilities/{shc.id}/ot-schedule",
+        headers=auth_headers(token),
+        json={"wardId": str(ward.id), "start": "2026-05-02T09:00:00Z", "end": "2026-05-02T09:17:00Z"},
+    )
+    assert resp.status_code == 400
+
+    resp = client.post(
+        f"/facilities/{shc.id}/ot-schedule",
+        headers=auth_headers(token),
+        json={"wardId": str(ward.id), "start": "2026-05-02T09:00:00Z", "end": "2026-05-02T10:00:00Z"},
+    )
+    assert resp.status_code == 200
+
+
 def test_referral_has_exactly_one_status_and_cannot_reopen_once_closed(client, db, role_authority, geo):
     """OPS-13 acceptance criterion: a referral has exactly one of OPEN/ACKNOWLEDGED/CLOSED at
     any time."""

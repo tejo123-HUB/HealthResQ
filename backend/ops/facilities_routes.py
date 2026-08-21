@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 
 from backend.db import get_db
 from backend.ops import models
-from backend.ops.deps import CurrentUser, get_current_user, get_scoped_facility
+from backend.ops.deps import CurrentUser, get_current_user, get_scoped_facility, scope_contains
 from backend.ops.schemas import Facility
 
 router = APIRouter(tags=["facilities"])
@@ -22,6 +22,17 @@ def _facility_out(f: models.Facility) -> Facility:
     )
 
 
+def _facilities_for_scope(db: Session, level: models.ScopeLevel, scope_id: uuid.UUID):
+    query = db.query(models.Facility)
+    if level == models.ScopeLevel.FACILITY:
+        return query.filter(models.Facility.id == scope_id).all()
+    if level == models.ScopeLevel.DISTRICT:
+        return query.filter(models.Facility.district_id == scope_id).all()
+    if level == models.ScopeLevel.STATE:
+        return query.filter(models.Facility.state_id == scope_id).all()
+    return query.filter(models.Facility.country_id == scope_id).all()  # NATIONAL
+
+
 @router.get("/facilities", response_model=list[Facility])
 def list_facilities(
     scope: str | None = Query(
@@ -31,7 +42,8 @@ def list_facilities(
     user: CurrentUser = Depends(get_current_user),
 ) -> list[Facility]:
     """OPS-02: always scoped to the caller's own authorized hierarchy node. The optional `scope`
-    query param can only narrow further within it, never widen outside it."""
+    query param can only narrow further within it (at any level, not just down to a single
+    facility), never widen outside it — see `scope_contains`."""
     level, scope_id = user.scope_level, user.scope_id
 
     if scope is not None:
@@ -42,32 +54,11 @@ def list_facilities(
         except ValueError as exc:
             raise HTTPException(status.HTTP_400_BAD_REQUEST, "Invalid scope filter") from exc
 
-        # A requested scope is acceptable only if it's the caller's own scope, or a facility the
-        # caller's own scope already contains — never a way to reach outside it.
-        if req_level == level and req_id == scope_id:
-            pass
-        elif req_level == models.ScopeLevel.FACILITY and level != models.ScopeLevel.FACILITY:
-            candidate = db.get(models.Facility, req_id)
-            if candidate is None:
-                raise HTTPException(status.HTTP_404_NOT_FOUND, "Facility not found")
-            from backend.ops.deps import enforce_scope
-
-            enforce_scope(db, user, candidate)
-            return [_facility_out(candidate)]
-        else:
+        if not scope_contains(db, user, req_level, req_id):
             raise HTTPException(status.HTTP_403_FORBIDDEN, "Requested scope outside caller's own scope")
+        level, scope_id = req_level, req_id
 
-    query = db.query(models.Facility)
-    if level == models.ScopeLevel.FACILITY:
-        query = query.filter(models.Facility.id == scope_id)
-    elif level == models.ScopeLevel.DISTRICT:
-        query = query.filter(models.Facility.district_id == scope_id)
-    elif level == models.ScopeLevel.STATE:
-        query = query.filter(models.Facility.state_id == scope_id)
-    elif level == models.ScopeLevel.NATIONAL:
-        query = query.filter(models.Facility.country_id == scope_id)
-
-    return [_facility_out(f) for f in query.all()]
+    return [_facility_out(f) for f in _facilities_for_scope(db, level, scope_id)]
 
 
 @router.get("/facilities/{facility_id}", response_model=Facility)

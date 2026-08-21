@@ -54,6 +54,55 @@ def enforce_scope(db: Session, user: CurrentUser, facility: models.Facility) -> 
         raise HTTPException(status.HTTP_403_FORBIDDEN, "Unknown scope level")
 
 
+_LEVEL_RANK = {
+    models.ScopeLevel.FACILITY: 0,
+    models.ScopeLevel.DISTRICT: 1,
+    models.ScopeLevel.STATE: 2,
+    models.ScopeLevel.NATIONAL: 3,
+}
+
+
+def scope_contains(db: Session, user: CurrentUser, target_level: models.ScopeLevel, target_id: uuid.UUID) -> bool:
+    """True if (target_level, target_id) is the caller's own scope, or a scope strictly narrower
+    than and fully contained within it. Used to validate optional narrowing filters (OPS-02) —
+    e.g. a STATE user asking for one of their own districts — without ever allowing a request to
+    widen outside the caller's own scope."""
+    if target_level == user.scope_level and target_id == user.scope_id:
+        return True
+    if _LEVEL_RANK[target_level] >= _LEVEL_RANK[user.scope_level]:
+        return False
+
+    if target_level == models.ScopeLevel.FACILITY:
+        facility = db.get(models.Facility, target_id)
+        if facility is None:
+            return False
+        if user.scope_level == models.ScopeLevel.DISTRICT:
+            return facility.district_id == user.scope_id
+        if user.scope_level == models.ScopeLevel.STATE:
+            return facility.state_id == user.scope_id
+        if user.scope_level == models.ScopeLevel.NATIONAL:
+            return facility.country_id == user.scope_id
+
+    if target_level == models.ScopeLevel.DISTRICT:
+        district = db.get(models.District, target_id)
+        if district is None:
+            return False
+        if user.scope_level == models.ScopeLevel.STATE:
+            return district.state_id == user.scope_id
+        if user.scope_level == models.ScopeLevel.NATIONAL:
+            state = db.get(models.State, district.state_id)
+            return state is not None and state.country_id == user.scope_id
+
+    if target_level == models.ScopeLevel.STATE:
+        state = db.get(models.State, target_id)
+        if state is None:
+            return False
+        if user.scope_level == models.ScopeLevel.NATIONAL:
+            return state.country_id == user.scope_id
+
+    return False
+
+
 def get_facility_or_404(db: Session, facility_id: uuid.UUID) -> models.Facility:
     facility = db.get(models.Facility, facility_id)
     if facility is None:

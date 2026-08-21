@@ -6,6 +6,7 @@ from sqlalchemy import and_
 from sqlalchemy.orm import Session
 
 from backend.audit.service import log_event
+from backend.config import settings
 from backend.db import get_db
 from backend.ops import models
 from backend.ops.deps import CurrentUser, enforce_scope, get_current_user, get_scoped_facility
@@ -154,6 +155,14 @@ def create_ot_slot(
 
     if body.end <= body.start:
         raise HTTPException(status.HTTP_400_BAD_REQUEST, "end must be after start")
+
+    granularity_seconds = settings.ot_slot_granularity_minutes * 60
+    duration_seconds = (body.end - body.start).total_seconds()
+    if duration_seconds % granularity_seconds != 0:
+        raise HTTPException(
+            status.HTTP_400_BAD_REQUEST,
+            f"slot duration must be a multiple of the configured {settings.ot_slot_granularity_minutes}-minute granularity",
+        )
 
     overlap = (
         db.query(models.OTSchedule)

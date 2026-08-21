@@ -12,9 +12,24 @@ GET    /geography/hierarchy                      → Country[]
 
 GET    /facilities?scope=...                      → Facility[]
 GET    /facilities/{id}                            → Facility
+
+GET    /products                                    → Product[]      // added by Direction 1: nothing
+                                                                       // exposed valid productIds before this
+
 POST   /facilities/{id}/footfall                    → FootfallEntry
+GET    /facilities/{id}/footfall?date=               → FootfallEntry[]   // added by Direction 1 (OPS-06
+                                                                          // home-screen read path)
+
 POST   /facilities/{id}/inventory/transactions       → InventoryTransaction
+GET    /facilities/{id}/inventory                     → InventoryPositionLine[]   // added by Direction 1
+                                                                                   // (OPS-06 home-screen
+                                                                                   // read path)
+
 POST   /facilities/{id}/capacity                       → CapacityStatus
+GET    /facilities/{id}/capacity                         → CapacityStatus   // added by Direction 1
+                                                                             // (OPS-06 home-screen read
+                                                                             // path); 404 if nothing has
+                                                                             // been submitted yet
 
 GET    /facilities/{id}/instructions                    → Instruction[]
 POST   /instructions/{id}/status                          → Instruction
@@ -92,9 +107,12 @@ type District = { id: string, name: string, facilityIds: string[] }
 type State = { id: string, name: string, districts: District[] }
 type Country = { id: string, name: string, states: State[] }
 
+type Product = { id: string, name: string, unit: string }
+type InventoryPositionLine = { productId: string, currentStock: number }
+
 type Warehouse = {
   id: string, name: string, districtId: string, stateId: string, countryId: string,
-  inventory: { productId: string, currentStock: number }[],
+  inventory: InventoryPositionLine[],
   orders: Instruction[]   // instructions addressed to this warehouse; same object OPS-06 calls Instruction
 }
 

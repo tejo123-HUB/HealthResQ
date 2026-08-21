@@ -15,5 +15,9 @@ class Settings(BaseSettings):
 
     seed_default_password: str = "demo-pass-123"
 
+    # OPS-12: "slot granularity is a configuration value defaulting to 30 minutes" — every OT
+    # slot's duration must be a positive multiple of this.
+    ot_slot_granularity_minutes: int = 30
+
 
 settings = Settings()

@@ -9,6 +9,7 @@ from backend.ops import (
     hms_routes,
     instructions_routes,
     inventory_routes,
+    products_routes,
     reference_indicators,
     warehouses_routes,
 )
@@ -20,6 +21,7 @@ for module in (
     geography_routes,
     facilities_routes,
     footfall_routes,
+    products_routes,
     inventory_routes,
     capacity_routes,
     instructions_routes,
