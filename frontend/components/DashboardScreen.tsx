@@ -1,0 +1,132 @@
+"use client";
+
+import Link from "next/link";
+import { useState } from "react";
+import useSWR from "swr";
+import { AgentPane } from "@/components/agent/AgentPane";
+import { FederationPanel } from "@/components/FederationPanel";
+import { ListGroup, ListRow, StatCard } from "@/components/hig/Card";
+import { ErrorBanner } from "@/components/hig/ErrorBanner";
+import { Icon } from "@/components/hig/Icon";
+import { SegmentedControl } from "@/components/hig/SegmentedControl";
+import { SeverityBadge } from "@/components/hig/SeverityBadge";
+import { RiskMap } from "@/components/RiskMap";
+import { intelligence } from "@/lib/api/intelligence";
+import type { Scope, ScopeLevel } from "@/lib/api/types";
+
+type Tab = "OVERVIEW" | "RISK_MAP" | "EXPLORER" | "FEDERATION";
+
+/** CMD-09: District/State/National dashboards, each strictly scoped to the viewing user's own
+ * authority level in the real implementation — one workspace per role, organized with tabs
+ * (Federation only applies at NATIONAL) instead of separate nav destinations. Composing a new
+ * action is a single icon button here rather than a persistent nav pill. Data lives in the main
+ * column; the AI suggestion + chat side pane (AgentPane) is where it gets discussed — always
+ * present, not a modal. Data is fixture-backed via lib/api/intelligence.ts until Direction 2
+ * ships — this component doesn't know or care. */
+export function DashboardScreen({ level, scopeId }: { level: ScopeLevel; scopeId: string }) {
+  const [tab, setTab] = useState<Tab>("OVERVIEW");
+  const {
+    data: summary,
+    isLoading: summaryLoading,
+    error: summaryError,
+    mutate: retrySummary,
+  } = useSWR(["scope-summary", level], () => intelligence.getScopeSummary(level));
+  const { data: markers } = useSWR(["risk-markers"], () => intelligence.getRiskMarkers());
+  const { data: explorer } = useSWR(["explorer"], () => intelligence.getResourceExplorer());
+
+  const scope: Scope = { level, id: scopeId };
+
+  const options: { value: Tab; label: string }[] = [
+    { value: "OVERVIEW", label: "Overview" },
+    { value: "RISK_MAP", label: "Risk map" },
+    { value: "EXPLORER", label: "Explorer" },
+  ];
+  if (level === "NATIONAL") options.push({ value: "FEDERATION", label: "Federation" });
+
+  return (
+    <div className="flex flex-col lg:flex-row gap-6 items-start">
+      <div className="flex flex-col gap-6 flex-1 min-w-0 w-full">
+        <div className="flex items-center justify-between flex-wrap gap-3">
+          <h1 className="text-title1">{summary?.scopeLabel ?? level}</h1>
+          <div className="flex items-center gap-2">
+            <SegmentedControl value={tab} onChange={setTab} options={options} />
+            <Link
+              href="/orders/new"
+              aria-label="Compose new action"
+              className="w-11 h-11 flex items-center justify-center rounded-hig bg-tint-blue text-white active:opacity-70 active:scale-90 transition-hig"
+            >
+              <Icon name="plus" className="w-5 h-5" />
+            </Link>
+          </div>
+        </div>
+
+        {tab === "OVERVIEW" && (
+          <>
+            {summaryError && <ErrorBanner message="Couldn't load the scope summary." onRetry={() => retrySummary()} />}
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+              <StatCard
+                icon="building"
+                label="Facilities in scope"
+                value={summary?.facilityCount}
+                loading={summaryLoading}
+                index={0}
+              />
+              <StatCard
+                icon="alert"
+                label="Total deficit"
+                value={summary?.deficitTotal.toLocaleString()}
+                tone={summary && summary.deficitTotal > 0 ? "warning" : "default"}
+                loading={summaryLoading}
+                index={1}
+              />
+              <StatCard
+                icon="flag"
+                label="Pending recommendations"
+                value={summary?.pendingRecommendations}
+                tone="accent"
+                href="/recommendations/REC-204"
+                loading={summaryLoading}
+                index={2}
+              />
+            </div>
+
+            {summary && (
+              <ListGroup title="Alerts by severity">
+                <ListRow label={<SeverityBadge severity="NORMAL" label="Normal" />} value={summary.alertCounts.normal} />
+                <ListRow label={<SeverityBadge severity="WATCH" label="Watch" />} value={summary.alertCounts.watch} />
+                <ListRow label={<SeverityBadge severity="HIGH" label="High" />} value={summary.alertCounts.high} />
+                <ListRow label={<SeverityBadge severity="CRITICAL" label="Critical" />} value={summary.alertCounts.critical} />
+              </ListGroup>
+            )}
+          </>
+        )}
+
+        {tab === "RISK_MAP" && markers && (
+          <div className="animate-fade-in-up">
+            <RiskMap markers={markers} />
+          </div>
+        )}
+
+        {tab === "EXPLORER" && explorer && (
+          <ListGroup title="Resource explorer">
+            {explorer.map((row, i) => (
+              <ListRow
+                key={i}
+                label={`${row.resource} · ${row.facilityId}`}
+                value={
+                  <span className={row.deficit > 0 ? "text-tint-red" : ""}>
+                    stock {row.currentStock} / demand {row.forecastDemand} / deficit {row.deficit}
+                  </span>
+                }
+              />
+            ))}
+          </ListGroup>
+        )}
+
+        {tab === "FEDERATION" && <FederationPanel />}
+      </div>
+
+      <AgentPane scope={scope} />
+    </div>
+  );
+}

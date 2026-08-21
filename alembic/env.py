@@ -4,6 +4,7 @@ from alembic import context
 from sqlalchemy import engine_from_config, pool
 
 from backend.audit import models as audit_models  # noqa: F401 - registers AuditLog on Base.metadata
+from backend.comm import models as comm_models  # noqa: F401 - registers COMM models on Base.metadata
 from backend.config import settings
 from backend.db import Base
 from backend.intelligence import models as intelligence_models  # noqa: F401 - registers INT models

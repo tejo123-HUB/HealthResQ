@@ -9,9 +9,21 @@ from backend.ops import models
 from backend.ops.deps import CurrentUser, get_current_user, get_scoped_facility
 from backend.ops.freshness import classify_freshness
 from backend.ops.inventory import apply_transaction
-from backend.ops.schemas import InventoryTransaction, InventoryTransactionIn
+from backend.ops.schemas import InventoryPositionLine, InventoryTransaction, InventoryTransactionIn
 
 router = APIRouter(tags=["inventory"])
+
+
+@router.get("/facilities/{facility_id}/inventory", response_model=list[InventoryPositionLine])
+def get_inventory(
+    facility: models.Facility = Depends(get_scoped_facility),
+    db: Session = Depends(get_db),
+) -> list[InventoryPositionLine]:
+    """Read path for OPS-06's home screen — added by Direction 1; the original OPS-09 surface
+    only had the POST below. Current stock per product, straight from the OPS-04 derived
+    positions table."""
+    positions = db.query(models.InventoryPosition).filter(models.InventoryPosition.facility_id == facility.id).all()
+    return [InventoryPositionLine(product_id=str(p.product_id), current_stock=p.current_stock) for p in positions]
 
 
 @router.post("/facilities/{facility_id}/inventory/transactions", response_model=InventoryTransaction)

@@ -15,6 +15,10 @@ class Settings(BaseSettings):
 
     seed_default_password: str = "demo-pass-123"
 
+    # OPS-12: "slot granularity is a configuration value defaulting to 30 minutes" — every OT
+    # slot's duration must be a positive multiple of this.
+    ot_slot_granularity_minutes: int = 30
+
     # INT-09: "greedy" (default, INT-08) or "min_cost_flow" for generate_redistribution_options.
     # Provably equivalent for the single-destination case (see redistribution/ORTOOLS_UPGRADE.md);
     # this flag exists to satisfy the architecture's "swappable allocator" acceptance criterion,

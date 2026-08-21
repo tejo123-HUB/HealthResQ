@@ -12,9 +12,24 @@ GET    /geography/hierarchy                      → Country[]
 
 GET    /facilities?scope=...                      → Facility[]
 GET    /facilities/{id}                            → Facility
+
+GET    /products                                    → Product[]      // added by Direction 1: nothing
+                                                                       // exposed valid productIds before this
+
 POST   /facilities/{id}/footfall                    → FootfallEntry
+GET    /facilities/{id}/footfall?date=               → FootfallEntry[]   // added by Direction 1 (OPS-06
+                                                                          // home-screen read path)
+
 POST   /facilities/{id}/inventory/transactions       → InventoryTransaction
+GET    /facilities/{id}/inventory                     → InventoryPositionLine[]   // added by Direction 1
+                                                                                   // (OPS-06 home-screen
+                                                                                   // read path)
+
 POST   /facilities/{id}/capacity                       → CapacityStatus
+GET    /facilities/{id}/capacity                         → CapacityStatus   // added by Direction 1
+                                                                             // (OPS-06 home-screen read
+                                                                             // path); 404 if nothing has
+                                                                             // been submitted yet
 
 GET    /facilities/{id}/instructions                    → Instruction[]
 POST   /instructions/{id}/status                          → Instruction
@@ -29,9 +44,34 @@ GET    /wards/{id}/beds                                          → Bed[]     /
                                                                               // a patient into one — the
                                                                               // original surface had no
                                                                               // read path for either.
+GET    /wards/{id}/admissions?activeOnly=              → Admission[]   // added by Direction 4: BedGrid
+                                                                        // needs the admission ID behind an
+                                                                        // occupied bed (e.g. to discharge
+                                                                        // it after a page reload); the
+                                                                        // original surface had no read
+                                                                        // path for admissions at all.
 POST   /facilities/{id}/admissions                            → Admission
 POST   /admissions/{id}/discharge                                → Admission
+GET    /facilities/{id}/ot-schedule                                → OTSlot[]   // added by Direction 4:
+                                                                                 // same gap as wards/beds —
+                                                                                 // creation with no read path.
 POST   /facilities/{id}/ot-schedule                                → OTSlot
+GET    /facilities/{id}/referrals                                    → Referral[]  // added by Direction 4:
+                                                                                    // referrals where this
+                                                                                    // facility is source OR
+                                                                                    // destination.
+GET    /facilities/{id}/referral-candidates                            → Facility[]  // added by Direction 4:
+                                                                                      // GET /facilities scopes
+                                                                                      // a FACILITY-level caller
+                                                                                      // to just themselves, so
+                                                                                      // this narrow, purpose-
+                                                                                      // built read path is the
+                                                                                      // only way a PHC operator
+                                                                                      // can discover which SHC
+                                                                                      // to refer to — returns
+                                                                                      // only PHC/SHC facilities
+                                                                                      // in the caller's own
+                                                                                      // district.
 POST   /referrals                                                    → Referral
 POST   /referrals/{id}/status                                          → Referral   // added by Direction 1:
                                                                                      // OPS-13 requires a
@@ -95,9 +135,12 @@ type District = { id: string, name: string, facilityIds: string[] }
 type State = { id: string, name: string, districts: District[] }
 type Country = { id: string, name: string, states: State[] }
 
+type Product = { id: string, name: string, unit: string }
+type InventoryPositionLine = { productId: string, currentStock: number }
+
 type Warehouse = {
   id: string, name: string, districtId: string, stateId: string, countryId: string,
-  inventory: { productId: string, currentStock: number }[],
+  inventory: InventoryPositionLine[],
   orders: Instruction[]   // instructions addressed to this warehouse; same object OPS-06 calls Instruction
 }
 
@@ -183,7 +226,26 @@ type AtomicInstruction = {
 
 ---
 
-## 4. `COMM-01` dispatch signature — Direction 4 → Direction 3
+## 4. `AGT-01` agent chat interface — Direction 3 → Direction 4
+
+Added when Direction 4 built the authority-workspace side pane (data + AI suggestion + chat, per
+`healthresq-architecture.md` Scenario 2 — "Agent query answering"). Not a new capability, just the
+frozen shape for a surface the architecture doc already specified but no interface existed for yet.
+
+```ts
+askAgent(scope: Scope, question: string, context?: { recommendationId?: string }): {
+  answer: string,       // synthesized only from tool-call results (AGT-01/AGT-05) — never invented
+  evidence: string[]    // same evidence-tag vocabulary as CMD-01's Recommendation.evidence
+}
+```
+
+Direction 4's side pane calls this per message; Direction 3 doesn't exist yet, so
+`frontend/lib/api/agent.ts` returns canned answers keyed by keyword match until Direction 3 ships —
+same swap-the-client-module pattern as `lib/api/intelligence.ts` and `lib/api/command.ts`.
+
+---
+
+## 5. `COMM-01` dispatch signature — Direction 4 → Direction 3
 
 ```ts
 dispatch(recipientUnitId: string, payload: AtomicInstruction): {
@@ -197,7 +259,7 @@ getInbox(recipientUnitId: string): AtomicInstruction[]   // caller's own mailbox
 
 ---
 
-## 5. Canonical example records
+## 6. Canonical example records
 
 Copy these verbatim into every direction's own tests and stub responses.
 
@@ -229,7 +291,7 @@ Copy these verbatim into every direction's own tests and stub responses.
 
 ---
 
-## 6. `INT-13` REST surface — Direction 2 → Direction 4
+## 7. `INT-13` REST surface — Direction 2 → Direction 4
 
 Not part of the original Contract Freeze (Section 2 only froze INT's tool functions/graph schema
 for Direction 3's in-process use and Direction 4's stub). Added once built, per the "edit the
@@ -285,7 +347,7 @@ platform integration, not a FHIR server (no `_search`, no writes, `Location` onl
 
 ---
 
-## 7. Change discipline
+## 8. Change discipline
 
 Any change to a shape above requires a short sync between the owning direction and every "used by" direction listed in `healthresq-development-directions.md`'s interface table — edit this file, don't fork a second copy of a shape.
 

@@ -11,6 +11,7 @@ import random
 from datetime import date, datetime, timedelta, timezone
 
 from backend.audit.service import log_event
+from backend.comm import models as comm_models
 from backend.config import settings
 from backend.db import Base, SessionLocal, engine
 from backend.intelligence.graph.build import sync_graph_from_ops
@@ -301,6 +302,20 @@ def run() -> None:
                 status=models.InstructionStatus.ACKNOWLEDGED,
             )
         )
+
+        # --- COMM-03 stub graph edges (Direction 4; swapped for Apache AGE once INT-06 ships) -------
+        # One ADMIN_PARENT edge per facility, from its own district — enough for
+        # backend/comm/service.py::sync_unit_mailbox to seal each facility's demo instruction into
+        # its mailbox the moment that facility's operator logs in and registers a key.
+        for f in facilities:
+            db.add(
+                comm_models.CommCommandEdge(
+                    from_level=comm_models.IssuerLevel.DISTRICT,
+                    from_scope_id=f.district_id,
+                    to_facility_id=f.id,
+                    edge_type=comm_models.GraphEdgeType.ADMIN_PARENT,
+                )
+            )
 
         log_event(db, actor_user_id=None, action="SEED", entity_type="database", entity_id="seed", details={"facilities": len(facilities)})
 

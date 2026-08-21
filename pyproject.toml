@@ -23,6 +23,8 @@ dependencies = [
     "networkx==3.6.1",
     "neo4j==6.2.0",
     "h3==4.5.0",
+    "pynacl==1.5.0",
+    "cryptography==43.0.1",
 ]
 
 [dependency-groups]

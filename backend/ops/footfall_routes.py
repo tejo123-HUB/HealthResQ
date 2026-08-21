@@ -1,6 +1,6 @@
-from datetime import datetime, timezone
+from datetime import date as date_, datetime, timezone
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Query
 from sqlalchemy.dialects.postgresql import insert as pg_insert
 from sqlalchemy.orm import Session
 
@@ -11,6 +11,34 @@ from backend.ops.deps import CurrentUser, get_current_user, get_scoped_facility
 from backend.ops.schemas import FootfallEntry, FootfallEntryIn
 
 router = APIRouter(tags=["footfall"])
+
+
+@router.get("/facilities/{facility_id}/footfall", response_model=list[FootfallEntry])
+def get_footfall(
+    date: date_ | None = Query(default=None, description="Defaults to today"),
+    facility: models.Facility = Depends(get_scoped_facility),
+    db: Session = Depends(get_db),
+) -> list[FootfallEntry]:
+    """Read path for OPS-06's home screen ('today's footfall') — added by Direction 1; the
+    original OPS-09 surface only had the POST below."""
+    target_date = date or date_.today()
+    rows = (
+        db.query(models.PatientActivity)
+        .filter(models.PatientActivity.facility_id == facility.id, models.PatientActivity.date == target_date)
+        .all()
+    )
+    return [
+        FootfallEntry(
+            facility_id=str(facility.id),
+            date=r.date,
+            shift=r.shift,
+            opd_visits=r.opd_visits,
+            admissions=r.admissions,
+            discharges=r.discharges,
+            referrals=r.referrals,
+        )
+        for r in rows
+    ]
 
 
 @router.post("/facilities/{facility_id}/footfall", response_model=FootfallEntry)

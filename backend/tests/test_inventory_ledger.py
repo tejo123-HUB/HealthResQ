@@ -63,3 +63,32 @@ def test_issue_more_than_available_is_rejected(client, db, role_operator, geo):
         .one_or_none()
     )
     assert position is None or position.current_stock == 0
+
+
+def test_get_inventory_reflects_current_positions(client, db, role_operator, geo):
+    """Read path added by Direction 1 — nothing exposed current stock before this."""
+    facility = make_facility(db, geo, name="PHC-InvGet", ftype=models.FacilityType.PHC)
+    product = _product(db, "IV Fluids")
+    token = make_user_token(db, role_operator, models.ScopeLevel.FACILITY, facility.id)
+
+    client.post(
+        f"/facilities/{facility.id}/inventory/transactions",
+        headers=auth_headers(token),
+        json={"productId": str(product.id), "type": "RECEIPT", "quantity": 200},
+    )
+
+    resp = client.get(f"/facilities/{facility.id}/inventory", headers=auth_headers(token))
+    assert resp.status_code == 200
+    body = resp.json()
+    assert body == [{"productId": str(product.id), "currentStock": 200}]
+
+
+def test_list_products_returns_catalog(client, db, role_operator, geo):
+    facility = make_facility(db, geo, name="PHC-Prod", ftype=models.FacilityType.PHC)
+    product = _product(db, "Amoxicillin")
+    token = make_user_token(db, role_operator, models.ScopeLevel.FACILITY, facility.id)
+
+    resp = client.get("/products", headers=auth_headers(token))
+    assert resp.status_code == 200
+    ids = [p["id"] for p in resp.json()]
+    assert str(product.id) in ids

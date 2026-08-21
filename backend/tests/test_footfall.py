@@ -45,3 +45,28 @@ def test_resubmitting_same_slot_corrects_rather_than_duplicates(client, db, role
     )
     assert len(rows) == 1
     assert rows[0].opd_visits == 75
+
+
+def test_get_footfall_defaults_to_today_and_reads_back_submission(client, db, role_operator, geo):
+    """Read path added by Direction 1 for OPS-06's home screen."""
+    facility = make_facility(db, geo, name="PHC-FootGet", ftype=models.FacilityType.PHC)
+    token = make_user_token(db, role_operator, models.ScopeLevel.FACILITY, facility.id)
+    today = date.today().isoformat()
+
+    client.post(
+        f"/facilities/{facility.id}/footfall",
+        headers=auth_headers(token),
+        json={"date": today, "shift": "DAY", "opdVisits": 42, "admissions": 1, "discharges": 1, "referrals": 0},
+    )
+
+    resp = client.get(f"/facilities/{facility.id}/footfall", headers=auth_headers(token))
+    assert resp.status_code == 200
+    body = resp.json()
+    assert len(body) == 1
+    assert body[0]["opdVisits"] == 42
+
+    resp_explicit = client.get(f"/facilities/{facility.id}/footfall?date={today}", headers=auth_headers(token))
+    assert resp_explicit.json() == body
+
+    resp_other_day = client.get(f"/facilities/{facility.id}/footfall?date=2020-01-01", headers=auth_headers(token))
+    assert resp_other_day.json() == []

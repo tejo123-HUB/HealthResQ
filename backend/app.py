@@ -1,8 +1,10 @@
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, HTTPException, Request
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
+from backend.comm.routes import router as comm_router
 from backend.db import engine
 from backend.intelligence.api import router as intelligence_router
 from backend.intelligence.graph.schema import ensure_graph_ready
@@ -21,8 +23,19 @@ async def _lifespan(_app: FastAPI):
 
 def create_app() -> FastAPI:
     app = FastAPI(title="HealthResQ API", version="0.1.0", lifespan=_lifespan)
+
+    # The Web Application (frontend/) runs as a separate Next.js dev server (Direction 4).
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=["http://localhost:3000"],
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
+
     app.include_router(ops_router)
     app.include_router(intelligence_router)
+    app.include_router(comm_router)
 
     @app.exception_handler(HTTPException)
     async def http_exception_handler(_request: Request, exc: HTTPException) -> JSONResponse:

@@ -1,11 +1,12 @@
 import uuid
 from datetime import datetime, timezone
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy import and_
 from sqlalchemy.orm import Session
 
 from backend.audit.service import log_event
+from backend.config import settings
 from backend.db import get_db
 from backend.ops import models
 from backend.ops.deps import CurrentUser, enforce_scope, get_current_user, get_scoped_facility
@@ -20,6 +21,7 @@ from backend.ops.schemas import (
     ReferralStatusUpdate,
     Ward,
 )
+from backend.ops.schemas import Facility as FacilityOut
 
 router = APIRouter(tags=["hospital-management"])
 
@@ -76,6 +78,29 @@ def list_beds(
 
     rows = db.query(models.Bed).filter(models.Bed.ward_id == ward_id).all()
     return [Bed(id=str(b.id), facility_id=str(b.facility_id), ward_id=str(b.ward_id), code=b.code, occupied=b.occupied) for b in rows]
+
+
+@router.get("/wards/{ward_id}/admissions", response_model=list[Admission])
+def list_ward_admissions(
+    ward_id: uuid.UUID,
+    active_only: bool = Query(default=True, alias="activeOnly"),
+    db: Session = Depends(get_db),
+    user: CurrentUser = Depends(get_current_user),
+) -> list[Admission]:
+    """Read path for OPS-11's BedGrid UI — added by Direction 4, matching the precedent the wards/
+    beds discovery endpoints above already set: an operator needs a way to find the admission ID
+    behind an occupied bed (e.g. to discharge it after a page reload), and the original OPS-09
+    surface had no read path for admissions at all, only create/discharge."""
+    ward = db.get(models.Ward, ward_id)
+    if ward is None:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "Ward not found")
+    facility = db.get(models.Facility, ward.facility_id)
+    enforce_scope(db, user, facility)
+
+    query = db.query(models.Admission).filter(models.Admission.ward_id == ward_id)
+    if active_only:
+        query = query.filter(models.Admission.discharged_at.is_(None))
+    return [_admission_out(a) for a in query.all()]
 
 
 # --- Admissions (OPS-11) ---------------------------------------------------------------------------
@@ -137,6 +162,17 @@ def discharge_admission(
     return _admission_out(admission)
 
 
+@router.get("/facilities/{facility_id}/ot-schedule", response_model=list[OTSlot])
+def list_ot_slots(
+    facility: models.Facility = Depends(get_scoped_facility),
+    db: Session = Depends(get_db),
+) -> list[OTSlot]:
+    """Read path for OPS-12's OT scheduler UI — added by Direction 4, same precedent as
+    wards/beds/admissions above: the original surface had creation but no read path."""
+    rows = db.query(models.OTSchedule).filter(models.OTSchedule.facility_id == facility.id).all()
+    return [_ot_slot_out(o) for o in rows]
+
+
 # --- OT scheduling (OPS-12) -------------------------------------------------------------------------
 
 
@@ -154,6 +190,14 @@ def create_ot_slot(
 
     if body.end <= body.start:
         raise HTTPException(status.HTTP_400_BAD_REQUEST, "end must be after start")
+
+    granularity_seconds = settings.ot_slot_granularity_minutes * 60
+    duration_seconds = (body.end - body.start).total_seconds()
+    if duration_seconds % granularity_seconds != 0:
+        raise HTTPException(
+            status.HTTP_400_BAD_REQUEST,
+            f"slot duration must be a multiple of the configured {settings.ot_slot_granularity_minutes}-minute granularity",
+        )
 
     overlap = (
         db.query(models.OTSchedule)
@@ -175,6 +219,54 @@ def create_ot_slot(
     db.refresh(slot)
 
     return _ot_slot_out(slot)
+
+
+@router.get("/facilities/{facility_id}/referral-candidates", response_model=list[FacilityOut])
+def list_referral_candidates(
+    facility: models.Facility = Depends(get_scoped_facility),
+    db: Session = Depends(get_db),
+) -> list[FacilityOut]:
+    """Read path for OPS-13's referral composer — added by Direction 4. `GET /facilities` scopes
+    a FACILITY-level caller down to exactly themselves (OPS-02's normal, deliberate isolation), so
+    a PHC operator otherwise has no way to discover which SHC to refer a patient to. This endpoint
+    is intentionally narrow rather than a general bypass: it authorizes via the same
+    `get_scoped_facility` dependency as every other facility-addressed route, and returns only
+    other PHC/SHC facilities in the caller's own district — never a wider scope, never a different
+    district."""
+    rows = (
+        db.query(models.Facility)
+        .filter(
+            models.Facility.district_id == facility.district_id,
+            models.Facility.id != facility.id,
+            models.Facility.type.in_([models.FacilityType.PHC, models.FacilityType.SHC]),
+        )
+        .all()
+    )
+    return [
+        FacilityOut(
+            id=str(f.id), type=f.type.value, name=f.name,
+            district_id=str(f.district_id), state_id=str(f.state_id), country_id=str(f.country_id),
+        )
+        for f in rows
+    ]
+
+
+@router.get("/facilities/{facility_id}/referrals", response_model=list[Referral])
+def list_facility_referrals(
+    facility: models.Facility = Depends(get_scoped_facility),
+    db: Session = Depends(get_db),
+) -> list[Referral]:
+    """Read path for OPS-13's ReferralTracker UI — added by Direction 4, same precedent as above:
+    referrals where this facility is either the source or the destination, since both sides need
+    to track the same referral through OPEN->ACKNOWLEDGED->CLOSED."""
+    rows = (
+        db.query(models.Referral)
+        .filter(
+            (models.Referral.source_facility_id == facility.id) | (models.Referral.dest_facility_id == facility.id)
+        )
+        .all()
+    )
+    return [_referral_out(r) for r in rows]
 
 
 # --- Referrals (OPS-13) -----------------------------------------------------------------------------

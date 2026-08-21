@@ -1,0 +1,20 @@
+"use client";
+
+import { useRouter } from "next/navigation";
+import { Icon } from "@/components/hig/Icon";
+
+/** Nav carries no links (each role has exactly one workspace), so a page reached via an in-workspace
+ * action — not the workspace itself — needs its own way back. Browser/router back, not a fixed
+ * href, so it always returns to wherever the user actually came from. */
+export function BackButton() {
+  const router = useRouter();
+  return (
+    <button
+      onClick={() => router.back()}
+      className="flex items-center gap-1 text-body text-tint-blue mb-2 -ml-2 px-2 py-1 rounded-hig active:bg-fill-regular transition-hig"
+    >
+      <Icon name="chevronLeft" className="w-5 h-5" />
+      Back
+    </button>
+  );
+}

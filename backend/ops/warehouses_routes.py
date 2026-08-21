@@ -9,7 +9,7 @@ from backend.ops import models
 from backend.ops.deps import CurrentUser, get_current_user, get_scoped_facility
 from backend.ops.instructions import apply_transition, instruction_out
 from backend.ops.inventory import apply_transaction
-from backend.ops.schemas import InstructionStatusUpdate, Warehouse, WarehouseInventoryLine
+from backend.ops.schemas import InstructionStatusUpdate, InventoryPositionLine, Warehouse
 
 router = APIRouter(tags=["warehouses"])
 
@@ -39,7 +39,7 @@ def get_warehouse(
         district_id=str(facility.district_id),
         state_id=str(facility.state_id),
         country_id=str(facility.country_id),
-        inventory=[WarehouseInventoryLine(product_id=str(p.product_id), current_stock=p.current_stock) for p in positions],
+        inventory=[InventoryPositionLine(product_id=str(p.product_id), current_stock=p.current_stock) for p in positions],
         orders=[instruction_out(o) for o in orders],
     )
 
