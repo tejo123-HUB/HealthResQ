@@ -1,14 +1,18 @@
 "use client";
 
 import Link from "next/link";
-import { useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import useSWR from "swr";
+import { TypewriterText } from "@/components/agent/TypewriterText";
 import { Icon } from "@/components/hig/Icon";
 import { agent } from "@/lib/api/agent";
 import { command } from "@/lib/api/command";
 import type { Scope } from "@/lib/api/types";
 
-type ChatMessage = { role: "user" | "agent"; text: string };
+// `typed` starts false only for a freshly-arrived agent reply — it flips to true once
+// TypewriterText finishes revealing it, so scrolling back through history never re-types
+// something you already read.
+type ChatMessage = { role: "user" | "agent"; text: string; typed?: boolean };
 
 /** Data lives in the main column; this pane is where the authority discusses it — the top AI
  * suggestion (the most recent pending recommendation in the caller's own scope, per CMD-09) plus
@@ -18,24 +22,34 @@ export function AgentPane({ scope }: { scope: Scope }) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
   const [sending, setSending] = useState(false);
+  const scrollRef = useRef<HTMLDivElement>(null);
   const { data: pending } = useSWR(["pending-recommendations", scope.level, scope.id], () =>
     command.listRecommendations("PENDING_REVIEW,OUTDATED")
   );
   const topRecommendation = pending?.[0];
+
+  useEffect(() => {
+    scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
+  }, [messages.length, sending]);
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
     const question = input.trim();
     if (!question || sending) return;
     setInput("");
-    setMessages((m) => [...m, { role: "user", text: question }]);
+    setMessages((m) => [...m, { role: "user", text: question, typed: true }]);
     setSending(true);
     try {
       const reply = await agent.ask(scope, question, topRecommendation ? { recommendationId: topRecommendation.id } : undefined);
-      setMessages((m) => [...m, { role: "agent", text: reply.answer }]);
+      setMessages((m) => [...m, { role: "agent", text: reply.answer, typed: false }]);
     } finally {
       setSending(false);
     }
+  }
+
+  function markTyped(index: number) {
+    setMessages((m) => m.map((msg, i) => (i === index ? { ...msg, typed: true } : msg)));
+    scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
   }
 
   return (
@@ -68,7 +82,7 @@ export function AgentPane({ scope }: { scope: Scope }) {
         <div className="px-4 py-3 border-b border-separator text-footnote text-label-secondary uppercase">
           Ask about this
         </div>
-        <div className="flex-1 flex flex-col gap-2 p-4 overflow-y-auto max-h-80">
+        <div ref={scrollRef} className="flex-1 flex flex-col gap-2 p-4 overflow-y-auto max-h-80 scroll-smooth">
           {messages.length === 0 && (
             <p className="text-footnote text-label-tertiary">
               Ask why this is happening, what the alternatives are, or whether it's safe.
@@ -81,7 +95,11 @@ export function AgentPane({ scope }: { scope: Scope }) {
                 m.role === "user" ? "bg-tint-blue text-white self-end animate-slide-in-right" : "bg-bg-secondary text-label self-start animate-slide-in-left"
               }`}
             >
-              {m.text}
+              {m.role === "agent" && !m.typed ? (
+                <TypewriterText text={m.text} onDone={() => markTyped(i)} />
+              ) : (
+                m.text
+              )}
             </div>
           ))}
           {sending && (

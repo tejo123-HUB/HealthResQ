@@ -14,9 +14,18 @@ import { recommendationSeverity, SeverityBadge } from "@/components/hig/Severity
 import { Skeleton } from "@/components/hig/Skeleton";
 import { ApiError } from "@/lib/api/client";
 import { command, type DecisionAction } from "@/lib/api/command";
+import { useToast } from "@/lib/toast/ToastProvider";
+
+const ACTION_VERB: Record<DecisionAction, string> = {
+  APPROVE: "approved — dispatching now",
+  REJECT: "rejected",
+  MODIFY: "modified",
+  ESCALATE: "escalated",
+};
 
 function DecisionScreen() {
   const params = useParams<{ id: string }>();
+  const toast = useToast();
   const {
     data: recommendation,
     isLoading,
@@ -54,8 +63,11 @@ function DecisionScreen() {
       const updated = await command.submitDecision(recommendation!.id, action, opts);
       await mutate(updated, { revalidate: false });
       setEscalating(false);
+      toast.success(`Recommendation ${ACTION_VERB[action]}`);
     } catch (err) {
-      setActionError(err instanceof ApiError ? err.message : "That action couldn't be completed.");
+      const message = err instanceof ApiError ? err.message : "That action couldn't be completed.";
+      setActionError(message);
+      toast.error(message);
       await mutate(); // an OUTDATED-marking failure still changed server state — pick it up
     } finally {
       setSubmitting(null);

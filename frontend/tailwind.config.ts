@@ -107,6 +107,26 @@ const config: Config = {
           from: { transform: "scaleX(0)" },
           to: { transform: "scaleX(1)" },
         },
+        "toast-in": {
+          from: { opacity: "0", transform: "translateY(-12px) scale(0.96)" },
+          to: { opacity: "1", transform: "translateY(0) scale(1)" },
+        },
+        "toast-out": {
+          from: { opacity: "1", transform: "translateY(0) scale(1)", maxHeight: "80px" },
+          to: { opacity: "0", transform: "translateY(-8px) scale(0.96)", maxHeight: "0" },
+        },
+        // Path length of Icon's "checkCircle" (checkmark + circle in one path), measured via
+        // getTotalLength() — the checkmark subpath alone is ~8.5 of the total ~65, so animating
+        // the whole path's dashoffset draws the checkmark first (~13% of the duration) and then
+        // sweeps the circle around it, reading as "seal of approval" rather than a generic reveal.
+        "draw-check": {
+          from: { strokeDashoffset: "65" },
+          to: { strokeDashoffset: "0" },
+        },
+        materialize: {
+          from: { opacity: "0", transform: "scale(0.985) translateY(6px)", filter: "blur(3px)" },
+          to: { opacity: "1", transform: "scale(1) translateY(0)", filter: "blur(0)" },
+        },
       },
       animation: {
         "fade-in": "fade-in 320ms ease-out both",
@@ -123,6 +143,10 @@ const config: Config = {
         "glow-pulse": "glow-pulse 1.8s ease-in-out infinite",
         "slide-in-right": "slide-in-right 260ms cubic-bezier(0.16,1,0.3,1) both",
         "slide-in-left": "slide-in-left 260ms cubic-bezier(0.16,1,0.3,1) both",
+        "toast-in": "toast-in 320ms cubic-bezier(0.16,1,0.3,1) both",
+        "toast-out": "toast-out 220ms cubic-bezier(0.4,0,1,1) both",
+        "draw-check": "draw-check 420ms 200ms cubic-bezier(0.65,0,0.35,1) both",
+        materialize: "materialize 360ms cubic-bezier(0.16,1,0.3,1) both",
         "underline-grow": "underline-grow 260ms cubic-bezier(0.16,1,0.3,1) both",
       },
     },

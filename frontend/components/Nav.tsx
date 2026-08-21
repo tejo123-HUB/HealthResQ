@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { useEffect, useState } from "react";
 import { Icon } from "@/components/hig/Icon";
 import { useAuth } from "@/lib/auth/AuthContext";
 import { useTheme } from "@/lib/theme/ThemeProvider";
@@ -12,13 +13,28 @@ import { useTheme } from "@/lib/theme/ThemeProvider";
 export function Nav() {
   const { scope, facility, logout } = useAuth();
   const { theme, setTheme } = useTheme();
+  const [scrolled, setScrolled] = useState(false);
+
+  // A flat border reads fine at the very top of a page; once content is scrolling underneath,
+  // a soft shadow gives the bar real separation instead of content looking like it's clipping
+  // through it — the same depth cue iOS/macOS bars pick up once there's something to float above.
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 4);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   if (!scope) return null;
 
   const themeIcon = theme === "dark" ? "moon" : "sun";
 
   return (
-    <nav className="sticky top-0 z-10 backdrop-blur-xl bg-fill-thick border-b border-separator">
+    <nav
+      className={`sticky top-0 z-10 backdrop-blur-xl bg-fill-thick border-b transition-shadow duration-300 ${
+        scrolled ? "border-separator shadow-[0_1px_12px_rgba(0,0,0,0.06)]" : "border-transparent"
+      }`}
+    >
       <div className="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
         <div className="flex items-center gap-2.5">
           <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center overflow-hidden shrink-0 ring-1 ring-separator shadow-sm">
