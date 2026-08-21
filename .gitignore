@@ -4,3 +4,10 @@ __pycache__/
 .env
 .pytest_cache/
 *.egg-info/
+
+# frontend (Next.js)
+frontend/node_modules/
+frontend/.next/
+frontend/next-env.d.ts
+frontend/.env.local
+frontend/tsconfig.tsbuildinfo

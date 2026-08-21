@@ -57,6 +57,7 @@ Four directions. Each one is fully independent — every direction stubs whateve
 **Day 1**
 - Gemini integration + tool schemas (`AGT-02`), bounded loop (`AGT-01`, `AGT-03`, cap 8), safety rules (`AGT-05`) — built against the mock INT tools
 - Recommendation object & state machine (`CMD-01`), authority routing (`CMD-02`)
+- Expose `AGT-01` over the frozen `askAgent()` shape (`healthresq-interface-shapes.md` §4) — Direction 4's authority-workspace side pane already calls this shape against a canned stand-in; swapping it for the real endpoint is a one-file client change, not a UI change
 
 **Day 2**
 - Proactive triggers (`AGT-04`), authority-originated actions (`CMD-07`)
@@ -79,6 +80,7 @@ Four directions. Each one is fully independent — every direction stubs whateve
 - Mailbox isolation (`COMM-01`), envelope encryption round-trip (`COMM-02`) — tested standalone, no dependency
 - Web App skeleton, routing, role-based navigation
 - Every screen built and laid out against hand-typed example data: PHC/SHC home, warehouse terminal, risk map, resource explorer, decision screen, dashboards, federation screen
+- Authority workspaces (district/state/national) pair their data tabs with a persistent AI-suggestion + chat side pane (Scenario 2, `AGT-01`) for asking about alternatives — fixture-backed via `askAgent()` (§4) until Direction 3 ships
 
 **Day 2**
 - Graph-validated routing (`COMM-03`), delivery guarantees + reconnect-replay (`COMM-04`), key-loss re-provisioning (`COMM-05`); `COMM-06` documented only
@@ -96,6 +98,7 @@ Four directions. Each one is fully independent — every direction stubs whateve
 | `OPS-09` REST API | Direction 1 | 2, 4 | Fixture data (Direction 2), hand-typed data (Direction 4) |
 | INT tool functions + graph schema | Direction 2 | 3, 4 | Mock tool server (Direction 3), hand-typed data (Direction 4) |
 | `CMD-01` recommendation schema | Direction 3 | 4 | Hand-typed example recommendations (Direction 4) |
+| `AGT-01` `askAgent()` chat interface | Direction 3 | 4 | Canned keyword-matched replies (Direction 4) |
 | `COMM-01` dispatch signature | Direction 4 | 3 | Mock `dispatch()` (Direction 3) |
 
 Each direction builds its own stub of what it needs — no shared mock service, no coordination overhead beyond the upfront interface agreement. Swap order: Direction 1 (no dependencies, ships first) → 2 → 3 → 4, but all four are writing code from hour one regardless of that order.

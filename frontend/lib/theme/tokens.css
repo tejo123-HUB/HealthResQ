@@ -1,0 +1,87 @@
+/* Apple HIG-derived design tokens (healthresq-development-directions.md brief §2). Light is the
+   default and lives on bare :root — deliberately NOT gated behind `prefers-color-scheme`; dark
+   only ever applies when the user explicitly opts in via the [data-theme="dark"] toggle
+   (lib/theme/ThemeProvider.tsx), stamped before hydration by the inline script in app/layout.tsx
+   so there's no flash of the wrong theme on repeat visits. */
+
+:root {
+  --bg: #ffffff;
+  --bg-secondary: #f2f2f7;
+  --bg-tertiary: #e5e5ea;
+
+  --label: rgba(0, 0, 0, 1);
+  --label-secondary: rgba(60, 60, 67, 0.6);
+  --label-tertiary: rgba(60, 60, 67, 0.3);
+  --label-quaternary: rgba(60, 60, 67, 0.18);
+
+  --separator: rgba(60, 60, 67, 0.29);
+
+  --tint-blue: #007aff;
+  --tint-green: #34c759;
+  --tint-orange: #ff9500;
+  --tint-red: #ff3b30;
+
+  --tint-orange-wash: rgba(255, 149, 0, 0.15);
+  --tint-orange-wash-strong: rgba(255, 149, 0, 0.28);
+  --tint-red-wash: rgba(255, 59, 48, 0.15);
+  --tint-green-wash: rgba(52, 199, 89, 0.15);
+  --tint-blue-wash: rgba(0, 122, 255, 0.15);
+
+  --fill-thick: rgba(255, 255, 255, 0.85);
+  --fill-regular: rgba(255, 255, 255, 0.7);
+  --fill-thin: rgba(255, 255, 255, 0.55);
+
+  /* Decorative brand accents sampled from logo.png — used only for brand moments (login page
+     background, loading-screen ring, the Nav mark's backdrop). Never used for status/severity
+     meaning; that stays on the --tint-* set above. */
+  --brand-teal: #14919b;
+  --brand-green: #6ebe44;
+  --brand-orange: #f5821f;
+  --brand-gold: #f9a825;
+
+  --brand-teal-wash: rgba(20, 145, 155, 0.16);
+  --brand-green-wash: rgba(110, 190, 68, 0.16);
+  --brand-orange-wash: rgba(245, 130, 31, 0.16);
+  --brand-gold-wash: rgba(249, 168, 37, 0.16);
+
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Segoe UI",
+    Roboto, Helvetica, Arial, sans-serif;
+}
+
+:root[data-theme="dark"] {
+  --bg: #000000;
+  --bg-secondary: #1c1c1e;
+  --bg-tertiary: #2c2c2e;
+
+  --label: rgba(255, 255, 255, 1);
+  --label-secondary: rgba(235, 235, 245, 0.6);
+  --label-tertiary: rgba(235, 235, 245, 0.3);
+  --label-quaternary: rgba(235, 235, 245, 0.16);
+
+  --separator: rgba(84, 84, 88, 0.6);
+
+  --tint-blue: #0a84ff;
+  --tint-green: #32d74b;
+  --tint-orange: #ff9f0a;
+  --tint-red: #ff453a;
+
+  --tint-orange-wash: rgba(255, 159, 10, 0.2);
+  --tint-orange-wash-strong: rgba(255, 159, 10, 0.32);
+  --tint-red-wash: rgba(255, 69, 58, 0.2);
+  --tint-green-wash: rgba(50, 215, 75, 0.2);
+  --tint-blue-wash: rgba(10, 132, 255, 0.2);
+
+  --fill-thick: rgba(28, 28, 30, 0.85);
+  --fill-regular: rgba(28, 28, 30, 0.7);
+  --fill-thin: rgba(28, 28, 30, 0.55);
+
+  --brand-teal: #2bb3bd;
+  --brand-green: #86d15a;
+  --brand-orange: #ff9d47;
+  --brand-gold: #ffc247;
+
+  --brand-teal-wash: rgba(43, 179, 189, 0.22);
+  --brand-green-wash: rgba(134, 209, 90, 0.22);
+  --brand-orange-wash: rgba(255, 157, 71, 0.22);
+  --brand-gold-wash: rgba(255, 194, 71, 0.22);
+}

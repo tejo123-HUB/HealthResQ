@@ -1,0 +1,74 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import "../lib/theme/tokens.css";
+
+html,
+body {
+  background-color: var(--bg);
+  color: var(--label);
+  font-family: var(--font-sans);
+}
+
+* {
+  border-color: var(--separator);
+}
+
+/* HIG type ramp utility classes */
+.text-title1 {
+  font-size: 28px;
+  line-height: 34px;
+  font-weight: 700;
+}
+.text-title2 {
+  font-size: 22px;
+  line-height: 28px;
+  font-weight: 700;
+}
+.text-title3 {
+  font-size: 20px;
+  line-height: 25px;
+  font-weight: 600;
+}
+.text-headline {
+  font-size: 17px;
+  line-height: 22px;
+  font-weight: 600;
+}
+.text-body {
+  font-size: 17px;
+  line-height: 22px;
+  font-weight: 400;
+}
+.text-callout {
+  font-size: 16px;
+  line-height: 21px;
+  font-weight: 400;
+}
+.text-subhead {
+  font-size: 15px;
+  line-height: 20px;
+  font-weight: 400;
+}
+.text-footnote {
+  font-size: 13px;
+  line-height: 18px;
+  font-weight: 400;
+}
+.text-caption1 {
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 400;
+}
+.text-caption2 {
+  font-size: 11px;
+  line-height: 13px;
+  font-weight: 500;
+}
+
+.transition-hig {
+  transition-property: opacity, transform, background-color, color, border-color;
+  transition-duration: 200ms;
+  transition-timing-function: ease-out;
+}
