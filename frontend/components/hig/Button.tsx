@@ -20,7 +20,7 @@ export function Button({
     <button
       {...props}
       disabled={disabled}
-      className={`transition-hig text-headline rounded-hig px-4 min-h-[44px] ${VARIANT_CLASSES[variant]} ${
+      className={`transition-hig text-headline rounded-hig px-3.5 min-h-[2.375rem] ${VARIANT_CLASSES[variant]} ${
         disabled ? "opacity-40 cursor-not-allowed" : "active:opacity-70 active:scale-[0.97]"
       } ${className}`}
     />

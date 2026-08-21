@@ -15,55 +15,57 @@ body {
   border-color: var(--separator);
 }
 
-/* HIG type ramp utility classes */
+/* HIG type ramp utility classes — scaled down ~10-15% from iOS's own point sizes: this is a
+   desktop-web dashboard, not a phone screen held at arm's length, so the full mobile scale reads
+   oversized here. Apple's own proportions (weight, relative sizing) are preserved. */
 .text-title1 {
-  font-size: 28px;
-  line-height: 34px;
+  font-size: 24px;
+  line-height: 29px;
   font-weight: 700;
 }
 .text-title2 {
-  font-size: 22px;
-  line-height: 28px;
+  font-size: 19px;
+  line-height: 24px;
   font-weight: 700;
 }
 .text-title3 {
-  font-size: 20px;
-  line-height: 25px;
+  font-size: 17px;
+  line-height: 22px;
   font-weight: 600;
 }
 .text-headline {
-  font-size: 17px;
-  line-height: 22px;
+  font-size: 15px;
+  line-height: 20px;
   font-weight: 600;
 }
 .text-body {
-  font-size: 17px;
-  line-height: 22px;
-  font-weight: 400;
-}
-.text-callout {
-  font-size: 16px;
-  line-height: 21px;
-  font-weight: 400;
-}
-.text-subhead {
   font-size: 15px;
   line-height: 20px;
   font-weight: 400;
 }
-.text-footnote {
+.text-callout {
+  font-size: 14px;
+  line-height: 19px;
+  font-weight: 400;
+}
+.text-subhead {
   font-size: 13px;
   line-height: 18px;
   font-weight: 400;
 }
-.text-caption1 {
+.text-footnote {
   font-size: 12px;
   line-height: 16px;
   font-weight: 400;
 }
-.text-caption2 {
+.text-caption1 {
   font-size: 11px;
-  line-height: 13px;
+  line-height: 14px;
+  font-weight: 400;
+}
+.text-caption2 {
+  font-size: 10px;
+  line-height: 12px;
   font-weight: 500;
 }
 

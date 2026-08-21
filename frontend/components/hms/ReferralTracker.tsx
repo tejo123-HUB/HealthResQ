@@ -97,7 +97,7 @@ export function ReferralTracker({
                 key={f.id}
                 type="button"
                 onClick={() => setDestFacilityId(f.id)}
-                className={`transition-hig text-subhead rounded-hig px-4 min-h-[44px] border ${
+                className={`transition-hig text-subhead rounded-hig px-4 min-h-[2.375rem] border ${
                   destFacilityId === f.id
                     ? "bg-tint-blue-wash text-tint-blue border-tint-blue"
                     : "bg-bg-secondary text-label border-separator"
@@ -114,7 +114,7 @@ export function ReferralTracker({
             value={reason}
             onChange={(e) => setReason(e.target.value)}
             placeholder="e.g. suspected fracture"
-            className="text-body bg-bg-secondary rounded-hig px-3 min-h-[44px] border border-separator"
+            className="text-body bg-bg-secondary rounded-hig px-3 min-h-[2.375rem] border border-separator"
           />
         </label>
         <div className="flex flex-col gap-1.5">
@@ -123,7 +123,7 @@ export function ReferralTracker({
             <button
               type="button"
               onClick={() => setUrgency("ROUTINE")}
-              className={`transition-hig text-subhead rounded-hig flex-1 min-h-[44px] border ${
+              className={`transition-hig text-subhead rounded-hig flex-1 min-h-[2.375rem] border ${
                 urgency === "ROUTINE"
                   ? "bg-tint-blue-wash text-tint-blue border-tint-blue"
                   : "bg-bg-secondary text-label border-separator"
@@ -134,7 +134,7 @@ export function ReferralTracker({
             <button
               type="button"
               onClick={() => setUrgency("URGENT")}
-              className={`transition-hig text-subhead rounded-hig flex-1 min-h-[44px] border ${
+              className={`transition-hig text-subhead rounded-hig flex-1 min-h-[2.375rem] border ${
                 urgency === "URGENT"
                   ? "bg-tint-red-wash text-tint-red border-tint-red"
                   : "bg-bg-secondary text-label border-separator"

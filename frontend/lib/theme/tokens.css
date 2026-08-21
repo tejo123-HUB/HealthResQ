@@ -22,12 +22,21 @@
   --tint-green: #34c759;
   --tint-orange: #ff9500;
   --tint-red: #ff3b30;
+  /* Warm decorative accents (Apple's systemPink/systemYellow/systemBrown) — used only for
+     category/visual-interest tinting on non-alert stat cards, never for severity meaning; that
+     stays on orange/red/green above. */
+  --tint-pink: #ff2d55;
+  --tint-yellow: #ffcc00;
+  --tint-brown: #a2845e;
 
   --tint-orange-wash: rgba(255, 149, 0, 0.15);
   --tint-orange-wash-strong: rgba(255, 149, 0, 0.28);
   --tint-red-wash: rgba(255, 59, 48, 0.15);
   --tint-green-wash: rgba(52, 199, 89, 0.15);
   --tint-blue-wash: rgba(0, 122, 255, 0.15);
+  --tint-pink-wash: rgba(255, 45, 85, 0.15);
+  --tint-yellow-wash: rgba(255, 204, 0, 0.18);
+  --tint-brown-wash: rgba(162, 132, 94, 0.18);
 
   --fill-thick: rgba(255, 255, 255, 0.85);
   --fill-regular: rgba(255, 255, 255, 0.7);
@@ -58,12 +67,18 @@
   --tint-green: #32d74b;
   --tint-orange: #ff9f0a;
   --tint-red: #ff453a;
+  --tint-pink: #ff375f;
+  --tint-yellow: #ffd60a;
+  --tint-brown: #ac8e68;
 
   --tint-orange-wash: rgba(255, 159, 10, 0.2);
   --tint-orange-wash-strong: rgba(255, 159, 10, 0.32);
   --tint-red-wash: rgba(255, 69, 58, 0.2);
   --tint-green-wash: rgba(50, 215, 75, 0.2);
   --tint-blue-wash: rgba(10, 132, 255, 0.2);
+  --tint-pink-wash: rgba(255, 55, 95, 0.22);
+  --tint-yellow-wash: rgba(255, 214, 10, 0.24);
+  --tint-brown-wash: rgba(172, 142, 104, 0.24);
 
   --fill-thick: rgba(28, 28, 30, 0.85);
   --fill-regular: rgba(28, 28, 30, 0.7);

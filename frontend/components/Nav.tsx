@@ -19,13 +19,13 @@ export function Nav() {
 
   return (
     <nav className="sticky top-0 z-10 backdrop-blur-xl bg-fill-thick border-b border-separator">
-      <div className="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
-        <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center overflow-hidden shrink-0 ring-1 ring-separator">
-            <Image src="/logo.png" alt="HealthResQ" width={32} height={32} />
+      <div className="max-w-5xl mx-auto px-4 h-14 flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <div className="w-7 h-7 rounded-full bg-white flex items-center justify-center overflow-hidden shrink-0 ring-1 ring-separator">
+            <Image src="/logo.png" alt="HealthResQ" width={28} height={28} />
           </div>
           <div>
-            <p className="text-headline leading-none">{facility ? facility.name : scope.level}</p>
+            <p className="text-subhead font-semibold leading-none">{facility ? facility.name : scope.level}</p>
             <p className="text-caption2 text-label-tertiary">HealthResQ</p>
           </div>
         </div>
@@ -33,18 +33,18 @@ export function Nav() {
           <button
             onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
             aria-label="Toggle theme"
-            className="w-11 h-11 flex items-center justify-center rounded-hig text-label-secondary active:bg-fill-regular active:scale-90 transition-hig overflow-hidden"
+            className="w-9 h-9 flex items-center justify-center rounded-hig text-label-secondary active:bg-fill-regular active:scale-90 transition-hig overflow-hidden"
           >
             <span key={theme} className="animate-scale-in inline-flex">
-              <Icon name={themeIcon} />
+              <Icon name={themeIcon} className="w-4.5 h-4.5" />
             </span>
           </button>
           <button
             onClick={logout}
             aria-label="Sign out"
-            className="w-11 h-11 flex items-center justify-center rounded-hig text-tint-red active:bg-fill-regular active:scale-90 transition-hig"
+            className="w-9 h-9 flex items-center justify-center rounded-hig text-tint-red active:bg-fill-regular active:scale-90 transition-hig"
           >
-            <Icon name="signOut" />
+            <Icon name="signOut" className="w-4.5 h-4.5" />
           </button>
         </div>
       </div>

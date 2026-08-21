@@ -36,7 +36,7 @@ export function AgentPane({ scope }: { scope: Scope }) {
   return (
     <aside className="flex flex-col gap-4 lg:w-80 shrink-0">
       <div className="bg-bg rounded-hig border border-separator p-4">
-        <div className="flex items-center gap-2 mb-2 text-tint-blue">
+        <div className="flex items-center gap-2 mb-2 text-tint-pink">
           <Icon name="flag" className="w-4.5 h-4.5" />
           <span className="text-footnote font-semibold uppercase">AI suggestion</span>
         </div>
@@ -49,7 +49,7 @@ export function AgentPane({ scope }: { scope: Scope }) {
         </Link>
       </div>
 
-      <div className="bg-bg rounded-hig border border-separator flex flex-col flex-1 min-h-[320px]">
+      <div className="bg-bg rounded-hig border border-separator flex flex-col flex-1 min-h-[20rem]">
         <div className="px-4 py-3 border-b border-separator text-footnote text-label-secondary uppercase">
           Ask about this
         </div>
@@ -82,15 +82,15 @@ export function AgentPane({ scope }: { scope: Scope }) {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Ask a question…"
-            className="flex-1 text-body bg-bg-secondary rounded-hig px-3 min-h-[40px] border border-separator"
+            className="flex-1 text-body bg-bg-secondary rounded-hig px-3 min-h-[2.25rem] border border-separator"
           />
           <button
             type="submit"
             disabled={sending || !input.trim()}
             aria-label="Send"
-            className="w-10 h-10 shrink-0 flex items-center justify-center rounded-hig bg-tint-blue text-white disabled:opacity-40 active:opacity-70 active:scale-90 transition-hig"
+            className="w-9 h-9 shrink-0 flex items-center justify-center rounded-hig bg-tint-blue text-white disabled:opacity-40 active:opacity-70 active:scale-90 transition-hig"
           >
-            <Icon name="chevronRight" className="w-5 h-5" />
+            <Icon name="chevronRight" className="w-4.5 h-4.5" />
           </button>
         </form>
       </div>

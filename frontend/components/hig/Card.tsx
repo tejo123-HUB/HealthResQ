@@ -5,7 +5,7 @@ import { Skeleton } from "@/components/hig/Skeleton";
 
 export function Card({ children, className = "" }: { children: ReactNode; className?: string }) {
   return (
-    <div className={`bg-bg rounded-hig border border-separator p-4 ${className}`}>{children}</div>
+    <div className={`bg-bg rounded-hig border border-separator p-3 ${className}`}>{children}</div>
   );
 }
 
@@ -25,27 +25,39 @@ export function StatCard({
   icon: Parameters<typeof Icon>[0]["name"];
   label: string;
   value: ReactNode;
-  tone?: "default" | "warning" | "accent";
+  tone?: "default" | "warning" | "accent" | "pink" | "yellow" | "brown";
   href?: string;
   loading?: boolean;
   index?: number;
 }) {
-  const toneClasses =
-    tone === "warning" ? "text-tint-orange" : tone === "accent" ? "text-tint-blue" : "text-label";
-  const iconWashClasses =
-    tone === "warning" ? "bg-tint-orange-wash text-tint-orange" : tone === "accent" ? "bg-tint-blue-wash text-tint-blue" : "bg-fill-regular text-label-secondary";
+  const TONE_TEXT: Record<string, string> = {
+    default: "text-label",
+    warning: "text-tint-orange",
+    accent: "text-tint-blue",
+    pink: "text-tint-pink",
+    yellow: "text-tint-yellow",
+    brown: "text-tint-brown",
+  };
+  const TONE_WASH: Record<string, string> = {
+    default: "bg-fill-regular text-label-secondary",
+    warning: "bg-tint-orange-wash text-tint-orange",
+    accent: "bg-tint-blue-wash text-tint-blue",
+    pink: "bg-tint-pink-wash text-tint-pink",
+    yellow: "bg-tint-yellow-wash text-tint-yellow",
+    brown: "bg-tint-brown-wash text-tint-brown",
+  };
   const style: CSSProperties = { animationDelay: `${index * 60}ms` };
 
   const content = (
     <Card className={`h-full animate-fade-in-up ${href ? "active:opacity-70 active:scale-[0.98] transition-hig" : ""}`}>
-      <div className={`w-9 h-9 rounded-full flex items-center justify-center mb-2 ${iconWashClasses}`}>
-        <Icon name={icon} className="w-4.5 h-4.5" />
+      <div className={`w-8 h-8 rounded-full flex items-center justify-center mb-2 ${TONE_WASH[tone]}`}>
+        <Icon name={icon} className="w-4 h-4" />
       </div>
       <p className="text-caption1 text-label-secondary">{label}</p>
       {loading ? (
-        <Skeleton className="h-6 w-16 mt-1.5" />
+        <Skeleton className="h-5 w-16 mt-1.5" />
       ) : (
-        <p className={`text-title2 mt-0.5 ${toneClasses}`}>{value}</p>
+        <p className={`text-title3 mt-0.5 ${TONE_TEXT[tone]}`}>{value}</p>
       )}
     </Card>
   );
@@ -85,12 +97,12 @@ export function ListRow({
   return (
     <div
       onClick={onClick}
-      className={`flex items-center justify-between px-4 min-h-[44px] py-2 transition-hig ${
+      className={`flex items-center justify-between px-3.5 min-h-[2.375rem] py-1.5 transition-hig ${
         interactive ? "cursor-pointer active:bg-fill-regular active:scale-[0.99]" : ""
       }`}
     >
-      <span className="text-body">{label}</span>
-      {value !== undefined && <span className="text-body text-label-secondary">{value}</span>}
+      <span className="text-callout">{label}</span>
+      {value !== undefined && <span className="text-callout text-label-secondary">{value}</span>}
     </div>
   );
 }

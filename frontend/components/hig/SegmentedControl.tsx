@@ -13,7 +13,7 @@ export function SegmentedControl<T extends string>({
         <button
           key={opt.value}
           onClick={() => onChange(opt.value)}
-          className={`transition-hig text-subhead font-medium rounded-[9px] px-3 min-h-[32px] ${
+          className={`transition-hig text-subhead font-medium rounded-[0.5625rem] px-3 min-h-[1.875rem] ${
             value === opt.value ? "bg-bg text-label shadow-sm" : "text-label-secondary"
           }`}
         >

@@ -43,7 +43,7 @@ export function ConfirmSheet({
         <div className="flex flex-col gap-2 w-full mt-4">
           <button
             onClick={onConfirm}
-            className={`transition-hig text-headline rounded-hig min-h-[50px] text-white active:opacity-70 active:scale-[0.97] ${
+            className={`transition-hig text-headline rounded-hig min-h-[2.75rem] text-white active:opacity-70 active:scale-[0.97] ${
               destructive ? "bg-tint-red" : "bg-tint-blue"
             }`}
           >
@@ -51,7 +51,7 @@ export function ConfirmSheet({
           </button>
           <button
             onClick={onCancel}
-            className="transition-hig text-headline rounded-hig min-h-[50px] bg-fill-regular text-label active:opacity-70 active:scale-[0.97]"
+            className="transition-hig text-headline rounded-hig min-h-[2.75rem] bg-fill-regular text-label active:opacity-70 active:scale-[0.97]"
           >
             Cancel
           </button>

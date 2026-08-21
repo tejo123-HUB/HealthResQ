@@ -12,11 +12,11 @@ export function FederationPanel() {
   return (
     <div className="flex flex-col gap-6">
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        <StatCard icon="flag" label="Participating countries" value={rows?.length ?? "—"} />
-        <StatCard icon="refresh" label="Latest round" value={rows?.[0]?.latestRound ?? "—"} />
+        <StatCard icon="flag" label="Participating countries" value={rows?.length ?? "—"} tone="pink" />
+        <StatCard icon="refresh" label="Latest round" value={rows?.[0]?.latestRound ?? "—"} tone="yellow" />
         <Card className="col-span-2">
           <p className="text-caption1 text-label-secondary">Raw PHC-level records shared</p>
-          <p className="text-title2 mt-1 text-tint-green">0</p>
+          <p className="text-title3 mt-1 text-tint-green">0</p>
           <p className="text-footnote text-label-secondary mt-1">
             Structural guarantee (INT-10): only the eleven documented aggregate fields ever leave a
             national node — never raw facility or patient data.
@@ -33,7 +33,7 @@ export function FederationPanel() {
               <XAxis dataKey="country" tick={{ fontSize: 12 }} />
               <YAxis tick={{ fontSize: 12 }} />
               <Tooltip />
-              <Bar dataKey="demandTrend" fill="var(--tint-blue)" radius={[6, 6, 0, 0]} />
+              <Bar dataKey="demandTrend" fill="var(--tint-orange)" radius={[6, 6, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </Card>

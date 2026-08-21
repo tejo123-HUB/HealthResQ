@@ -63,7 +63,7 @@ export function BedGrid({
               onClick={() => setPendingBed(bed)}
               disabled={disabled}
               style={{ animationDelay: `${i * 30}ms` }}
-              className={`transition-hig rounded-hig aspect-square flex flex-col items-center justify-center gap-1 min-h-[88px] animate-fade-in-up ${
+              className={`transition-hig rounded-hig aspect-square flex flex-col items-center justify-center gap-1 min-h-[4.75rem] animate-fade-in-up ${
                 bed.occupied
                   ? "bg-tint-red-wash text-tint-red"
                   : "bg-tint-green-wash text-tint-green active:opacity-70 active:scale-95"

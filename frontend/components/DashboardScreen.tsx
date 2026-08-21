@@ -65,9 +65,9 @@ export function DashboardScreen({ level, scopeId }: { level: ScopeLevel; scopeId
             <Link
               href="/orders/new"
               aria-label="Compose new action"
-              className="w-11 h-11 flex items-center justify-center rounded-hig bg-tint-blue text-white active:opacity-70 active:scale-90 transition-hig"
+              className="w-9 h-9 flex items-center justify-center rounded-hig bg-tint-blue text-white active:opacity-70 active:scale-90 transition-hig"
             >
-              <Icon name="plus" className="w-5 h-5" />
+              <Icon name="plus" className="w-4.5 h-4.5" />
             </Link>
           </div>
         </div>
@@ -80,6 +80,7 @@ export function DashboardScreen({ level, scopeId }: { level: ScopeLevel; scopeId
                 icon="building"
                 label="Facilities in scope"
                 value={summary?.facilityCount}
+                tone="brown"
                 loading={summaryLoading}
                 index={0}
               />
@@ -95,7 +96,7 @@ export function DashboardScreen({ level, scopeId }: { level: ScopeLevel; scopeId
                 icon="flag"
                 label="Pending recommendations"
                 value={summary?.pendingRecommendations}
-                tone="accent"
+                tone="pink"
                 href="/recommendations/REC-204"
                 loading={summaryLoading}
                 index={2}

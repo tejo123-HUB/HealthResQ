@@ -79,7 +79,7 @@ export function OTScheduler({
                   key={w.id}
                   type="button"
                   onClick={() => setWardId(w.id)}
-                  className={`transition-hig text-subhead rounded-hig px-4 min-h-[44px] border ${
+                  className={`transition-hig text-subhead rounded-hig px-4 min-h-[2.375rem] border ${
                     wardId === w.id
                       ? "bg-tint-blue-wash text-tint-blue border-tint-blue"
                       : "bg-bg-secondary text-label border-separator"
@@ -97,7 +97,7 @@ export function OTScheduler({
             type="datetime-local"
             value={start}
             onChange={(e) => setStart(e.target.value)}
-            className="text-body bg-bg-secondary rounded-hig px-3 min-h-[44px] border border-separator"
+            className="text-body bg-bg-secondary rounded-hig px-3 min-h-[2.375rem] border border-separator"
           />
         </label>
         <div className="flex flex-col gap-1.5">
@@ -108,7 +108,7 @@ export function OTScheduler({
                 key={mins}
                 type="button"
                 onClick={() => setDurationMinutes(mins)}
-                className={`transition-hig text-subhead rounded-hig flex-1 min-h-[44px] border ${
+                className={`transition-hig text-subhead rounded-hig flex-1 min-h-[2.375rem] border ${
                   durationMinutes === mins
                     ? "bg-tint-blue-wash text-tint-blue border-tint-blue"
                     : "bg-bg-secondary text-label border-separator"
