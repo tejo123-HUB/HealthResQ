@@ -13,6 +13,8 @@ BASELINE_WINDOW_DAYS = 14
 RECENT_WINDOW_DAYS = 3
 PERCENT_CHANGE_THRESHOLD = 40.0
 ZSCORE_THRESHOLD = 2.5
+CUSUM_SLACK_STDS = 0.5  # per-day deviation smaller than this (in baseline stds) is treated as noise, not drift
+CUSUM_THRESHOLD_STDS = 5.0  # cumulative deviation must clear this many baseline stds before drift is confirmed, so it only fires on a sustained trend, not a one-off swing already caught by detect_anomaly
 
 
 def _deseasonalized(series: pd.Series) -> pd.Series:
@@ -45,3 +47,36 @@ def detect_anomaly(series: pd.Series) -> dict | None:
         return None
 
     return {"baseline": round(baseline, 2), "recent": round(recent, 2), "percentChange": round(percent_change, 1)}
+
+
+def detect_drift(series: pd.Series) -> dict | None:
+    """CUSUM control chart: catches a slow, sustained drift (e.g. ~2-3%/day consumption creep)
+    that never trips detect_anomaly's single-day thresholds. Uses the earliest BASELINE_WINDOW_DAYS
+    of the (STL-deseasonalized) series as the stable reference, then walks the remaining days
+    accumulating deviation from that reference; a run of small daily deviations in the same
+    direction eventually crosses CUSUM_THRESHOLD_STDS even though no single day does."""
+    if len(series) < BASELINE_WINDOW_DAYS + 2:
+        return None
+
+    deseasonalized = _deseasonalized(series)
+    baseline_window = deseasonalized.iloc[:BASELINE_WINDOW_DAYS]
+    baseline_mean = float(baseline_window.mean())
+    std = float(baseline_window.std(ddof=0))
+    if std == 0:
+        return None
+
+    slack = CUSUM_SLACK_STDS * std
+    threshold = CUSUM_THRESHOLD_STDS * std
+
+    cumulative_up = 0.0
+    cumulative_down = 0.0
+    for offset, value in enumerate(deseasonalized.iloc[BASELINE_WINDOW_DAYS:], start=1):
+        cumulative_up = max(0.0, cumulative_up + (value - baseline_mean - slack))
+        cumulative_down = max(0.0, cumulative_down + (baseline_mean - value - slack))
+
+        if cumulative_up >= threshold:
+            return {"type": "DRIFT", "direction": "UP", "detectedAtDayOffset": offset, "cumulativeDeviation": round(cumulative_up, 2)}
+        if cumulative_down >= threshold:
+            return {"type": "DRIFT", "direction": "DOWN", "detectedAtDayOffset": offset, "cumulativeDeviation": round(cumulative_down, 2)}
+
+    return None

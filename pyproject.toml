@@ -19,6 +19,10 @@ dependencies = [
     "scipy==1.14.1",
     "pandas==2.2.3",
     "statsmodels==0.14.4",
+    "ortools==9.15.6755",
+    "networkx==3.6.1",
+    "neo4j==6.2.0",
+    "h3==4.5.0",
 ]
 
 [dependency-groups]

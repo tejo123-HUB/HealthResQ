@@ -38,5 +38,21 @@ services:
     command: >
       sh -c "alembic upgrade head && uvicorn backend.app:app --host 0.0.0.0 --port 8000"
 
+  # INT-14: dedicated self-hosted graph-database upgrade path, behind GRAPH_BACKEND=memgraph.
+  # Profile-gated — `docker compose up` never starts this by default (AGENTS.md's "no new
+  # deployable process by default" rule); only `docker compose --profile memgraph up` does.
+  # `--telemetry-enabled=false` turns off Memgraph Community's default anonymous usage telemetry.
+  memgraph:
+    image: memgraph/memgraph:latest
+    profiles: ["memgraph"]
+    restart: unless-stopped
+    command: ["--telemetry-enabled=false"]
+    ports:
+      - "${MEMGRAPH_BOLT_PORT:-7687}:7687"
+      - "${MEMGRAPH_LOG_PORT:-7444}:7444"
+    volumes:
+      - healthresq_memgraph_data:/var/lib/memgraph
+
 volumes:
   healthresq_pgdata:
+  healthresq_memgraph_data:

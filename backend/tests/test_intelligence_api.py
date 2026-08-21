@@ -98,6 +98,34 @@ def test_graph_view_returns_scoped_nodes_and_edges(client, db, role_authority, g
     assert body["edges"] == movements
 
 
+def test_hex_map_bins_facility_with_location(client, db, role_authority, geo):
+    facility = make_facility(db, geo, name="PHC-API-Hex", ftype=models.FacilityType.PHC, district=geo["district_a"])
+    facility.latitude, facility.longitude = 16.5, 80.6
+    product = _product(db)
+    _seed_consumption(db, facility, product)
+    sync_graph_from_ops(db)
+    tools.get_stockout_risk(db, str(facility.id), str(product.id))
+    db.flush()
+
+    token = make_user_token(db, role_authority, models.ScopeLevel.DISTRICT, geo["district_a"].id)
+    resp = client.get("/intelligence/hex-map", headers=auth_headers(token))
+    assert resp.status_code == 200
+    body = resp.json()
+    assert any(str(facility.id) in h["facilityIds"] for h in body)
+
+
+def test_fhir_locations_returns_valid_bundle(client, db, role_authority, geo):
+    facility = make_facility(db, geo, name="PHC-API-FHIR", ftype=models.FacilityType.PHC, district=geo["district_a"])
+    sync_graph_from_ops(db)
+
+    token = make_user_token(db, role_authority, models.ScopeLevel.DISTRICT, geo["district_a"].id)
+    resp = client.get("/intelligence/fhir/locations", headers=auth_headers(token))
+    assert resp.status_code == 200
+    body = resp.json()
+    assert body["resourceType"] == "Bundle"
+    assert any(e["resource"]["id"] == str(facility.id) for e in body["entry"])
+
+
 def test_graph_view_rejects_malformed_movement(client, db, role_authority, geo):
     token = make_user_token(db, role_authority, models.ScopeLevel.DISTRICT, geo["district_a"].id)
     resp = client.post(

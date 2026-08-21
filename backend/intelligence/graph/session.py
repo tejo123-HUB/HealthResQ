@@ -15,15 +15,35 @@ Two things AGE needs that plain SQLAlchemy doesn't give you for free:
 
 import json
 import re
+import threading
 import uuid
 
 from sqlalchemy import event, text
 from sqlalchemy.engine import Engine
 from sqlalchemy.orm import Session
 
+from backend.config import settings
 from backend.intelligence.graph import GRAPH_NAME
 
 _installed = False
+_memgraph_driver = None
+_memgraph_driver_lock = threading.Lock()
+
+
+def _get_memgraph_driver():
+    """INT-14: lazily-created, process-wide neo4j driver pointed at the self-hosted Memgraph
+    container. Memgraph speaks the Bolt protocol, so the official `neo4j` Python driver works
+    against it unmodified — no Memgraph-specific client library needed."""
+    global _memgraph_driver
+    if _memgraph_driver is None:
+        with _memgraph_driver_lock:
+            if _memgraph_driver is None:
+                from neo4j import GraphDatabase
+
+                _memgraph_driver = GraphDatabase.driver(
+                    settings.memgraph_uri, auth=(settings.memgraph_user, settings.memgraph_password)
+                )
+    return _memgraph_driver
 
 
 def install_age_session_setup() -> None:
@@ -64,10 +84,36 @@ def parse_agtype(value):
 def run_cypher(
     session: Session, cypher_query: str, params: dict | None = None, *, columns: tuple[str, ...] = ("result",)
 ) -> list[list]:
-    """Run an openCypher query against `GRAPH_NAME` and return rows with every column parsed via
-    `parse_agtype`. `columns` is the mandatory `AS (col agtype, ...)` spec — its arity must match
-    the query's `RETURN` clause exactly, and AGE requires it even for a `CREATE`-only query with no
-    `RETURN` at all.
+    """Run an openCypher query and return rows as plain positional lists, parsed to native Python
+    values. Every call site in `graph/queries.py`, `graph/build.py`, and the visualization modules
+    uses this exact signature regardless of which store is actually behind it (INT-14) —
+    `settings.graph_backend` picks AGE (default, the `session` argument is used directly) or
+    Memgraph (self-hosted, `session` is ignored — the real connection is the module-level neo4j
+    driver session against the Memgraph container instead). See `INT14_UPGRADE_NOTE.md`.
+    """
+    if settings.graph_backend == "memgraph":
+        return _run_cypher_memgraph(cypher_query, params)
+    return _run_cypher_age(session, cypher_query, params, columns=columns)
+
+
+def _run_cypher_memgraph(cypher_query: str, params: dict | None) -> list[list]:
+    """Memgraph's Bolt/neo4j-driver `$name` parameter syntax matches what every query in this
+    codebase already writes for AGE — no query rewriting needed. Unaliased `RETURN` expressions
+    get the literal expression text as their record key (same as AGE's arity-only column spec),
+    but `Record.values()` returns them in `RETURN`-clause order regardless of key name, which is
+    exactly the positional-list contract every caller here already relies on."""
+    driver = _get_memgraph_driver()
+    with driver.session() as neo_session:
+        result = neo_session.run(cypher_query, params or {})
+        return [list(record.values()) for record in result]
+
+
+def _run_cypher_age(
+    session: Session, cypher_query: str, params: dict | None, *, columns: tuple[str, ...]
+) -> list[list]:
+    """`columns` is the mandatory `AS (col agtype, ...)` spec — its arity must match the query's
+    `RETURN` clause exactly, and AGE requires it even for a `CREATE`-only query with no `RETURN` at
+    all.
 
     Parameters are passed through AGE's documented `PREPARE ... EXECUTE` form (a bare bind
     parameter in `cypher()`'s third argument position raises "third argument of cypher function

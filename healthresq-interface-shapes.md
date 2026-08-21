@@ -48,7 +48,10 @@ type Scope = { level: "FACILITY"|"DISTRICT"|"STATE"|"NATIONAL", id: string }
 
 type Facility = {
   id: string, type: "PHC"|"SHC"|"WAREHOUSE"|"REFERRAL_HOSPITAL",
-  name: string, districtId: string, stateId: string, countryId: string
+  name: string, districtId: string, stateId: string, countryId: string,
+  // Added by Direction 2: OPS-01's facilities.latitude/longitude columns. Nullable — a facility
+  // seeded/inserted before this field existed, or entered without coordinates, has `location: null`.
+  location: { lat: number, lng: number } | null
 }
 
 type FootfallEntry = {
@@ -239,16 +242,17 @@ scoped to exactly that token's own scope (no narrowing query param, unlike `OPS-
 GET  /intelligence/risk-map                                  → RiskMarker[]
 GET  /intelligence/resource-explorer?product_id=...            → ResourceRollup
 POST /intelligence/graph-view   { movements: Movement[] }        → ScopedGraphView
+GET  /intelligence/hex-map?resolution=5                          → HexCell[]
+GET  /intelligence/fhir/locations                                  → FHIR R4 Bundle (see note below)
 ```
 
 ```ts
 type RiskMarker = {
   facilityId: string, facilityName: string, facilityType: string,
   worstSeverity: "NORMAL"|"WATCH"|"HIGH"|"CRITICAL",
-  alerts: { facilityId: string, productId: string, severity: string }[]
+  alerts: { facilityId: string, productId: string, severity: string }[],
+  location: { lat: number, lng: number } | null
 }
-// No lat/lng: OPS-01 has no facility geocoordinate column yet. Once Direction 1 adds one,
-// RiskMarker gains a `location` field here — not invented ahead of that.
 
 type ResourceRollup = {
   productId: string, totalCurrentStock: number, totalDeficit: number,
@@ -261,10 +265,23 @@ type Movement = { from: string, to: string, quantity: number }
 // this endpoint takes a movement set, never a `recommendationId` (that's Direction 3's object).
 
 type ScopedGraphView = {
-  nodes: { id: string, type: string, districtId: string }[],
+  nodes: { id: string, type: string, districtId: string, location: { lat: number, lng: number } | null }[],
   edges: { from: string, to: string, quantity: number }[]
 }
+
+// H3 hexagonal regional rollup (resolution 0-15; default 5, ~9.85km edge). Facilities with no
+// recorded `location` aren't binned into any cell — see RiskMarker's note above.
+type HexCell = {
+  hexId: string, resolution: number, facilityCount: number, facilityIds: string[],
+  worstSeverity: "NORMAL"|"WATCH"|"HIGH"|"CRITICAL",
+  boundary: { lat: number, lng: number }[]
+}
 ```
+
+`GET /intelligence/fhir/locations` returns a standard HL7 FHIR R4 `Bundle` (`resourceType:
+"Bundle", type: "collection"`) of `Location` resources, not a HealthResQ-specific shape — see
+`backend/intelligence/interop/fhir_export.py`. Read-only export surface for external/government
+platform integration, not a FHIR server (no `_search`, no writes, `Location` only).
 
 ---
 

@@ -1,24 +1,41 @@
-# INT-09 — Minimum-cost-flow upgrade path (documented only)
+# INT-09 — Minimum-cost-flow upgrade path (implemented)
 
-Not implemented in this build, per `healthresq-development-directions.md`'s Direction 2 Day-2
-scope ("OR-Tools upgrade `INT-09` documented only").
+## What stayed a greedy allocator, and why
 
-**What it would replace:** `redistribution/allocator.py`'s `greedy_allocate` — a nearest-cost
-greedy allocator that walks INT-07's ranked donor candidates one at a time.
+`generate_redistribution_options` (the frozen tool function) resolves a single destination's
+deficit against a ranked donor list. For exactly one sink, per-donor capacities, and additive
+costs, sorting donors by ascending cost and taking as much as each can safely give — what
+`allocator.greedy_allocate` already does — is the textbook-optimal strategy. A minimum-cost-flow
+solver cannot beat that; it can only reproduce it. `test_batch_allocate_matches_greedy_for_a_single_
+destination` in `backend/tests/test_intelligence_min_cost_flow.py` proves the two paths agree.
+`greedy_allocate` stays the default; `settings.redistribution_allocator` can select
+`"min_cost_flow"` instead (routing the same single-destination call through the new solver as one
+degenerate batch request) purely to satisfy the architecture's "swappable allocator" acceptance
+criterion — not because the output is expected to differ.
 
-**What it would become:** the same facility/product deficit-and-surplus network modeled as a
-minimum-cost-flow problem — one source node per donor (capacity = that donor's safe surplus, per
-`donor_safe_surplus`), one sink node per deficit facility (demand = its deficit), edge costs from
-INT-07's existing graph cost (`distanceKm + estimatedMinutes * DELAY_WEIGHT + boundary penalty`) —
-solved with `ortools.graph.python.min_cost_flow.SimpleMinCostFlow`.
+## What min-cost-flow actually adds: `batch_allocate`
 
-**Why not now:** the greedy allocator is simple, explainable, and sufficient at prototype scale
-(a handful of donors per deficit); OR-Tools is an added dependency with no accuracy benefit until
-a redistribution scenario has enough simultaneous multi-donor, multi-deficit competition for
-greedy's local optimality to actually cost something globally.
+`redistribution/min_cost_flow_allocator.py`'s `batch_allocate` is a new, additive entry point for
+the case greedy structurally can't solve well: several deficit facilities competing for the *same*
+shared donor pool, submitted together. Run sequentially, greedy can strand a donor's cheap
+capacity on whichever destination happens to be processed first, at a real cost penalty — see
+`test_batch_allocate_beats_naive_sequential_greedy_on_shared_donor_pool`, which reproduces exactly
+that: a cheap-for-both donor gets exhausted on the "wrong" destination under one submission order
+and produces a strictly worse total cost than the split `batch_allocate` finds regardless of order.
 
-**Interface impact when built:** none. Per the architecture's INT-09 acceptance criterion,
-swapping allocators changes only `redistribution/allocator.py`'s internals — `greedy_allocate`'s
-signature (destination, product, deficit) → `AllocationResult` stays the call site's contract
-either way, and `backend.intelligence.tools.generate_redistribution_options` (the frozen tool
-function) never changes.
+Modeled as a transportation problem via `ortools.graph.python.min_cost_flow.SimpleMinCostFlow`:
+one node per donor (supply = `donor_safe_surplus` for that product), one node per deficit
+destination (demand = its deficit), edge costs from INT-07's existing graph cost
+(`distanceKm + estimatedMinutes * DELAY_WEIGHT + boundary penalty`). Two dummy nodes keep the flow
+network balanced (`SimpleMinCostFlow` requires total supply == total demand): a zero-cost "waste"
+sink absorbing donor supply nobody needed, and a steep-cost "unmet" source that only carries flow
+when real donor capacity can't cover a destination — that flow *is* `remaining_deficit`. Costs and
+quantities are scaled and rounded to satisfy `SimpleMinCostFlow`'s integer-only requirement.
+Deficits are grouped and solved per product — donor capacity for one product never competes
+against a deficit in a different product within the same batch call.
+
+**Interface impact:** none, as originally documented — `generate_redistribution_options`'s
+signature and return shape never changed. `batch_allocate` is a new function alongside it, not a
+replacement; nothing currently calls it (no multi-facility simultaneous-shortage endpoint exists
+yet) — it's ready for whichever future caller needs to resolve several deficits against a shared
+pool in one shot.

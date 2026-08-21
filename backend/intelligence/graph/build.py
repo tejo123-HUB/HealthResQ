@@ -7,11 +7,14 @@ Full rebuild, not incremental — simplest correct approach for a two-day protot
 Supply-route topology (there is no real road-network data to route against): every donor-capable
 facility pair within the same district gets a `SUPPLY_ROUTE`/`CAN_TRANSFER_TO` edge; every
 warehouse additionally connects to every donor-capable facility in its own state (a warehouse is
-the cross-district supply hub). Distances are a deterministic hash of the pair's IDs, not measured
-— good enough to rank donors consistently, not a real routing model.
+the cross-district supply hub). Distance is real great-circle (haversine) distance when both
+facilities have a recorded lat/lng (OPS-01's `location` field); falls back to a deterministic
+hash of the pair's IDs only when one or both coordinates are missing — still not a real road
+routing model (no road network data exists), but no longer fabricated when real coordinates exist.
 """
 
 import hashlib
+import math
 import uuid
 from collections import defaultdict
 
@@ -21,12 +24,28 @@ from backend.intelligence import ports
 from backend.intelligence.graph.session import run_cypher
 from backend.ops import models
 
+EARTH_RADIUS_KM = 6371.0
+
+
+def _haversine_km(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
+    phi1, phi2 = math.radians(lat1), math.radians(lat2)
+    d_phi = math.radians(lat2 - lat1)
+    d_lambda = math.radians(lon2 - lon1)
+    a = math.sin(d_phi / 2) ** 2 + math.cos(phi1) * math.cos(phi2) * math.sin(d_lambda / 2) ** 2
+    return 2 * EARTH_RADIUS_KM * math.asin(math.sqrt(a))
+
 
 def _synthetic_distance(id_a: str, id_b: str, *, low: float, high: float) -> float:
     key = ":".join(sorted((str(id_a), str(id_b))))
     digest = hashlib.sha256(key.encode()).hexdigest()
     fraction = (int(digest, 16) % 10_000) / 10_000
     return round(low + fraction * (high - low), 1)
+
+
+def _distance_km(a: models.Facility, b: models.Facility, *, low: float, high: float) -> float:
+    if a.latitude is not None and a.longitude is not None and b.latitude is not None and b.longitude is not None:
+        return round(_haversine_km(a.latitude, a.longitude, b.latitude, b.longitude), 1)
+    return _synthetic_distance(a.id, b.id, low=low, high=high)
 
 
 def sync_graph_from_ops(db: Session) -> None:
@@ -41,13 +60,15 @@ def sync_graph_from_ops(db: Session) -> None:
         run_cypher(
             db,
             "CREATE (:Facility {id: $id, type: $type, districtId: $districtId, "
-            "stateId: $stateId, countryId: $countryId})",
+            "stateId: $stateId, countryId: $countryId, latitude: $latitude, longitude: $longitude})",
             {
                 "id": str(f.id),
                 "type": f.type.value,
                 "districtId": str(f.district_id),
                 "stateId": str(f.state_id),
                 "countryId": str(f.country_id),
+                "latitude": f.latitude,
+                "longitude": f.longitude,
             },
             columns=("result",),
         )
@@ -145,7 +166,7 @@ def _build_supply_routes(db: Session, facilities: list[models.Facility]) -> None
     def link(a: models.Facility, b: models.Facility, *, cross_boundary: bool) -> None:
         if a.id == b.id:
             return
-        distance = _synthetic_distance(a.id, b.id, low=5, high=40 if not cross_boundary else 150)
+        distance = _distance_km(a, b, low=5, high=40 if not cross_boundary else 150)
         minutes = round(distance * 1.5, 1)
         for src, dst in ((a, b), (b, a)):
             run_cypher(

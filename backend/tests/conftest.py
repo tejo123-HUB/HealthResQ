@@ -98,10 +98,18 @@ def geo(db):
     return {"country": country, "state": state, "district_a": district_a, "district_b": district_b}
 
 
-def make_facility(db, geo, *, name: str, ftype: models.FacilityType, district=None) -> models.Facility:
+def make_facility(
+    db, geo, *, name: str, ftype: models.FacilityType, district=None, latitude=None, longitude=None
+) -> models.Facility:
     district = district or geo["district_a"]
     f = models.Facility(
-        type=ftype, name=name, district_id=district.id, state_id=geo["state"].id, country_id=geo["country"].id
+        type=ftype,
+        name=name,
+        district_id=district.id,
+        state_id=geo["state"].id,
+        country_id=geo["country"].id,
+        latitude=latitude,
+        longitude=longitude,
     )
     db.add(f)
     db.flush()

@@ -14,7 +14,10 @@ from fastapi import APIRouter, Body, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session
 
 from backend.db import get_db
-from backend.intelligence.visualization import graph_view, resource_explorer, risk_map
+from backend.intelligence import ports
+from backend.intelligence.graph.queries import cluster_risk_facility_ids
+from backend.intelligence.interop import fhir_export
+from backend.intelligence.visualization import graph_view, hex_map, resource_explorer, risk_map
 from backend.ops.deps import CurrentUser, get_current_user
 
 router = APIRouter(prefix="/intelligence", tags=["intelligence"])
@@ -46,3 +49,24 @@ def post_graph_view(
     if not all({"from", "to", "quantity"} <= set(m) for m in movements):
         raise HTTPException(status.HTTP_400_BAD_REQUEST, "each movement needs from/to/quantity")
     return graph_view.get_scoped_graph_view(db, movements)
+
+
+@router.get("/hex-map")
+def get_hex_map(
+    resolution: int = Query(default=hex_map.DEFAULT_RESOLUTION, ge=0, le=15),
+    db: Session = Depends(get_db),
+    user: CurrentUser = Depends(get_current_user),
+) -> list[dict]:
+    return hex_map.get_hex_map(db, user.scope_level.value, str(user.scope_id), resolution=resolution)
+
+
+@router.get("/fhir/locations")
+def get_fhir_locations(
+    db: Session = Depends(get_db),
+    user: CurrentUser = Depends(get_current_user),
+) -> dict:
+    """Read-only HL7 FHIR R4 export for external/government platform integration — scoped to the
+    caller's own JWT scope, same as every other endpoint in this router."""
+    ids = cluster_risk_facility_ids(db, user.scope_level.value, str(user.scope_id))
+    facilities = [ports.get_facility(db, uuid.UUID(fid)) for fid in ids]
+    return fhir_export.export_locations_bundle([f for f in facilities if f is not None])

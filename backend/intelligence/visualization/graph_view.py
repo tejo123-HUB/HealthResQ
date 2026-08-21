@@ -15,10 +15,18 @@ def get_scoped_graph_view(db: Session, movements: list[dict]) -> dict:
 
     node_rows = run_cypher(
         db,
-        "MATCH (f:Facility) WHERE f.id IN $ids RETURN f.id, f.type, f.districtId",
+        "MATCH (f:Facility) WHERE f.id IN $ids RETURN f.id, f.type, f.districtId, f.latitude, f.longitude",
         {"ids": facility_ids},
-        columns=("id", "type", "districtId"),
+        columns=("id", "type", "districtId", "latitude", "longitude"),
     )
-    nodes = [{"id": fid, "type": ftype, "districtId": district_id} for fid, ftype, district_id in node_rows]
+    nodes = [
+        {
+            "id": fid,
+            "type": ftype,
+            "districtId": district_id,
+            "location": {"lat": lat, "lng": lng} if lat is not None and lng is not None else None,
+        }
+        for fid, ftype, district_id, lat, lng in node_rows
+    ]
     edges = [{"from": m["from"], "to": m["to"], "quantity": m["quantity"]} for m in movements]
     return {"nodes": nodes, "edges": edges}

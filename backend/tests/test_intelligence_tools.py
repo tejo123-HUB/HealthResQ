@@ -115,6 +115,30 @@ def test_generate_redistribution_options_matches_frozen_shape(db, geo):
         assert set(movement.keys()) == {"from", "to", "quantity"}
 
 
+def test_generate_redistribution_options_min_cost_flow_allocator_matches_frozen_shape(db, geo, monkeypatch):
+    """INT-09: `settings.redistribution_allocator = "min_cost_flow"` must produce the exact same
+    frozen return shape as the default greedy path — the config flag changes the allocator's
+    internals, never this tool function's contract."""
+    from backend.config import settings
+
+    monkeypatch.setattr(settings, "redistribution_allocator", "min_cost_flow")
+
+    donor = make_facility(db, geo, name="PHC-DONOR-MCF", ftype=models.FacilityType.PHC, district=geo["district_a"])
+    destination = make_facility(db, geo, name="PHC-DEST-MCF", ftype=models.FacilityType.PHC, district=geo["district_a"])
+    product = _product(db)
+    apply_transaction(
+        db, facility_id=donor.id, product_id=product.id, type_=models.TransactionType.RECEIPT,
+        quantity=1000, batch=None, expiry=None, at=None, source_facility_id=donor.id,
+    )
+    sync_graph_from_ops(db)
+
+    result = tools.generate_redistribution_options(db, str(destination.id), str(product.id), 300)
+    assert set(result.keys()) == {"resolvedQuantity", "remainingDeficit", "movements", "requiredAuthority"}
+    assert result["resolvedQuantity"] == 300
+    for movement in result["movements"]:
+        assert set(movement.keys()) == {"from", "to", "quantity"}
+
+
 def test_find_safe_donors_matches_frozen_shape(db, geo):
     donor = make_facility(db, geo, name="PHC-DONOR3", ftype=models.FacilityType.PHC, district=geo["district_a"])
     destination = make_facility(db, geo, name="PHC-DEST5", ftype=models.FacilityType.PHC, district=geo["district_a"])

@@ -28,6 +28,15 @@ STATES = {
     "Karnataka": ["Bengaluru Urban", "Mysuru"],
 }
 
+# Approximate real-world state centroids (degrees) — facilities jitter around these so INT-06's
+# graph edges get a genuine haversine distance instead of a synthetic hash-based one.
+STATE_CENTROIDS = {
+    "Andhra Pradesh": (16.5062, 80.6480),
+    "Maharashtra": (19.7515, 75.7139),
+    "Karnataka": (15.3173, 75.7139),
+}
+COORDINATE_JITTER_DEGREES = 0.6  # ~65km spread — keeps facilities within their state, not exact
+
 PHC_COUNT = 20
 SHC_COUNT = 4
 WAREHOUSE_COUNT = 4
@@ -85,8 +94,17 @@ def run() -> None:
 
         def make_facility(name: str, ftype: models.FacilityType, district: models.District) -> models.Facility:
             state, ctry = district_state_country(district)
+            centroid_lat, centroid_lng = STATE_CENTROIDS[state.name]
+            lat = centroid_lat + random.uniform(-COORDINATE_JITTER_DEGREES, COORDINATE_JITTER_DEGREES)
+            lng = centroid_lng + random.uniform(-COORDINATE_JITTER_DEGREES, COORDINATE_JITTER_DEGREES)
             f = models.Facility(
-                type=ftype, name=name, district_id=district.id, state_id=state.id, country_id=ctry.id
+                type=ftype,
+                name=name,
+                district_id=district.id,
+                state_id=state.id,
+                country_id=ctry.id,
+                latitude=round(lat, 6),
+                longitude=round(lng, 6),
             )
             db.add(f)
             db.flush()

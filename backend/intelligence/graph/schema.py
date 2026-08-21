@@ -4,6 +4,7 @@ once per pytest session against the throwaway `healthresq_test` database) — no
 from sqlalchemy import text
 from sqlalchemy.engine import Engine
 
+from backend.config import settings
 from backend.intelligence.graph import GRAPH_NAME
 from backend.intelligence.graph.session import install_age_session_setup
 
@@ -11,7 +12,13 @@ from backend.intelligence.graph.session import install_age_session_setup
 def ensure_graph_ready(engine: Engine) -> None:
     """Idempotent: safe to call against a fresh database or one that already has the extension
     and graph. `create_graph()` itself errors if the graph already exists, so that call is guarded
-    explicitly rather than relied on to no-op."""
+    explicitly rather than relied on to no-op.
+
+    INT-14: a no-op when `graph_backend` is `memgraph` — Memgraph has no extension/named-graph
+    concept to set up; the whole instance already *is* the one graph, ready as soon as the
+    container is up."""
+    if settings.graph_backend == "memgraph":
+        return
     install_age_session_setup()
     with engine.connect() as conn:
         conn.execute(text("CREATE EXTENSION IF NOT EXISTS age"))

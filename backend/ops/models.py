@@ -6,6 +6,7 @@ from sqlalchemy import (
     Date,
     DateTime,
     Enum,
+    Float,
     ForeignKey,
     Integer,
     Numeric,
@@ -135,6 +136,10 @@ class Facility(Base):
     # Denormalized for cheap OPS-02 scope checks without joining up the hierarchy every request.
     state_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("states.id"), nullable=False)
     country_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("countries.id"), nullable=False)
+    # Real-world coordinates (was a documented gap — INT-06/07 used a synthetic hash-based
+    # distance, and INT-13's risk map had no location field, until these were added).
+    latitude: Mapped[float | None] = mapped_column(Float, nullable=True)
+    longitude: Mapped[float | None] = mapped_column(Float, nullable=True)
 
     district: Mapped["District"] = relationship(back_populates="facilities")
 

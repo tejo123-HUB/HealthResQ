@@ -15,5 +15,19 @@ class Settings(BaseSettings):
 
     seed_default_password: str = "demo-pass-123"
 
+    # INT-09: "greedy" (default, INT-08) or "min_cost_flow" for generate_redistribution_options.
+    # Provably equivalent for the single-destination case (see redistribution/ORTOOLS_UPGRADE.md);
+    # this flag exists to satisfy the architecture's "swappable allocator" acceptance criterion,
+    # not because the default output changes.
+    redistribution_allocator: str = "greedy"
+
+    # INT-14: "age" (default, Apache AGE inside the primary Postgres) or "memgraph" (self-hosted,
+    # profile-gated docker-compose service — never started by default, per the "no new deployable
+    # process by default" rule). See graph/INT14_UPGRADE_NOTE.md.
+    graph_backend: str = "age"
+    memgraph_uri: str = "bolt://localhost:7687"
+    memgraph_user: str = ""
+    memgraph_password: str = ""
+
 
 settings = Settings()

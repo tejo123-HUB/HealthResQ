@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from backend.db import get_db
 from backend.ops import models
 from backend.ops.deps import CurrentUser, get_current_user, get_scoped_facility
-from backend.ops.schemas import Facility
+from backend.ops.schemas import Facility, Location
 
 router = APIRouter(tags=["facilities"])
 
@@ -19,6 +19,7 @@ def _facility_out(f: models.Facility) -> Facility:
         district_id=str(f.district_id),
         state_id=str(f.state_id),
         country_id=str(f.country_id),
+        location=Location(lat=f.latitude, lng=f.longitude) if f.latitude is not None and f.longitude is not None else None,
     )
 
 

@@ -9,6 +9,7 @@ import uuid
 
 from sqlalchemy.orm import Session
 
+from backend.config import settings
 from backend.intelligence import composition, ports
 from backend.intelligence.anomaly.detection import detect_anomaly
 from backend.intelligence.graph.queries import (
@@ -19,6 +20,7 @@ from backend.intelligence.graph.queries import (
 )
 from backend.intelligence.models import Alert, Forecast, Severity
 from backend.intelligence.redistribution.allocator import donor_safe_surplus, greedy_allocate
+from backend.intelligence.redistribution.min_cost_flow_allocator import DeficitRequest, batch_allocate
 from backend.intelligence.risk.stockout import classify_severity
 
 _AUTHORITY_RANK = {"DISTRICT": 0, "STATE": 1, "NATIONAL": 2}
@@ -74,7 +76,14 @@ def get_dependency_impact(db: Session, facility_id: str) -> list[str]:
 
 
 def generate_redistribution_options(db: Session, destination_id: str, product_id: str, deficit: float) -> dict:
-    result = greedy_allocate(db, destination_id, uuid.UUID(product_id), deficit)
+    # INT-09: config-selected allocator. Both give the same answer for this single-destination
+    # call — a single sink is the case greedy is already provably optimal for — so this branch
+    # exists to satisfy the architecture's swappable-allocator acceptance criterion, not because
+    # the two paths are expected to disagree. See redistribution/ORTOOLS_UPGRADE.md.
+    if settings.redistribution_allocator == "min_cost_flow":
+        result = batch_allocate(db, [DeficitRequest(destination_id, uuid.UUID(product_id), deficit)])[destination_id]
+    else:
+        result = greedy_allocate(db, destination_id, uuid.UUID(product_id), deficit)
     required_authority = "DISTRICT"
     if result.movements:
         required_authority = max(

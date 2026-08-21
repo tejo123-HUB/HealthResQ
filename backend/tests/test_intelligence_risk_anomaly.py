@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-from backend.intelligence.anomaly.detection import detect_anomaly
+from backend.intelligence.anomaly.detection import detect_anomaly, detect_drift
 from backend.intelligence.models import Severity
 from backend.intelligence.risk.stockout import classify_severity, first_stockout_day, project_stock
 
@@ -42,3 +42,30 @@ def test_detect_anomaly_flags_surge():
 def test_detect_anomaly_none_when_stable():
     series = pd.Series([100.0] * 20)
     assert detect_anomaly(series) is None
+
+
+def test_detect_drift_flags_slow_ramp_missed_by_detect_anomaly():
+    """A ~2.5%/day creep over 20 days never trips a single-day threshold, but is a real
+    sustained shift that detect_anomaly structurally can't see — detect_drift should."""
+    values = [100.0]
+    for _ in range(19):
+        values.append(values[-1] * 1.025)
+    series = pd.Series(values)
+
+    assert detect_anomaly(series) is None
+
+    drift = detect_drift(series)
+    assert drift is not None
+    assert drift["direction"] == "UP"
+    assert drift["cumulativeDeviation"] > 0
+
+
+def test_detect_drift_none_when_stable():
+    series = pd.Series([100.0 + ((i % 3) - 1) * 0.5 for i in range(20)])
+    assert detect_drift(series) is None
+
+
+def test_detect_drift_does_not_crash_on_single_day_spike():
+    series = pd.Series([100.0] * 14 + [400.0] * 3)
+    result = detect_drift(series)
+    assert result is None or isinstance(result, dict)

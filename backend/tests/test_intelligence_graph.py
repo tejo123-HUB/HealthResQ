@@ -1,4 +1,4 @@
-from backend.intelligence.graph.build import sync_graph_from_ops
+from backend.intelligence.graph.build import _haversine_km, sync_graph_from_ops
 from backend.intelligence.graph.queries import (
     cluster_risk_facility_ids,
     dependency_impact,
@@ -54,6 +54,28 @@ def test_required_authority_cross_district_same_state(db, geo):
 
     result = get_required_authority(db, str(phc_a1.id), str(phc_b1.id))
     assert result["requiredAuthority"] == "STATE"
+
+
+def test_supply_route_uses_real_haversine_distance_when_coordinates_present(db, geo):
+    # Krishna district facility, Guntur-ish coordinates ~65km apart (a real-world sanity distance,
+    # not the [5,40) synthetic-hash range this pair would otherwise fall in).
+    phc_a1 = make_facility(
+        db, geo, name="PHC-Geo1", ftype=models.FacilityType.PHC, district=geo["district_a"],
+        latitude=16.5062, longitude=80.6480,
+    )
+    phc_a2 = make_facility(
+        db, geo, name="PHC-Geo2", ftype=models.FacilityType.PHC, district=geo["district_a"],
+        latitude=16.3067, longitude=80.4365,
+    )
+    db.flush()
+    sync_graph_from_ops(db)
+
+    expected = round(_haversine_km(16.5062, 80.6480, 16.3067, 80.4365), 1)
+    candidates = nearest_safe_donor_candidates(db, str(phc_a2.id))
+    match = next(c for c in candidates if c["facilityId"] == str(phc_a1.id))
+    # Exact equality to the real haversine value is the discriminating check — the synthetic
+    # hash-based fallback would need an astronomically unlikely coincidence to match it.
+    assert match["distanceKm"] == expected
 
 
 def test_cluster_risk_facility_ids_scopes_to_district(db, geo):
