@@ -226,7 +226,49 @@ Copy these verbatim into every direction's own tests and stub responses.
 
 ---
 
-## 6. Change discipline
+## 6. `INT-13` REST surface — Direction 2 → Direction 4
+
+Not part of the original Contract Freeze (Section 2 only froze INT's tool functions/graph schema
+for Direction 3's in-process use and Direction 4's stub). Added once built, per the "edit the
+shapes doc, don't fork it" rule — this is INT's own outward HTTP surface to the Web Application,
+the same way `OPS-09` is OPS's. Every route requires the caller's normal auth bearer token and is
+scoped to exactly that token's own scope (no narrowing query param, unlike `OPS-09`'s
+`/facilities`).
+
+```
+GET  /intelligence/risk-map                                  → RiskMarker[]
+GET  /intelligence/resource-explorer?product_id=...            → ResourceRollup
+POST /intelligence/graph-view   { movements: Movement[] }        → ScopedGraphView
+```
+
+```ts
+type RiskMarker = {
+  facilityId: string, facilityName: string, facilityType: string,
+  worstSeverity: "NORMAL"|"WATCH"|"HIGH"|"CRITICAL",
+  alerts: { facilityId: string, productId: string, severity: string }[]
+}
+// No lat/lng: OPS-01 has no facility geocoordinate column yet. Once Direction 1 adds one,
+// RiskMarker gains a `location` field here — not invented ahead of that.
+
+type ResourceRollup = {
+  productId: string, totalCurrentStock: number, totalDeficit: number,
+  facilities: { facilityId: string, currentStock: number, forecastDemand: number,
+                projectedStock: number, deficit: number }[]
+}
+
+type Movement = { from: string, to: string, quantity: number }
+// Callers pass the `movements` array from `generate_redistribution_options`'s result directly —
+// this endpoint takes a movement set, never a `recommendationId` (that's Direction 3's object).
+
+type ScopedGraphView = {
+  nodes: { id: string, type: string, districtId: string }[],
+  edges: { from: string, to: string, quantity: number }[]
+}
+```
+
+---
+
+## 7. Change discipline
 
 Any change to a shape above requires a short sync between the owning direction and every "used by" direction listed in `healthresq-development-directions.md`'s interface table — edit this file, don't fork a second copy of a shape.
 

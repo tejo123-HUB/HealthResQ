@@ -10,6 +10,8 @@ from backend.app import app
 from backend.audit import models as audit_models  # noqa: F401 - registers AuditLog on Base.metadata
 from backend.config import settings
 from backend.db import Base, get_db
+from backend.intelligence import models as intelligence_models  # noqa: F401 - registers INT models
+from backend.intelligence.graph.schema import ensure_graph_ready
 from backend.ops import models
 from backend.ops.security import create_access_token, hash_password
 
@@ -31,6 +33,7 @@ def test_engine():
 
     engine = create_engine(_test_url)
     Base.metadata.create_all(engine)
+    ensure_graph_ready(engine)
     yield engine
     engine.dispose()
 
