@@ -31,6 +31,15 @@ const config: Config = {
         "fill-thin": "var(--fill-thin)",
         "brand-teal": "var(--brand-teal)",
         "brand-teal-wash": "var(--brand-teal-wash)",
+        "brand-green": "var(--brand-green)",
+        "brand-green-wash": "var(--brand-green-wash)",
+        "brand-orange": "var(--brand-orange)",
+        "brand-orange-wash": "var(--brand-orange-wash)",
+        "brand-gold": "var(--brand-gold)",
+        "brand-gold-wash": "var(--brand-gold-wash)",
+      },
+      backgroundImage: {
+        brand: "var(--brand-gradient)",
       },
       fontFamily: {
         sans: ["var(--font-sans)"],

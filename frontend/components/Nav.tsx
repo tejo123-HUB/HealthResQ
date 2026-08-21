@@ -37,8 +37,13 @@ export function Nav() {
     >
       <div className="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
         <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center overflow-hidden shrink-0 ring-1 ring-separator shadow-sm">
-            <Image src="/logo.png" alt="HealthResQ" width={32} height={32} />
+          {/* The logo's own artwork is a ring sweeping teal -> green -> orange -> gold around the
+              mark — wrapping the nav avatar in that same gradient (rather than a plain gray ring)
+              is a literal, not just color-matched, echo of the brand mark itself. */}
+          <div className="w-8 h-8 rounded-full bg-brand p-[1.5px] shrink-0 shadow-sm">
+            <div className="w-full h-full rounded-full bg-white flex items-center justify-center overflow-hidden">
+              <Image src="/logo.png" alt="HealthResQ" width={32} height={32} />
+            </div>
           </div>
           <div>
             <p className="text-headline leading-none">{facility ? facility.name : scope.level}</p>

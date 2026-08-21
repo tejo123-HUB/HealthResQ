@@ -14,6 +14,7 @@ import { recommendationSeverity, SeverityBadge } from "@/components/hig/Severity
 import { Skeleton } from "@/components/hig/Skeleton";
 import { ApiError } from "@/lib/api/client";
 import { command, type DecisionAction } from "@/lib/api/command";
+import { ops } from "@/lib/api/ops";
 import { useToast } from "@/lib/toast/ToastProvider";
 
 const ACTION_VERB: Record<DecisionAction, string> = {
@@ -32,6 +33,11 @@ function DecisionScreen() {
     error,
     mutate,
   } = useSWR(["recommendation", params.id], () => command.getRecommendation(params.id));
+  // Suggested movements arrive as raw facility ids (healthresq-interface-shapes.md §3's
+  // Movement type has no name field) — resolved here the same way DashboardScreen's Explorer
+  // tab already does, so a human never has to read a UUID to understand a redistribution plan.
+  const { data: facilities } = useSWR(["facilities"], () => ops.listFacilities());
+  const facilityName = (id: string) => facilities?.find((f) => f.id === id)?.name ?? id;
   const [submitting, setSubmitting] = useState<DecisionAction | null>(null);
   const [actionError, setActionError] = useState<string | null>(null);
   const [confirming, setConfirming] = useState<Exclude<DecisionAction, "MODIFY" | "ESCALATE"> | null>(null);
@@ -119,7 +125,7 @@ function DecisionScreen() {
       {recommendation.suggestedMovements.length > 0 && (
         <ListGroup title="Suggested movements">
           {recommendation.suggestedMovements.map((m, i) => (
-            <ListRow key={i} label={`${m.from} → ${m.to}`} value={m.quantity} />
+            <ListRow key={i} label={`${facilityName(m.from)} → ${facilityName(m.to)}`} value={m.quantity} />
           ))}
         </ListGroup>
       )}

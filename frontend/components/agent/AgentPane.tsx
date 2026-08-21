@@ -54,10 +54,15 @@ export function AgentPane({ scope }: { scope: Scope }) {
 
   return (
     <aside className="flex flex-col gap-4 lg:w-80 shrink-0">
-      <div className="bg-bg rounded-hig border border-separator border-l-[3px] border-l-tint-blue shadow-card p-4 animate-fade-in-up">
-        <div className="flex items-center gap-2 mb-2 text-tint-blue">
-          <Icon name="flag" className="w-4.5 h-4.5" />
-          <span className="text-footnote font-semibold uppercase">AI suggestion</span>
+      {/* The AI surface gets the brand's own gradient + pulse iconography (the logo's literal
+          heartbeat motif) instead of generic interactive blue — a visual cue that this pane is
+          "the app talking to you", distinct from an ordinary tap target. */}
+      <div className="bg-bg rounded-hig border border-separator border-l-[3px] border-l-brand-teal shadow-card p-4 animate-fade-in-up">
+        <div className="flex items-center gap-2 mb-2">
+          <span className="w-5 h-5 rounded-full bg-brand flex items-center justify-center shrink-0">
+            <Icon name="pulse" className="w-3 h-3 text-white" />
+          </span>
+          <span className="text-footnote font-semibold uppercase text-brand-teal">AI suggestion</span>
         </div>
         {topRecommendation ? (
           <>
@@ -67,19 +72,23 @@ export function AgentPane({ scope }: { scope: Scope }) {
             </p>
             <Link
               href={`/recommendations/${topRecommendation.id}`}
-              className="text-footnote text-tint-blue mt-2 inline-flex items-center gap-0.5 group"
+              className="text-footnote text-brand-teal mt-2 inline-flex items-center gap-0.5 group"
             >
               Review full recommendation
               <Icon name="chevronRight" className="w-3 h-3 transition-transform group-hover:translate-x-0.5" />
             </Link>
           </>
         ) : (
-          <p className="text-body text-label-secondary">No pending recommendations right now.</p>
+          <p className="text-body text-label-secondary flex items-center gap-2">
+            <Icon name="checkCircle" className="w-4.5 h-4.5 text-tint-green" />
+            No pending recommendations right now.
+          </p>
         )}
       </div>
 
       <div className="bg-bg rounded-hig border border-separator shadow-card flex flex-col flex-1 min-h-[320px] animate-fade-in-up [animation-delay:60ms]">
-        <div className="px-4 py-3 border-b border-separator text-footnote text-label-secondary uppercase">
+        <div className="px-4 py-3 border-b border-separator text-footnote text-label-secondary uppercase flex items-center gap-1.5">
+          <Icon name="pulse" className="w-3.5 h-3.5 text-brand-teal" />
           Ask about this
         </div>
         <div ref={scrollRef} className="flex-1 flex flex-col gap-2 p-4 overflow-y-auto max-h-80 scroll-smooth">
@@ -92,7 +101,7 @@ export function AgentPane({ scope }: { scope: Scope }) {
             <div
               key={i}
               className={`text-body rounded-hig px-3 py-2 max-w-[85%] shadow-card ${
-                m.role === "user" ? "bg-tint-blue text-white self-end animate-slide-in-right" : "bg-bg-secondary text-label self-start animate-slide-in-left"
+                m.role === "user" ? "bg-tint-blue text-white self-end animate-slide-in-right" : "bg-brand-teal-wash text-label self-start animate-slide-in-left"
               }`}
             >
               {m.role === "agent" && !m.typed ? (
@@ -115,13 +124,13 @@ export function AgentPane({ scope }: { scope: Scope }) {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Ask a question…"
-            className="flex-1 text-body bg-bg-secondary rounded-hig px-3 min-h-[40px] border border-separator outline-none transition-hig focus:border-tint-blue focus:ring-2 focus:ring-tint-blue-wash"
+            className="flex-1 text-body bg-bg-secondary rounded-hig px-3 min-h-[40px] border border-separator outline-none transition-hig focus:border-brand-teal focus:ring-2 focus:ring-brand-teal-wash"
           />
           <button
             type="submit"
             disabled={sending || !input.trim()}
             aria-label="Send"
-            className="w-10 h-10 shrink-0 flex items-center justify-center rounded-hig bg-tint-blue text-white disabled:opacity-40 enabled:hover:shadow-card-hover active:opacity-70 active:scale-90 transition-hig"
+            className="w-10 h-10 shrink-0 flex items-center justify-center rounded-hig bg-brand text-white disabled:opacity-40 enabled:hover:shadow-card-hover active:opacity-70 active:scale-90 transition-hig"
           >
             <Icon name="chevronRight" className="w-5 h-5" />
           </button>

@@ -36,10 +36,24 @@
   --fill-regular: rgba(255, 255, 255, 0.7);
   --fill-thin: rgba(255, 255, 255, 0.55);
 
-  /* Decorative brand accent sampled from logo.png — used only for the loading-screen pulse ring.
-     Never used for status/severity meaning; that stays on the --tint-* set above. */
+  /* Decorative brand palette sampled from logo.png's ring/cross/hands (teal -> green -> orange ->
+     gold) — used for identity moments (nav mark, the AI/agent surface, loading/login) so the app
+     visibly carries its own mark instead of reading as generic HIG blue everywhere. Never used
+     for status/severity meaning; that stays exclusively on the --tint-* set above, unchanged. */
   --brand-teal: #14919b;
+  --brand-green: #2fa36b;
+  --brand-orange: #ff7a3d;
+  --brand-gold: #fdb813;
+
   --brand-teal-wash: rgba(20, 145, 155, 0.16);
+  --brand-green-wash: rgba(47, 163, 107, 0.16);
+  --brand-orange-wash: rgba(255, 122, 61, 0.16);
+  --brand-gold-wash: rgba(253, 184, 19, 0.18);
+
+  /* The logo's own ring sweep, teal through gold — used behind the mark itself (nav, login,
+     loading) as a soft glow/ring, never as a page-background wash (that was explicitly decided
+     against). Defined once here so every consumer draws the exact same gradient. */
+  --brand-gradient: linear-gradient(135deg, var(--brand-teal) 0%, var(--brand-green) 35%, var(--brand-orange) 70%, var(--brand-gold) 100%);
 
   --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Segoe UI",
     Roboto, Helvetica, Arial, sans-serif;
@@ -75,6 +89,17 @@
   --fill-regular: rgba(28, 28, 30, 0.7);
   --fill-thin: rgba(28, 28, 30, 0.55);
 
+  /* Brightened ~10-15% over the light values, same treatment every --tint-* color already gets
+     for dark mode — a saturated color sampled for a white background reads muddy on black. */
   --brand-teal: #2bb3bd;
+  --brand-green: #45c37f;
+  --brand-orange: #ff9a5c;
+  --brand-gold: #ffc93c;
+
   --brand-teal-wash: rgba(43, 179, 189, 0.22);
+  --brand-green-wash: rgba(69, 195, 127, 0.22);
+  --brand-orange-wash: rgba(255, 154, 92, 0.22);
+  --brand-gold-wash: rgba(255, 201, 60, 0.24);
+
+  --brand-gradient: linear-gradient(135deg, var(--brand-teal) 0%, var(--brand-green) 35%, var(--brand-orange) 70%, var(--brand-gold) 100%);
 }

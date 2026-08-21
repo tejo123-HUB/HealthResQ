@@ -39,9 +39,13 @@ export default function LoginPage() {
     <BrandBackdrop>
       <div className="min-h-[85vh] flex flex-col items-center justify-center px-4">
         <div className="max-w-sm w-full flex flex-col items-center">
-          <div className="animate-scale-in mb-5">
+          <div className="animate-scale-in mb-5 relative">
+            {/* A soft glow scoped tightly behind the mark itself — not a page-wide wash (that
+                stays deliberately flat, per the brief's "accents only" brand-color scope) — just
+                the logo's own ring-gradient read as a halo around the one place it belongs. */}
+            <div className="absolute inset-0 -m-3 rounded-full bg-brand opacity-25 blur-xl -z-10" aria-hidden="true" />
             <div className="animate-breathe">
-              <Image src="/logo.png" alt="HealthResQ" width={92} height={92} priority className="rounded-3xl" />
+              <Image src="/logo.png" alt="HealthResQ" width={92} height={92} priority className="rounded-3xl relative" />
             </div>
           </div>
 
