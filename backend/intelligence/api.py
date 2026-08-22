@@ -20,6 +20,7 @@ from backend.intelligence import ports
 from backend.intelligence.graph.queries import cluster_risk_facility_ids
 from backend.intelligence.interop import fhir_export
 from backend.intelligence.visualization import graph_view, hex_map, resource_explorer, risk_map
+from backend.ops import models
 from backend.ops.deps import CurrentUser, get_current_user
 
 router = APIRouter(prefix="/intelligence", tags=["intelligence"])
@@ -109,6 +110,12 @@ def get_federation_profile(
     db: Session = Depends(get_db),
     user: CurrentUser = Depends(get_current_user),
 ) -> list[dict]:
+    """National-dashboard-only, unlike every other endpoint in this router: federation aggregates
+    span every country's data, not the caller's own scope, so there's no per-scope filter to apply
+    — only NATIONAL callers may see cross-country data at all."""
+    if user.scope_level != models.ScopeLevel.NATIONAL:
+        raise HTTPException(status.HTTP_403_FORBIDDEN, "Federation data is a national-authority view")
+
     from backend.intelligence.models import FederationRound, FederationMetric
     latest_round = db.query(FederationRound).order_by(FederationRound.round_number.desc()).first()
     if not latest_round:
