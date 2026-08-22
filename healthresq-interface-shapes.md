@@ -358,7 +358,7 @@ platform integration, not a FHIR server (no `_search`, no writes, `Location` onl
 
 ---
 
-## 9. `CMD` REST surface — Direction 3 → Direction 4
+## 8. `CMD` REST surface — Direction 3 → Direction 4
 
 Not part of the original Contract Freeze (Section 3 only froze the `Recommendation`/
 `AtomicInstruction` object shapes for Direction 4's stub). Added once built, per the same "edit
@@ -411,8 +411,8 @@ type SituationReport = {
 
 ---
 
-## 10. Change discipline
+## 9. Change discipline
 
 Any change to a shape above requires a short sync between the owning direction and every "used by" direction listed in `healthresq-development-directions.md`'s interface table — edit this file, don't fork a second copy of a shape.
 
-**Resolved by Direction 3:** Section 1's `Instruction.status` superset (`ACKNOWLEDGED|READY|DISPATCHED|IN_PROGRESS|COMPLETED|BLOCKED`) vs. Section 3's originally-frozen `AtomicInstruction.status` subset (missing `READY`/`DISPATCHED`) — flagged above as an open inconsistency before Direction 3 built `CMD-08`. Resolved by not forking a second type at all: `CMD-08`'s decomposition (`backend/command/service.py::decompose_and_dispatch`) writes the same `backend.ops.models.AtomicInstruction` row Direction 1 already owns, and `GET /recommendations/{id}/instructions` (Section 9, above) serializes it with the same `backend.ops.schemas.Instruction` Section 1 already froze — one object, one schema, matching `healthresq-architecture.md`'s glossary claim exactly, rather than narrowing the table to match Section 3's smaller enum.
+**Resolved by Direction 3:** Section 1's `Instruction.status` superset (`ACKNOWLEDGED|READY|DISPATCHED|IN_PROGRESS|COMPLETED|BLOCKED`) vs. Section 3's originally-frozen `AtomicInstruction.status` subset (missing `READY`/`DISPATCHED`) — flagged above as an open inconsistency before Direction 3 built `CMD-08`. Resolved by not forking a second type at all: `CMD-08`'s decomposition (`backend/command/service.py::decompose_and_dispatch`) writes the same `backend.ops.models.AtomicInstruction` row Direction 1 already owns, and `GET /recommendations/{id}/instructions` (Section 8, above) serializes it with the same `backend.ops.schemas.Instruction` Section 1 already froze — one object, one schema, matching `healthresq-architecture.md`'s glossary claim exactly, rather than narrowing the table to match Section 3's smaller enum.

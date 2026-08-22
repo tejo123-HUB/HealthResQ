@@ -28,11 +28,10 @@ backend/
 └── audit/                 cross-cutting audit log, written to by every module above
 
 frontend/
-├── phc/ shc/ warehouse/    facility-facing screens
-├── district/ state/ national/   authority dashboards
+├── phc/ shc/ warehouse/          facility-facing screens
+├── district/ state/ national/    authority dashboards
 ├── recommendations/ orders/      decision screen, action composer
-├── federation/                    BRICS federation screen
-└── admin/
+└── federation/                   BRICS federation screen
 ```
 
 A file under `backend/comm/` is the only place allowed to write to a mailbox or call the encryption/routing logic. A file under `backend/agent/` is the only place allowed to call the Gemini API. Don't reach across a module boundary directly — call the other module's public function, same as the architecture's "no internal network APIs between modules" rule applies to imports too, not just HTTP.
