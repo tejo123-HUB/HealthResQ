@@ -28,11 +28,6 @@ class ReceiptStatus(str, enum.Enum):
     READ = "READ"
 
 
-class GraphEdgeType(str, enum.Enum):
-    COMMAND_TO = "COMMAND_TO"
-    ADMIN_PARENT = "ADMIN_PARENT"
-
-
 class IssuerLevel(str, enum.Enum):
     DISTRICT = "DISTRICT"
     STATE = "STATE"
@@ -116,24 +111,4 @@ class InstructionReceipt(Base):
     at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, default=_now)
 
 
-class CommCommandEdge(Base):
-    """COMM-03 stub: stands in for Apache AGE's COMMAND_TO/ADMIN_PARENT edges until Direction 2
-    (INT-06) ships the real persisted graph. `service.dispatch()` queries this table exactly the
-    way it will later query AGE — swapping the backing store is a one-function change inside
-    `backend/comm/service.py`, not a signature change for any caller."""
 
-    __tablename__ = "comm_command_edges"
-    __table_args__ = (
-        UniqueConstraint(
-            "from_level", "from_scope_id", "to_facility_id", "edge_type", name="uq_comm_command_edges_edge"
-        ),
-    )
-
-    id: Mapped[uuid.UUID] = _uuid_pk()
-    from_level: Mapped[IssuerLevel] = mapped_column(Enum(IssuerLevel, name="comm_issuer_level"), nullable=False)
-    from_scope_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), nullable=False, index=True)
-    to_facility_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True), ForeignKey("facilities.id"), nullable=False, index=True
-    )
-    edge_type: Mapped[GraphEdgeType] = mapped_column(Enum(GraphEdgeType, name="graph_edge_type"), nullable=False)
-    enabled: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)

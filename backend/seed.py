@@ -12,7 +12,6 @@ from datetime import date, datetime, timedelta, timezone
 
 from backend.agent.triggers import run_proactive_triggers
 from backend.audit.service import log_event
-from backend.comm import models as comm_models
 from backend.config import settings
 from backend.db import Base, SessionLocal, engine
 from backend.intelligence.composition import build_forecast
@@ -304,38 +303,6 @@ def run() -> None:
                 status=models.InstructionStatus.ACKNOWLEDGED,
             )
         )
-
-        # --- COMM-03 stub graph edges (Direction 4; swapped for Apache AGE once INT-06 ships) -------
-        # One ADMIN_PARENT edge per facility from its own district, plus one COMMAND_TO-equivalent
-        # edge from its own state and country — CMD-08 (Direction 3) needs a command path to exist
-        # at every authority level a recommendation might resolve to (a cross-district movement's
-        # requiredAuthority comes out STATE or NATIONAL, per CMD-02's graph-derived computation),
-        # not just the district level Direction 4 originally seeded for the mailbox-sync demo.
-        for f in facilities:
-            db.add(
-                comm_models.CommCommandEdge(
-                    from_level=comm_models.IssuerLevel.DISTRICT,
-                    from_scope_id=f.district_id,
-                    to_facility_id=f.id,
-                    edge_type=comm_models.GraphEdgeType.ADMIN_PARENT,
-                )
-            )
-            db.add(
-                comm_models.CommCommandEdge(
-                    from_level=comm_models.IssuerLevel.STATE,
-                    from_scope_id=f.state_id,
-                    to_facility_id=f.id,
-                    edge_type=comm_models.GraphEdgeType.COMMAND_TO,
-                )
-            )
-            db.add(
-                comm_models.CommCommandEdge(
-                    from_level=comm_models.IssuerLevel.NATIONAL,
-                    from_scope_id=f.country_id,
-                    to_facility_id=f.id,
-                    edge_type=comm_models.GraphEdgeType.COMMAND_TO,
-                )
-            )
 
         log_event(db, actor_user_id=None, action="SEED", entity_type="database", entity_id="seed", details={"facilities": len(facilities)})
 

@@ -13,10 +13,8 @@ from sqlalchemy.orm import Session
 
 from backend.comm.crypto import seal_payload
 from backend.comm.models import (
-    CommCommandEdge,
     CommMailbox,
     CommSealedMessage,
-    GraphEdgeType,
     InstructionReceipt,
     IssuerLevel,
     ReceiptStatus,
@@ -71,18 +69,14 @@ def dispatch(
     upstream of this one). No registered public key yet -> QUEUED, nothing written — the frozen
     dispatch signature's existing QUEUED state covers "can't deliver yet"; `sync_unit_mailbox`
     retries automatically once a key shows up, no separate pending-dispatch table needed."""
-    edge = (
-        db.query(CommCommandEdge)
-        .filter(
-            CommCommandEdge.from_level == issuer_level,
-            CommCommandEdge.from_scope_id == issuer_scope_id,
-            CommCommandEdge.to_facility_id == recipient_facility_id,
-            CommCommandEdge.edge_type.in_([GraphEdgeType.COMMAND_TO, GraphEdgeType.ADMIN_PARENT]),
-            CommCommandEdge.enabled.is_(True),
-        )
-        .first()
+    from backend.intelligence.graph.session import run_cypher
+    rows = run_cypher(
+        db,
+        "MATCH (a {id: $issuerId})-[r:COMMAND_TO|ADMIN_PARENT]->(b:Facility {id: $recipientId}) RETURN count(r)",
+        {"issuerId": str(issuer_scope_id), "recipientId": str(recipient_facility_id)},
+        columns=("count",)
     )
-    if edge is None:
+    if not rows or rows[0][0] == 0:
         return DispatchResult(status="REJECTED_NO_EDGE", sealed_message_id=None)
 
     key_pair = db.get(UnitKeyPair, recipient_facility_id)
