@@ -65,7 +65,7 @@ function DecisionScreen() {
       </div>
     );
   }
-  if (error || (!recommendation && !isLoading)) {
+  if (error || !recommendation) {
     return <ErrorBanner message="Couldn't load this recommendation." onRetry={() => mutate()} />;
   }
 
