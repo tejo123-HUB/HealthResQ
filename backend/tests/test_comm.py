@@ -28,6 +28,19 @@ def _b64d(s: str) -> bytes:
     return base64.b64decode(s)
 
 
+def _command_edge(db, *, scope_id, facility_id) -> None:
+    from backend.intelligence.graph.session import run_cypher
+    run_cypher(
+        db,
+        "MERGE (a:AuthorityLevel {id: $scopeId}) "
+        "MERGE (b:Facility {id: $facilityId}) "
+        "MERGE (a)-[:ADMIN_PARENT]->(b) "
+        "RETURN 1",
+        {"scopeId": str(scope_id), "facilityId": str(facility_id)},
+        columns=("result",)
+    )
+
+
 # --- COMM-02: envelope encryption round-trip, standalone -------------------------------------------
 
 
@@ -73,14 +86,7 @@ def test_dispatch_queued_without_recipient_key(db, geo):
     facility = make_facility(db, geo, name="PHC-NoKey", ftype=models.FacilityType.PHC)
     instruction = models.AtomicInstruction(recipient_facility_id=facility.id, action="Prepare ORS", quantity=100)
     db.add(instruction)
-    db.add(
-        comm_models.CommCommandEdge(
-            from_level=comm_models.IssuerLevel.DISTRICT,
-            from_scope_id=facility.district_id,
-            to_facility_id=facility.id,
-            edge_type=comm_models.GraphEdgeType.ADMIN_PARENT,
-        )
-    )
+    _command_edge(db, scope_id=facility.district_id, facility_id=facility.id)
     db.flush()
 
     result = service.dispatch(
@@ -102,14 +108,7 @@ def test_key_registration_seals_pending_instruction_into_inbox(client, db, role_
     facility = make_facility(db, geo, name="PHC-Inbox", ftype=models.FacilityType.PHC)
     instruction = models.AtomicInstruction(recipient_facility_id=facility.id, action="Prepare 500 ORS", quantity=500)
     db.add(instruction)
-    db.add(
-        comm_models.CommCommandEdge(
-            from_level=comm_models.IssuerLevel.DISTRICT,
-            from_scope_id=facility.district_id,
-            to_facility_id=facility.id,
-            edge_type=comm_models.GraphEdgeType.ADMIN_PARENT,
-        )
-    )
+    _command_edge(db, scope_id=facility.district_id, facility_id=facility.id)
     db.flush()
     token = make_user_token(db, role_operator, models.ScopeLevel.FACILITY, facility.id)
 
@@ -140,14 +139,7 @@ def test_wrong_units_key_cannot_decrypt_inbox_message(client, db, role_operator,
     facility = make_facility(db, geo, name="PHC-WrongKey", ftype=models.FacilityType.PHC)
     instruction = models.AtomicInstruction(recipient_facility_id=facility.id, action="Prepare ORS", quantity=10)
     db.add(instruction)
-    db.add(
-        comm_models.CommCommandEdge(
-            from_level=comm_models.IssuerLevel.DISTRICT,
-            from_scope_id=facility.district_id,
-            to_facility_id=facility.id,
-            edge_type=comm_models.GraphEdgeType.ADMIN_PARENT,
-        )
-    )
+    _command_edge(db, scope_id=facility.district_id, facility_id=facility.id)
     db.flush()
     token = make_user_token(db, role_operator, models.ScopeLevel.FACILITY, facility.id)
 
@@ -184,14 +176,7 @@ def test_key_loss_flags_prior_unread_messages_unrecoverable(client, db, role_ope
     facility = make_facility(db, geo, name="PHC-KeyLoss", ftype=models.FacilityType.PHC)
     instruction = models.AtomicInstruction(recipient_facility_id=facility.id, action="Prepare ORS", quantity=10)
     db.add(instruction)
-    db.add(
-        comm_models.CommCommandEdge(
-            from_level=comm_models.IssuerLevel.DISTRICT,
-            from_scope_id=facility.district_id,
-            to_facility_id=facility.id,
-            edge_type=comm_models.GraphEdgeType.ADMIN_PARENT,
-        )
-    )
+    _command_edge(db, scope_id=facility.district_id, facility_id=facility.id)
     db.flush()
     token = make_user_token(db, role_operator, models.ScopeLevel.FACILITY, facility.id)
 
@@ -227,14 +212,7 @@ def test_receipt_marks_message_read(client, db, role_operator, geo):
     facility = make_facility(db, geo, name="PHC-Receipt", ftype=models.FacilityType.PHC)
     instruction = models.AtomicInstruction(recipient_facility_id=facility.id, action="Prepare ORS", quantity=10)
     db.add(instruction)
-    db.add(
-        comm_models.CommCommandEdge(
-            from_level=comm_models.IssuerLevel.DISTRICT,
-            from_scope_id=facility.district_id,
-            to_facility_id=facility.id,
-            edge_type=comm_models.GraphEdgeType.ADMIN_PARENT,
-        )
-    )
+    _command_edge(db, scope_id=facility.district_id, facility_id=facility.id)
     db.flush()
     token = make_user_token(db, role_operator, models.ScopeLevel.FACILITY, facility.id)
 
@@ -260,14 +238,7 @@ def test_other_unit_cannot_post_receipt(client, db, role_operator, geo):
     facility_b = make_facility(db, geo, name="PHC-RecB", ftype=models.FacilityType.PHC)
     instruction = models.AtomicInstruction(recipient_facility_id=facility_a.id, action="Prepare ORS", quantity=10)
     db.add(instruction)
-    db.add(
-        comm_models.CommCommandEdge(
-            from_level=comm_models.IssuerLevel.DISTRICT,
-            from_scope_id=facility_a.district_id,
-            to_facility_id=facility_a.id,
-            edge_type=comm_models.GraphEdgeType.ADMIN_PARENT,
-        )
-    )
+    _command_edge(db, scope_id=facility_a.district_id, facility_id=facility_a.id)
     db.flush()
     token_a = make_user_token(db, role_operator, models.ScopeLevel.FACILITY, facility_a.id)
     token_b = make_user_token(db, role_operator, models.ScopeLevel.FACILITY, facility_b.id)

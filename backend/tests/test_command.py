@@ -25,14 +25,17 @@ def _stock(db, facility, product, quantity: int) -> None:
     db.flush()
 
 
-def _command_edge(db, *, level: comm_models.IssuerLevel, scope_id, facility_id) -> None:
-    db.add(
-        comm_models.CommCommandEdge(
-            from_level=level, from_scope_id=scope_id, to_facility_id=facility_id,
-            edge_type=comm_models.GraphEdgeType.ADMIN_PARENT,
-        )
+def _command_edge(db, *, level, scope_id, facility_id) -> None:
+    from backend.intelligence.graph.session import run_cypher
+    run_cypher(
+        db,
+        "MERGE (a:AuthorityLevel {id: $scopeId}) "
+        "MERGE (b:Facility {id: $facilityId}) "
+        "MERGE (a)-[:ADMIN_PARENT]->(b) "
+        "RETURN 1",
+        {"scopeId": str(scope_id), "facilityId": str(facility_id)},
+        columns=("result",)
     )
-    db.flush()
 
 
 def _draft_recommendation(db, geo, *, donor, destination, product, quantity=300, status_=RecommendationStatus.PENDING_REVIEW):
@@ -164,7 +167,7 @@ def test_approve_with_no_confirmed_edge_creates_no_instructions_and_stays_approv
     product = _product(db)
     _stock(db, donor, product, 1000)
     rec = _draft_recommendation(db, geo, donor=donor, destination=dest, product=product)
-    # Deliberately no CommCommandEdge seeded.
+    # Deliberately no command edge seeded.
 
     rec, instructions = service.approve_or_modify(db, rec, action=DecisionAction.APPROVE, actor_user_id=None)
 
