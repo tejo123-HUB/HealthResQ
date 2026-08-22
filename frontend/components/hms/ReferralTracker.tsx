@@ -58,7 +58,12 @@ export function ReferralTracker({
   return (
     <div className="flex flex-col gap-4">
       <ListGroup title="Referrals">
-        {referrals.length === 0 && <div className="px-4 py-3 text-body text-label-secondary">No referrals.</div>}
+        {referrals.length === 0 && (
+          <div className="px-4 py-3 flex items-center gap-2 text-body text-label-secondary">
+            <Icon name="checkCircle" className="w-4.5 h-4.5" />
+            No referrals.
+          </div>
+        )}
         {referrals.map((r, idx) => {
           const next = nextStatus(r.status);
           const outgoing = r.sourceFacilityId === facilityId;

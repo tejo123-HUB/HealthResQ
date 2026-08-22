@@ -3,6 +3,7 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { Button } from "@/components/hig/Button";
 import { ListGroup, ListRow } from "@/components/hig/Card";
+import { Icon } from "@/components/hig/Icon";
 import { SeverityBadge, type Severity } from "@/components/hig/SeverityBadge";
 import type { OTSlot, Ward } from "@/lib/api/types";
 
@@ -55,7 +56,12 @@ export function OTScheduler({
   return (
     <div className="flex flex-col gap-4">
       <ListGroup title="OT slots">
-        {slots.length === 0 && <div className="px-4 py-3 text-body text-label-secondary">No slots scheduled.</div>}
+        {slots.length === 0 && (
+          <div className="px-4 py-3 flex items-center gap-2 text-body text-label-secondary">
+            <Icon name="checkCircle" className="w-4.5 h-4.5" />
+            No slots scheduled.
+          </div>
+        )}
         {slots.map((s) => (
           <ListRow
             key={s.id}

@@ -14,6 +14,7 @@ export function Button({
   variant = "primary",
   className = "",
   disabled,
+  children,
   ...props
 }: ButtonHTMLAttributes<HTMLButtonElement> & { variant?: Variant }) {
   return (
@@ -23,6 +24,8 @@ export function Button({
       className={`transition-hig text-headline rounded-hig px-3.5 min-h-[2.375rem] ${VARIANT_CLASSES[variant]} ${
         disabled ? "opacity-40 cursor-not-allowed" : "active:opacity-70 active:scale-[0.97]"
       } ${className}`}
-    />
+    >
+      {children}
+    </button>
   );
 }

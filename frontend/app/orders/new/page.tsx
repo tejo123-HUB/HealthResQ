@@ -12,6 +12,7 @@ import { ApiError } from "@/lib/api/client";
 import { ops } from "@/lib/api/ops";
 import { command } from "@/lib/api/command";
 import { useAuth } from "@/lib/auth/AuthContext";
+import { useToast } from "@/lib/toast/ToastProvider";
 
 /** CMD-07: an authority composes a recommendation directly, restricted to facilities/units in
  * their own scope (real facility list, via GET /facilities — legitimately scoped for a
@@ -19,6 +20,7 @@ import { useAuth } from "@/lib/auth/AuthContext";
  * CMD-01 lifecycle as an agent-drafted recommendation (origin=HUMAN) before it can be approved. */
 function ActionComposer() {
   const router = useRouter();
+  const toast = useToast();
   const { scope } = useAuth();
   const { data: facilities } = useSWR(["facilities", scope?.level, scope?.id], () => ops.listFacilities());
   const { data: products } = useSWR(["products"], () => ops.listProducts());
@@ -36,9 +38,12 @@ function ActionComposer() {
     setSubmitError(null);
     try {
       const recommendation = await command.composeAction({ destinationFacilityId, productId, quantity, reason });
+      toast.success("Recommendation submitted for review");
       router.push(`/recommendations/${recommendation.id}`);
     } catch (err) {
-      setSubmitError(err instanceof ApiError ? err.message : "That submission couldn't be completed.");
+      const message = err instanceof ApiError ? err.message : "That submission couldn't be completed.";
+      setSubmitError(message);
+      toast.error(message);
     } finally {
       setSubmitting(false);
     }

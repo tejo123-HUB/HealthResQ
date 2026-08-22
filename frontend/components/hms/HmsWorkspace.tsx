@@ -8,13 +8,16 @@ import { ReferralTracker } from "@/components/hms/ReferralTracker";
 import { WardList } from "@/components/hms/WardList";
 import { ErrorBanner } from "@/components/hig/ErrorBanner";
 import { Skeleton } from "@/components/hig/Skeleton";
+import { ApiError } from "@/lib/api/client";
 import { ops } from "@/lib/api/ops";
 import type { Admission, Bed, ReferralUrgency } from "@/lib/api/types";
+import { useToast } from "@/lib/toast/ToastProvider";
 
 /** OPS-11-13, as a self-contained workspace section (not a top-level nav destination) — mounted
  * inside the facility's single workspace page as the "Hospital" tab. */
 export function HmsWorkspace({ facilityId }: { facilityId: string }) {
   const [selectedWardId, setSelectedWardId] = useState<string | null>(null);
+  const toast = useToast();
 
   const {
     data: wards,
@@ -41,17 +44,31 @@ export function HmsWorkspace({ facilityId }: { facilityId: string }) {
 
   const admissionByBedId = new Map<string, Admission>((admissions ?? []).map((a) => [a.bedId, a]));
 
+  function reportFailure(err: unknown, fallback: string) {
+    toast.error(err instanceof ApiError ? err.message : fallback);
+  }
+
   async function admit(bed: Bed) {
     if (!selectedWardId) return;
-    await ops.createAdmission(facilityId, selectedWardId, bed.id);
-    mutateBeds();
-    mutateAdmissions();
+    try {
+      await ops.createAdmission(facilityId, selectedWardId, bed.id);
+      mutateBeds();
+      mutateAdmissions();
+      toast.success(`Patient admitted into ${bed.code}`);
+    } catch (err) {
+      reportFailure(err, "Couldn't admit patient — try again.");
+    }
   }
 
   async function discharge(admission: Admission) {
-    await ops.dischargeAdmission(admission.id);
-    mutateBeds();
-    mutateAdmissions();
+    try {
+      await ops.dischargeAdmission(admission.id);
+      mutateBeds();
+      mutateAdmissions();
+      toast.success("Patient discharged — bed is free");
+    } catch (err) {
+      reportFailure(err, "Couldn't discharge patient — try again.");
+    }
   }
 
   return (
@@ -92,6 +109,7 @@ export function HmsWorkspace({ facilityId }: { facilityId: string }) {
           onCreate={async (wardId, start, end) => {
             await ops.createOtSlot(facilityId, wardId, start, end);
             mutateOt();
+            toast.success("OT slot scheduled");
           }}
         />
       </section>
@@ -105,11 +123,17 @@ export function HmsWorkspace({ facilityId }: { facilityId: string }) {
           onCreate={async (destFacilityId, reason, urgency: ReferralUrgency) => {
             await ops.createReferral({ sourceFacilityId: facilityId, destFacilityId, reason, urgency });
             mutateReferrals();
+            toast.success("Referral sent");
           }}
           onAdvanceStatus={async (referral) => {
             const next = referral.status === "OPEN" ? "ACKNOWLEDGED" : "CLOSED";
-            await ops.updateReferralStatus(referral.id, next);
-            mutateReferrals();
+            try {
+              await ops.updateReferralStatus(referral.id, next);
+              mutateReferrals();
+              toast.success(`Referral marked ${next}`);
+            } catch (err) {
+              reportFailure(err, "Couldn't update referral — try again.");
+            }
           }}
         />
       </section>

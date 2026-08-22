@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import { Icon } from "@/components/hig/Icon";
 
 /** HIG action-sheet-style confirmation, used before any tap that changes real-world state in one
@@ -25,6 +26,22 @@ export function ConfirmSheet({
   onConfirm: () => void;
   onCancel: () => void;
 }) {
+  const cancelRef = useRef<HTMLButtonElement>(null);
+
+  // Escape to back out, same as tapping the backdrop — and focus starts on Cancel, not Confirm,
+  // so a keyboard user who just hits Enter out of habit doesn't accidentally commit a
+  // consequential action (admit/discharge/approve) they only meant to dismiss.
+  useEffect(() => {
+    if (!open) return;
+    cancelRef.current?.focus();
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onCancel();
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open]);
+
   if (!open) return null;
 
   return (
@@ -52,8 +69,9 @@ export function ConfirmSheet({
             {confirmLabel}
           </button>
           <button
+            ref={cancelRef}
             onClick={onCancel}
-            className="transition-hig text-headline rounded-hig min-h-[2.75rem] bg-fill-regular text-label hover:bg-fill-thick active:opacity-70 active:scale-[0.97]"
+            className="transition-hig text-headline rounded-hig min-h-[2.75rem] bg-fill-regular text-label hover:bg-fill-thick active:opacity-70 active:scale-[0.97] focus:outline-none focus:ring-2 focus:ring-tint-blue-wash"
           >
             Cancel
           </button>

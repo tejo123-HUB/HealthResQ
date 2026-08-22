@@ -5,6 +5,7 @@ import { Nav } from "@/components/Nav";
 import { PageTransition } from "@/components/PageTransition";
 import { AuthProvider } from "@/lib/auth/AuthContext";
 import { ThemeProvider } from "@/lib/theme/ThemeProvider";
+import { ToastProvider } from "@/lib/toast/ToastProvider";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -33,12 +34,14 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       </head>
       <body className="bg-bg-secondary min-h-screen">
         <ThemeProvider>
-          <AuthProvider>
-            <Nav />
-            <main className="max-w-5xl mx-auto px-4 py-6">
-              <PageTransition>{children}</PageTransition>
-            </main>
-          </AuthProvider>
+          <ToastProvider>
+            <AuthProvider>
+              <Nav />
+              <main className="max-w-5xl mx-auto px-4 py-6">
+                <PageTransition>{children}</PageTransition>
+              </main>
+            </AuthProvider>
+          </ToastProvider>
         </ThemeProvider>
       </body>
     </html>

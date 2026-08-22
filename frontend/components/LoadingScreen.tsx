@@ -23,8 +23,10 @@ export function LoadingScreen({ message }: { message?: string }) {
       <div className="relative w-20 h-20 flex items-center justify-center">
         <span className="absolute inset-0 rounded-full bg-brand-teal-wash animate-pulse-ring" />
         <span className="absolute inset-0 rounded-full bg-brand-teal-wash animate-pulse-ring [animation-delay:0.6s]" />
-        <span className="relative w-14 h-14 rounded-full bg-white flex items-center justify-center overflow-hidden animate-breathe ring-1 ring-separator">
-          <Image src="/logo.png" alt="HealthResQ" width={56} height={56} priority />
+        <span className="relative w-14 h-14 rounded-full bg-brand-teal p-[2px] animate-breathe">
+          <span className="w-full h-full rounded-full bg-white flex items-center justify-center overflow-hidden">
+            <Image src="/logo.png" alt="HealthResQ" width={56} height={56} priority />
+          </span>
         </span>
       </div>
 

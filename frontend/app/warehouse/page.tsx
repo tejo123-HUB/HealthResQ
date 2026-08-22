@@ -8,13 +8,16 @@ import { Icon } from "@/components/hig/Icon";
 import { Skeleton } from "@/components/hig/Skeleton";
 import { InstructionList } from "@/components/InstructionList";
 import { InboxPanel } from "@/components/mailbox/InboxPanel";
+import { ApiError } from "@/lib/api/client";
 import { ops } from "@/lib/api/ops";
 import type { InstructionStatus } from "@/lib/api/types";
 import { useAuth } from "@/lib/auth/AuthContext";
+import { useToast } from "@/lib/toast/ToastProvider";
 
 function WarehouseScreen() {
   const { facility } = useAuth();
   const facilityId = facility!.id;
+  const toast = useToast();
   const {
     data: warehouse,
     isLoading,
@@ -65,8 +68,13 @@ function WarehouseScreen() {
         instructions={warehouse?.orders ?? []}
         loading={isLoading}
         onAdvance={async (order, next: InstructionStatus) => {
-          await ops.updateWarehouseOrderStatus(facilityId, order.id, next);
-          mutate();
+          try {
+            await ops.updateWarehouseOrderStatus(facilityId, order.id, next);
+            mutate();
+            toast.success(next === "BLOCKED" ? "Order reported as blocked" : `Order marked ${next}`);
+          } catch (err) {
+            toast.error(err instanceof ApiError ? err.message : "Couldn't update order — try again.");
+          }
         }}
       />
     </div>

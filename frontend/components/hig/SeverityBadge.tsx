@@ -34,7 +34,10 @@ export function SeverityBadge({ severity, label }: { severity: Severity; label: 
         severity === "CRITICAL" ? "animate-glow-pulse" : ""
       } ${SEVERITY_CLASSES[severity]}`}
     >
-      <Icon name={SEVERITY_ICON[severity]} className="w-3.5 h-3.5" />
+      <Icon
+        name={SEVERITY_ICON[severity]}
+        className={`w-3.5 h-3.5 ${severity === "SUCCESS" ? "[stroke-dasharray:65] animate-draw-check" : ""}`}
+      />
       {label}
     </span>
   );

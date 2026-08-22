@@ -5,9 +5,11 @@ import { StatCard } from "@/components/hig/Card";
 import { ErrorBanner } from "@/components/hig/ErrorBanner";
 import { InstructionList } from "@/components/InstructionList";
 import { InboxPanel } from "@/components/mailbox/InboxPanel";
+import { ApiError } from "@/lib/api/client";
 import { ops } from "@/lib/api/ops";
 import type { InstructionStatus } from "@/lib/api/types";
 import { useAuth } from "@/lib/auth/AuthContext";
+import { useToast } from "@/lib/toast/ToastProvider";
 
 /** OPS-06: today's footfall/beds/staff/low-stock summary plus the instruction inbox, sourced
  * exclusively from this facility's own mailbox (via InboxPanel) and its own instructions
@@ -16,6 +18,7 @@ import { useAuth } from "@/lib/auth/AuthContext";
 export function FacilityHome() {
   const { facility } = useAuth();
   const facilityId = facility!.id;
+  const toast = useToast();
 
   const { data: footfall, isLoading: footfallLoading, error: footfallError } = useSWR(["footfall", facilityId], () =>
     ops.getFootfall(facilityId)
@@ -89,8 +92,13 @@ export function FacilityHome() {
           instructions={instructions ?? []}
           loading={instructionsLoading}
           onAdvance={async (instruction, next: InstructionStatus) => {
-            await ops.updateInstructionStatus(instruction.id, next);
-            mutateInstructions();
+            try {
+              await ops.updateInstructionStatus(instruction.id, next);
+              mutateInstructions();
+              toast.success(next === "BLOCKED" ? "Instruction reported as blocked" : `Instruction marked ${next}`);
+            } catch (err) {
+              toast.error(err instanceof ApiError ? err.message : "Couldn't update instruction — try again.");
+            }
           }}
         />
       )}
