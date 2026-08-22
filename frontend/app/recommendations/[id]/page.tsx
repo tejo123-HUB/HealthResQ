@@ -1,7 +1,7 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import useSWR from "swr";
 import { AuthGuard } from "@/components/AuthGuard";
 import { BackButton } from "@/components/hig/BackButton";
@@ -16,6 +16,7 @@ import { ApiError } from "@/lib/api/client";
 import { command, type DecisionAction } from "@/lib/api/command";
 import { ops } from "@/lib/api/ops";
 import { useToast } from "@/lib/toast/ToastProvider";
+import { useAuth } from "@/lib/auth/AuthContext";
 
 const ACTION_VERB: Record<DecisionAction, string> = {
   APPROVE: "approved — dispatching now",
@@ -27,6 +28,7 @@ const ACTION_VERB: Record<DecisionAction, string> = {
 function DecisionScreen() {
   const params = useParams<{ id: string }>();
   const toast = useToast();
+  const { logout } = useAuth();
   const {
     data: recommendation,
     isLoading,
@@ -43,6 +45,12 @@ function DecisionScreen() {
   const [confirming, setConfirming] = useState<Exclude<DecisionAction, "MODIFY" | "ESCALATE"> | null>(null);
   const [escalating, setEscalating] = useState(false);
   const [unresolvedQuantity, setUnresolvedQuantity] = useState(0);
+
+  useEffect(() => {
+    if (error instanceof ApiError && error.status === 401) {
+      logout();
+    }
+  }, [error, logout]);
 
   if (isLoading) {
     return (

@@ -14,8 +14,9 @@ export const command = {
   getRecommendation: async (id: string): Promise<Recommendation | null> => {
     try {
       return await api.get<Recommendation>(`/recommendations/${id}`);
-    } catch {
-      return null;
+    } catch (e: any) {
+      if (e?.status === 404) return null;
+      throw e;
     }
   },
 
