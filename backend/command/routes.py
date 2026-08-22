@@ -76,6 +76,7 @@ def get_recommendation(
     rec = service.get_recommendation(db, recommendation_id)
     if rec is None:
         raise HTTPException(status.HTTP_404_NOT_FOUND, "Recommendation not found")
+    _require_own_scope_authority(user, rec)
     return recommendation_out(rec)
 
 
@@ -174,10 +175,14 @@ def submit_decision(
 def list_recommendation_instructions(
     recommendation_id: uuid.UUID,
     db: Session = Depends(get_db),
-    _user: CurrentUser = Depends(get_current_user),
+    user: CurrentUser = Depends(get_current_user),
 ) -> list[InstructionSchema]:
     """CMD-08's decomposed output — the same `atomic_instructions` rows OPS-06/07 show in a
     facility's own inbox, filtered to the ones this recommendation produced."""
+    rec = service.get_recommendation(db, recommendation_id)
+    if rec is None:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "Recommendation not found")
+    _require_own_scope_authority(user, rec)
     instructions = (
         db.query(ops_models.AtomicInstruction).filter(ops_models.AtomicInstruction.recommendation_id == recommendation_id).all()
     )

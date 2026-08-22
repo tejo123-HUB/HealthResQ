@@ -29,6 +29,8 @@ def ask_agent(
         except ValueError:
             rec = None
         if rec is not None:
+            from backend.command.routes import _require_own_scope_authority
+            _require_own_scope_authority(user, rec)
             facility_id = str(rec.destination_facility_id) if rec.destination_facility_id else None
             product_id = str(rec.product_id) if rec.product_id else None
 
