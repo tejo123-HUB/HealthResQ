@@ -17,14 +17,17 @@ cp .env.example .env
 docker compose up -d --build
 ```
 
-This starts PostgreSQL (with PostGIS) and the API (migrations run automatically on container
-start). Seed demo data once the stack is up:
+This starts PostgreSQL (with PostGIS), the API (migrations run automatically on container start),
+and the web frontend (Next.js, built and served standalone). Seed demo data once the stack is up:
 
 ```
 docker compose exec api python -m backend.seed
 ```
 
-API is then available at `http://localhost:8000` (`/health`, interactive docs at `/docs`).
+API is then available at `http://localhost:8000` (`/health`, interactive docs at `/docs`); the web
+app at `http://localhost:3000`. `NEXT_PUBLIC_API_BASE_URL` (see `.env.example`) is inlined into the
+web container's build — it must stay a browser-reachable `host:port`, not the compose-internal
+`api` hostname, since it's read client-side.
 
 ### Run locally against `docker compose up -d db`
 
@@ -35,6 +38,15 @@ docker compose up -d db
 uv run alembic upgrade head
 uv run python -m backend.seed
 uv run uvicorn backend.app:app --reload
+```
+
+For frontend hot-reload during development, run the Next.js dev server directly against the API
+above instead of the `web` container:
+
+```
+cd frontend
+npm install
+npm run dev
 ```
 
 ### Demo login
