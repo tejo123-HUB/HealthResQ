@@ -11,9 +11,9 @@ export function BackButton() {
   return (
     <button
       onClick={() => router.back()}
-      className="flex items-center gap-1 text-body text-tint-blue mb-2 -ml-2 px-2 py-1 rounded-hig active:bg-fill-regular transition-hig"
+      className="group flex items-center gap-1 text-body text-tint-blue mb-2 -ml-2 px-2 py-1 rounded-hig hover:bg-fill-thin active:bg-fill-regular transition-hig"
     >
-      <Icon name="chevronLeft" className="w-5 h-5" />
+      <Icon name="chevronLeft" className="w-5 h-5 transition-transform group-hover:-translate-x-0.5" />
       Back
     </button>
   );

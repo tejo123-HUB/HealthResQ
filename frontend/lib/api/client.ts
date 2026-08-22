@@ -46,8 +46,52 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   return (await res.json()) as T;
 }
 
+/** Reads a newline-delimited-JSON (NDJSON) response body incrementally, yielding each parsed
+ * line as soon as it arrives — for endpoints that stream one row at a time (e.g. a per-facility
+ * forecast computation) rather than blocking until the whole payload is ready. `signal` lets the
+ * caller abort mid-stream (e.g. the user picked a different resource before this one finished). */
+async function* stream<T>(path: string, signal?: AbortSignal): AsyncGenerator<T> {
+  const token = getToken();
+  const headers = new Headers();
+  if (token) headers.set("Authorization", `Bearer ${token}`);
+
+  const res = await fetch(`${API_BASE_URL}${path}`, { headers, signal });
+  if (!res.ok || !res.body) {
+    let detail = res.statusText;
+    try {
+      const body = await res.json();
+      detail = body.detail ?? detail;
+    } catch {
+      // response body wasn't JSON — fall back to statusText
+    }
+    throw new ApiError(res.status, detail);
+  }
+
+  const reader = res.body.getReader();
+  const decoder = new TextDecoder();
+  let buffer = "";
+  try {
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      buffer += decoder.decode(value, { stream: true });
+      let newlineIndex: number;
+      while ((newlineIndex = buffer.indexOf("\n")) !== -1) {
+        const line = buffer.slice(0, newlineIndex).trim();
+        buffer = buffer.slice(newlineIndex + 1);
+        if (line) yield JSON.parse(line) as T;
+      }
+    }
+    const rest = buffer.trim();
+    if (rest) yield JSON.parse(rest) as T;
+  } finally {
+    reader.releaseLock();
+  }
+}
+
 export const api = {
   get: <T>(path: string) => request<T>(path, { method: "GET" }),
   post: <T>(path: string, body?: unknown) =>
     request<T>(path, { method: "POST", body: body === undefined ? undefined : JSON.stringify(body) }),
+  stream,
 };

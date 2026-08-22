@@ -59,11 +59,15 @@ export function ReferralTracker({
     <div className="flex flex-col gap-4">
       <ListGroup title="Referrals">
         {referrals.length === 0 && <div className="px-4 py-3 text-body text-label-secondary">No referrals.</div>}
-        {referrals.map((r) => {
+        {referrals.map((r, idx) => {
           const next = nextStatus(r.status);
           const outgoing = r.sourceFacilityId === facilityId;
           return (
-            <div key={r.id} className="px-4 py-3 flex items-center justify-between gap-3">
+            <div
+              key={r.id}
+              style={{ animationDelay: `${idx * 40}ms` }}
+              className="px-4 py-3 flex items-center justify-between gap-3 animate-fade-in-up hover:bg-fill-thin transition-hig"
+            >
               <div className="flex items-center gap-3 min-w-0">
                 <div className="w-9 h-9 rounded-full bg-fill-regular flex items-center justify-center shrink-0 text-label-secondary">
                   <Icon name={outgoing ? "chevronRight" : "inbox"} className="w-4 h-4" />
@@ -88,7 +92,7 @@ export function ReferralTracker({
         })}
       </ListGroup>
 
-      <form onSubmit={onSubmit} className="flex flex-col gap-4 bg-bg rounded-hig border border-separator p-4">
+      <form onSubmit={onSubmit} className="flex flex-col gap-4 bg-bg rounded-hig border border-separator shadow-card p-4">
         <div className="flex flex-col gap-1.5">
           <span className="text-footnote text-label-secondary">Refer to</span>
           <div className="flex gap-2 flex-wrap">
@@ -100,7 +104,7 @@ export function ReferralTracker({
                 className={`transition-hig text-subhead rounded-hig px-4 min-h-[2.375rem] border ${
                   destFacilityId === f.id
                     ? "bg-tint-blue-wash text-tint-blue border-tint-blue"
-                    : "bg-bg-secondary text-label border-separator"
+                    : "bg-bg-secondary text-label border-separator hover:bg-fill-thin"
                 }`}
               >
                 {f.name}
@@ -114,7 +118,7 @@ export function ReferralTracker({
             value={reason}
             onChange={(e) => setReason(e.target.value)}
             placeholder="e.g. suspected fracture"
-            className="text-body bg-bg-secondary rounded-hig px-3 min-h-[2.375rem] border border-separator"
+            className="text-body bg-bg-secondary rounded-hig px-3 min-h-[2.375rem] border border-separator outline-none transition-hig focus:border-tint-blue focus:ring-2 focus:ring-tint-blue-wash"
           />
         </label>
         <div className="flex flex-col gap-1.5">
@@ -126,7 +130,7 @@ export function ReferralTracker({
               className={`transition-hig text-subhead rounded-hig flex-1 min-h-[2.375rem] border ${
                 urgency === "ROUTINE"
                   ? "bg-tint-blue-wash text-tint-blue border-tint-blue"
-                  : "bg-bg-secondary text-label border-separator"
+                  : "bg-bg-secondary text-label border-separator hover:bg-fill-thin"
               }`}
             >
               Routine
@@ -137,7 +141,7 @@ export function ReferralTracker({
               className={`transition-hig text-subhead rounded-hig flex-1 min-h-[2.375rem] border ${
                 urgency === "URGENT"
                   ? "bg-tint-red-wash text-tint-red border-tint-red"
-                  : "bg-bg-secondary text-label border-separator"
+                  : "bg-bg-secondary text-label border-separator hover:bg-fill-thin"
               }`}
             >
               Urgent
@@ -145,7 +149,7 @@ export function ReferralTracker({
           </div>
         </div>
         <Button type="submit">Refer</Button>
-        {error && <p className="text-footnote text-tint-red">{error}</p>}
+        {error && <p className="text-footnote text-tint-red animate-fade-in-up">{error}</p>}
       </form>
     </div>
   );

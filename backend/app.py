@@ -4,7 +4,9 @@ from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
+from backend.agent.routes import router as agent_router
 from backend.comm.routes import router as comm_router
+from backend.command.routes import router as command_router
 from backend.db import engine
 from backend.intelligence.api import router as intelligence_router
 from backend.intelligence.graph.schema import ensure_graph_ready
@@ -25,9 +27,13 @@ def create_app() -> FastAPI:
     app = FastAPI(title="HealthResQ API", version="0.1.0", lifespan=_lifespan)
 
     # The Web Application (frontend/) runs as a separate Next.js dev server (Direction 4).
+    # "localhost" and "127.0.0.1" are different origins to the browser even though they resolve
+    # to the same machine — allow both, since either is a normal way to reach the dev server (and
+    # a mismatch here fails every request silently from the frontend's point of view: the fetch
+    # throws before a response is ever seen, which looks exactly like "login is failing").
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=["http://localhost:3000"],
+        allow_origin_regex=r"http://(localhost|127\.0\.0\.1):3000",
         allow_credentials=True,
         allow_methods=["*"],
         allow_headers=["*"],
@@ -36,6 +42,8 @@ def create_app() -> FastAPI:
     app.include_router(ops_router)
     app.include_router(intelligence_router)
     app.include_router(comm_router)
+    app.include_router(command_router)
+    app.include_router(agent_router)
 
     @app.exception_handler(HTTPException)
     async def http_exception_handler(_request: Request, exc: HTTPException) -> JSONResponse:

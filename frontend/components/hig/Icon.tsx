@@ -26,6 +26,8 @@ const PATHS: Record<string, string> = {
   moon: "M20 14.5a8 8 0 1 1-9.5-9.5 6.5 6.5 0 0 0 9.5 9.5Z",
   x: "M18 6 6 18M6 6l12 12",
   pulse: "M22 12h-4l-3 9L9 3l-3 9H2",
+  search: "M11 19a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm10 2-4.35-4.35",
+  chevronDown: "m6 9 6 6 6-6",
 };
 
 export function Icon({

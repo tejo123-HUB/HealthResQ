@@ -29,7 +29,10 @@ const SEVERITY_ICON: Record<Severity, Parameters<typeof Icon>[0]["name"]> = {
 export function SeverityBadge({ severity, label }: { severity: Severity; label: string }) {
   return (
     <span
-      className={`inline-flex items-center gap-1 text-caption1 font-semibold rounded-full pl-1.5 pr-2.5 py-1 ${SEVERITY_CLASSES[severity]}`}
+      key={severity}
+      className={`inline-flex items-center gap-1 text-caption1 font-semibold rounded-full pl-1.5 pr-2.5 py-1 animate-pop-in ${
+        severity === "CRITICAL" ? "animate-glow-pulse" : ""
+      } ${SEVERITY_CLASSES[severity]}`}
     >
       <Icon name={SEVERITY_ICON[severity]} className="w-3.5 h-3.5" />
       {label}
@@ -59,4 +62,24 @@ const RISK_SEVERITY: Record<string, Severity> = {
 
 export function riskSeverity(status: string): Severity {
   return RISK_SEVERITY[status] ?? "NEUTRAL";
+}
+
+// CMD-01's Recommendation.status — a DRAFT/PENDING_REVIEW recommendation is awaiting a decision
+// (WATCH), OUTDATED needs recalculation before it can proceed (CRITICAL, same urgency as a
+// BLOCKED instruction), REJECTED/ESCALATED are settled-elsewhere outcomes (NEUTRAL, not a
+// failure of this row), and APPROVED/MODIFIED/EXECUTING/COMPLETED are all success states.
+const RECOMMENDATION_SEVERITY: Record<string, Severity> = {
+  DRAFT: "WATCH",
+  PENDING_REVIEW: "WATCH",
+  OUTDATED: "CRITICAL",
+  APPROVED: "SUCCESS",
+  MODIFIED: "SUCCESS",
+  EXECUTING: "SUCCESS",
+  COMPLETED: "SUCCESS",
+  REJECTED: "NEUTRAL",
+  ESCALATED: "NEUTRAL",
+};
+
+export function recommendationSeverity(status: string): Severity {
+  return RECOMMENDATION_SEVERITY[status] ?? "NEUTRAL";
 }

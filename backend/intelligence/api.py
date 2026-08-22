@@ -8,12 +8,14 @@ Scope is deliberately restricted to exactly the caller's own JWT scope (no narro
 unlike OPS-09's `/facilities`) — simplest safe default for a first cut; loosen it only by editing
 the shapes doc, not by drifting the implementation ahead of it."""
 
+import json
 import uuid
 
 from fastapi import APIRouter, Body, Depends, HTTPException, Query, status
+from fastapi.responses import StreamingResponse
 from sqlalchemy.orm import Session
 
-from backend.db import get_db
+from backend.db import SessionLocal, get_db
 from backend.intelligence import ports
 from backend.intelligence.graph.queries import cluster_risk_facility_ids
 from backend.intelligence.interop import fhir_export
@@ -38,6 +40,36 @@ def get_resource_explorer(
     user: CurrentUser = Depends(get_current_user),
 ) -> dict:
     return resource_explorer.get_resource_rollup(db, user.scope_level.value, str(user.scope_id), str(product_id))
+
+
+@router.get("/resource-explorer/stream")
+def stream_resource_explorer(
+    product_id: uuid.UUID = Query(...),
+    user: CurrentUser = Depends(get_current_user),
+) -> StreamingResponse:
+    """NDJSON streaming twin of `/resource-explorer` — one `{"type":"facility",...}` line per
+    facility as its forecast completes, then a closing `{"type":"summary",...}` line, instead of
+    one response that blocks until every facility in scope is done.
+
+    Opens its own database session with `SessionLocal()` rather than the shared `Depends(get_db)`
+    used everywhere else: that dependency's session is closed the instant this function returns,
+    which happens before a `StreamingResponse`'s generator body actually runs — fixed upstream in
+    FastAPI 0.118.0 (fastapi#14099), newer than the `fastapi==0.115.0` pinned here. Closing over a
+    dependency-provided session here would silently produce a request against a closed session
+    partway through the stream."""
+    scope_level = user.scope_level.value
+    scope_id = str(user.scope_id)
+    product_id_str = str(product_id)
+
+    def generate():
+        db = SessionLocal()
+        try:
+            for event in resource_explorer.stream_resource_rollup(db, scope_level, scope_id, product_id_str):
+                yield json.dumps(event) + "\n"
+        finally:
+            db.close()
+
+    return StreamingResponse(generate(), media_type="application/x-ndjson")
 
 
 @router.post("/graph-view")

@@ -2,21 +2,26 @@
 
 import Link from "next/link";
 import { useState, type FormEvent } from "react";
+import useSWR from "swr";
 import { Icon } from "@/components/hig/Icon";
 import { agent } from "@/lib/api/agent";
+import { command } from "@/lib/api/command";
 import type { Scope } from "@/lib/api/types";
-import { FIXTURE_RECOMMENDATION } from "@/lib/fixtures/recommendation";
 
 type ChatMessage = { role: "user" | "agent"; text: string };
 
 /** Data lives in the main column; this pane is where the authority discusses it — the top AI
- * suggestion plus a chat thread for "what about instead…" questions (AGT-01, via the fixture-
- * backed `lib/api/agent.ts` facade until Direction 3 ships). One persistent surface, not a modal,
- * so a question is always one tap away without leaving the workspace. */
+ * suggestion (the most recent pending recommendation in the caller's own scope, per CMD-09) plus
+ * a chat thread for "what about instead…" questions (AGT-01). One persistent surface, not a
+ * modal, so a question is always one tap away without leaving the workspace. */
 export function AgentPane({ scope }: { scope: Scope }) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
   const [sending, setSending] = useState(false);
+  const { data: pending } = useSWR(["pending-recommendations", scope.level, scope.id], () =>
+    command.listRecommendations("PENDING_REVIEW,OUTDATED")
+  );
+  const topRecommendation = pending?.[0];
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
@@ -26,7 +31,7 @@ export function AgentPane({ scope }: { scope: Scope }) {
     setMessages((m) => [...m, { role: "user", text: question }]);
     setSending(true);
     try {
-      const reply = await agent.ask(scope, question);
+      const reply = await agent.ask(scope, question, topRecommendation ? { recommendationId: topRecommendation.id } : undefined);
       setMessages((m) => [...m, { role: "agent", text: reply.answer }]);
     } finally {
       setSending(false);
@@ -35,21 +40,31 @@ export function AgentPane({ scope }: { scope: Scope }) {
 
   return (
     <aside className="flex flex-col gap-4 lg:w-80 shrink-0">
-      <div className="bg-bg rounded-hig border border-separator p-4">
+      <div className="bg-bg rounded-hig border border-separator border-l-[3px] border-l-tint-pink shadow-card p-4 animate-fade-in-up">
         <div className="flex items-center gap-2 mb-2 text-tint-pink">
           <Icon name="flag" className="w-4.5 h-4.5" />
           <span className="text-footnote font-semibold uppercase">AI suggestion</span>
         </div>
-        <p className="text-body">{FIXTURE_RECOMMENDATION.problem}</p>
-        <p className="text-footnote text-label-secondary mt-1">
-          {FIXTURE_RECOMMENDATION.resource} · {FIXTURE_RECOMMENDATION.requiredAuthority} approval
-        </p>
-        <Link href={`/recommendations/${FIXTURE_RECOMMENDATION.id}`} className="text-footnote text-tint-blue mt-2 inline-block">
-          Review full recommendation →
-        </Link>
+        {topRecommendation ? (
+          <>
+            <p className="text-body">{topRecommendation.problem}</p>
+            <p className="text-footnote text-label-secondary mt-1">
+              {topRecommendation.resource} · {topRecommendation.requiredAuthority} approval
+            </p>
+            <Link
+              href={`/recommendations/${topRecommendation.id}`}
+              className="text-footnote text-tint-blue mt-2 inline-flex items-center gap-0.5 group"
+            >
+              Review full recommendation
+              <Icon name="chevronRight" className="w-3 h-3 transition-transform group-hover:translate-x-0.5" />
+            </Link>
+          </>
+        ) : (
+          <p className="text-body text-label-secondary">No pending recommendations right now.</p>
+        )}
       </div>
 
-      <div className="bg-bg rounded-hig border border-separator flex flex-col flex-1 min-h-[20rem]">
+      <div className="bg-bg rounded-hig border border-separator shadow-card flex flex-col flex-1 min-h-[20rem] animate-fade-in-up [animation-delay:60ms]">
         <div className="px-4 py-3 border-b border-separator text-footnote text-label-secondary uppercase">
           Ask about this
         </div>
@@ -62,8 +77,8 @@ export function AgentPane({ scope }: { scope: Scope }) {
           {messages.map((m, i) => (
             <div
               key={i}
-              className={`text-body rounded-hig px-3 py-2 max-w-[85%] animate-fade-in-up ${
-                m.role === "user" ? "bg-tint-blue text-white self-end" : "bg-bg-secondary text-label self-start"
+              className={`text-body rounded-hig px-3 py-2 max-w-[85%] shadow-card ${
+                m.role === "user" ? "bg-tint-blue text-white self-end animate-slide-in-right" : "bg-bg-secondary text-label self-start animate-slide-in-left"
               }`}
             >
               {m.text}
@@ -82,13 +97,13 @@ export function AgentPane({ scope }: { scope: Scope }) {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Ask a question…"
-            className="flex-1 text-body bg-bg-secondary rounded-hig px-3 min-h-[2.25rem] border border-separator"
+            className="flex-1 text-body bg-bg-secondary rounded-hig px-3 min-h-[2.25rem] border border-separator outline-none transition-hig focus:border-tint-blue focus:ring-2 focus:ring-tint-blue-wash"
           />
           <button
             type="submit"
             disabled={sending || !input.trim()}
             aria-label="Send"
-            className="w-9 h-9 shrink-0 flex items-center justify-center rounded-hig bg-tint-blue text-white disabled:opacity-40 active:opacity-70 active:scale-90 transition-hig"
+            className="w-9 h-9 shrink-0 flex items-center justify-center rounded-hig bg-tint-blue text-white disabled:opacity-40 enabled:hover:shadow-card-hover active:opacity-70 active:scale-90 transition-hig"
           >
             <Icon name="chevronRight" className="w-4.5 h-4.5" />
           </button>

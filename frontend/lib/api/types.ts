@@ -121,17 +121,81 @@ export type RiskMarker = {
   location: Location | null;
 };
 
+export type ResourceExplorerFacilityRow = {
+  facilityId: string;
+  currentStock: number;
+  forecastDemand: number;
+  projectedStock: number;
+  deficit: number;
+};
+
 export type ResourceRollup = {
   productId: string;
   totalCurrentStock: number;
   totalDeficit: number;
-  facilities: {
-    facilityId: string;
-    currentStock: number;
-    forecastDemand: number;
-    projectedStock: number;
-    deficit: number;
-  }[];
+  facilities: ResourceExplorerFacilityRow[];
+};
+
+// NDJSON events from GET /intelligence/resource-explorer/stream — one "facility" event per row as
+// its forecast completes, then a single closing "summary" event.
+export type ResourceExplorerEvent =
+  | ({ type: "facility" } & ResourceExplorerFacilityRow)
+  | { type: "summary"; productId: string; totalCurrentStock: number; totalDeficit: number };
+
+// --- Command (backend/command) — healthresq-interface-shapes.md §3, plus CMD-09/06's own REST
+// surface (same "edit the shapes doc, don't fork it" precedent as INT-13's §7) -------------------
+
+export type AuthorityLevel = "DISTRICT" | "STATE" | "NATIONAL";
+export type Movement = { from: string; to: string; quantity: number };
+
+export type RecommendationOrigin = "AGENT" | "HUMAN";
+export type RecommendationStatus =
+  | "DRAFT"
+  | "PENDING_REVIEW"
+  | "APPROVED"
+  | "MODIFIED"
+  | "REJECTED"
+  | "ESCALATED"
+  | "OUTDATED"
+  | "EXECUTING"
+  | "COMPLETED";
+
+export type Recommendation = {
+  id: string;
+  scopeLevel: AuthorityLevel;
+  scopeId: string;
+  resource: string;
+  problem: string;
+  evidence: string[];
+  forecastId: string | null;
+  graphResultId: string | null;
+  suggestedMovements: Movement[];
+  requiredAuthority: AuthorityLevel;
+  agentExplanation: string | null;
+  origin: RecommendationOrigin;
+  status: RecommendationStatus;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type AlertCounts = { normal: number; watch: number; high: number; critical: number };
+export type DashboardSummary = {
+  scopeLabel: string;
+  facilityCount: number;
+  alertCounts: AlertCounts;
+  deficitTotal: number;
+  pendingRecommendations: number;
+};
+
+export type SituationReport = {
+  scopeLevel: AuthorityLevel;
+  scopeId: string;
+  narrative: string;
+  facilitiesAtRisk: number;
+  deficitTotal: number;
+  pendingRecommendations: number;
+  executingInstructions: number;
+  generatedAt: string;
 };
 
 // --- COMM (backend/comm) -----------------------------------------------------------------------

@@ -33,5 +33,17 @@ class Settings(BaseSettings):
     memgraph_user: str = ""
     memgraph_password: str = ""
 
+    # AGT-01: "real" (calls Google Gemini's function-calling API) or "mock" (deterministic,
+    # tool-grounded template synthesis, no network call) — same real/mock adapter pattern as
+    # OPS-14's reference-indicator adapter. Defaults to "mock" since a working GEMINI_API_KEY and
+    # network egress aren't guaranteed in every environment this runs in; "real" is a config
+    # change, not a code change, once both are available.
+    agent_llm_mode: str = "mock"
+    gemini_api_key: str = ""
+    gemini_model: str = "gemini-2.0-flash"
+    # AGT-03: bounded investigation loop's max tool calls per interaction, configurable per the
+    # acceptance criterion ("the cap is a configuration value, not a hard-coded constant").
+    agent_tool_call_cap: int = 8
+
 
 settings = Settings()

@@ -52,10 +52,14 @@ export function InstructionList({
           Nothing pending.
         </div>
       )}
-      {instructions.map((i) => {
+      {instructions.map((i, idx) => {
         const forward = FORWARD[i.status];
         return (
-          <div key={i.id} className="px-4 py-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <div
+            key={i.id}
+            style={{ animationDelay: `${idx * 40}ms` }}
+            className="px-4 py-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 animate-fade-in-up hover:bg-fill-thin transition-hig"
+          >
             <div className="flex items-center gap-3 min-w-0">
               <div className="w-9 h-9 rounded-full bg-fill-regular flex items-center justify-center shrink-0 text-label-secondary">
                 <Icon name="box" className="w-4.5 h-4.5" />

@@ -69,7 +69,7 @@ export function OTScheduler({
         ))}
       </ListGroup>
 
-      <form onSubmit={onSubmit} className="flex flex-col gap-4 bg-bg rounded-hig border border-separator p-4">
+      <form onSubmit={onSubmit} className="flex flex-col gap-4 bg-bg rounded-hig border border-separator shadow-card p-4">
         {wards.length > 1 && (
           <div className="flex flex-col gap-1.5">
             <span className="text-footnote text-label-secondary">Ward</span>
@@ -82,7 +82,7 @@ export function OTScheduler({
                   className={`transition-hig text-subhead rounded-hig px-4 min-h-[2.375rem] border ${
                     wardId === w.id
                       ? "bg-tint-blue-wash text-tint-blue border-tint-blue"
-                      : "bg-bg-secondary text-label border-separator"
+                      : "bg-bg-secondary text-label border-separator hover:bg-fill-thin"
                   }`}
                 >
                   {w.name}
@@ -97,7 +97,7 @@ export function OTScheduler({
             type="datetime-local"
             value={start}
             onChange={(e) => setStart(e.target.value)}
-            className="text-body bg-bg-secondary rounded-hig px-3 min-h-[2.375rem] border border-separator"
+            className="text-body bg-bg-secondary rounded-hig px-3 min-h-[2.375rem] border border-separator outline-none transition-hig focus:border-tint-blue focus:ring-2 focus:ring-tint-blue-wash"
           />
         </label>
         <div className="flex flex-col gap-1.5">
@@ -111,7 +111,7 @@ export function OTScheduler({
                 className={`transition-hig text-subhead rounded-hig flex-1 min-h-[2.375rem] border ${
                   durationMinutes === mins
                     ? "bg-tint-blue-wash text-tint-blue border-tint-blue"
-                    : "bg-bg-secondary text-label border-separator"
+                    : "bg-bg-secondary text-label border-separator hover:bg-fill-thin"
                 }`}
               >
                 {mins} min
@@ -120,7 +120,7 @@ export function OTScheduler({
           </div>
         </div>
         <Button type="submit">Schedule slot</Button>
-        {error && <p className="text-footnote text-tint-red">{error}</p>}
+        {error && <p className="text-footnote text-tint-red animate-fade-in-up">{error}</p>}
       </form>
     </div>
   );

@@ -30,9 +30,9 @@ export function ConfirmSheet({
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center">
       <div className="absolute inset-0 bg-black/40 animate-fade-in" onClick={onCancel} />
-      <div className="relative w-full sm:max-w-sm bg-fill-thick backdrop-blur-xl rounded-t-2xl sm:rounded-hig border border-separator p-6 flex flex-col items-center gap-2 text-center animate-sheet-up sm:animate-scale-in">
+      <div className="relative w-full sm:max-w-sm bg-fill-thick backdrop-blur-xl rounded-t-2xl sm:rounded-hig border border-separator shadow-popover p-6 flex flex-col items-center gap-2 text-center animate-sheet-up sm:animate-scale-in">
         <div
-          className={`w-14 h-14 rounded-full flex items-center justify-center mb-1 ${
+          className={`w-14 h-14 rounded-full flex items-center justify-center mb-1 animate-pop-in ${
             destructive ? "bg-tint-red-wash text-tint-red" : "bg-tint-blue-wash text-tint-blue"
           }`}
         >
@@ -43,15 +43,17 @@ export function ConfirmSheet({
         <div className="flex flex-col gap-2 w-full mt-4">
           <button
             onClick={onConfirm}
-            className={`transition-hig text-headline rounded-hig min-h-[2.75rem] text-white active:opacity-70 active:scale-[0.97] ${
-              destructive ? "bg-tint-red" : "bg-tint-blue"
+            className={`transition-hig text-headline rounded-hig min-h-[2.75rem] text-white active:opacity-70 active:scale-[0.97] hover:shadow-card-hover ${
+              destructive
+                ? "bg-tint-red hover:bg-[color-mix(in_srgb,var(--tint-red)_88%,black)]"
+                : "bg-tint-blue hover:bg-[color-mix(in_srgb,var(--tint-blue)_88%,black)]"
             }`}
           >
             {confirmLabel}
           </button>
           <button
             onClick={onCancel}
-            className="transition-hig text-headline rounded-hig min-h-[2.75rem] bg-fill-regular text-label active:opacity-70 active:scale-[0.97]"
+            className="transition-hig text-headline rounded-hig min-h-[2.75rem] bg-fill-regular text-label hover:bg-fill-thick active:opacity-70 active:scale-[0.97]"
           >
             Cancel
           </button>

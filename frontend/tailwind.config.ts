@@ -24,8 +24,11 @@ const config: Config = {
         "tint-orange-wash": "var(--tint-orange-wash)",
         "tint-orange-wash-strong": "var(--tint-orange-wash-strong)",
         "tint-red-wash": "var(--tint-red-wash)",
+        "tint-red-wash-strong": "var(--tint-red-wash-strong)",
         "tint-green-wash": "var(--tint-green-wash)",
+        "tint-green-wash-strong": "var(--tint-green-wash-strong)",
         "tint-blue-wash": "var(--tint-blue-wash)",
+        "tint-blue-wash-strong": "var(--tint-blue-wash-strong)",
         "tint-pink-wash": "var(--tint-pink-wash)",
         "tint-yellow-wash": "var(--tint-yellow-wash)",
         "tint-brown-wash": "var(--tint-brown-wash)",
@@ -43,6 +46,13 @@ const config: Config = {
       },
       spacing: {
         4.5: "1.125rem",
+      },
+      boxShadow: {
+        // Soft, low-contrast elevation — Apple HIG cards read as "raised paper", never a hard
+        // drop shadow. Two-layer (tight + diffuse) for a more natural falloff than a single blur.
+        card: "0 1px 2px rgba(0,0,0,0.04), 0 2px 10px rgba(0,0,0,0.045)",
+        "card-hover": "0 2px 4px rgba(0,0,0,0.06), 0 10px 24px rgba(0,0,0,0.08)",
+        popover: "0 8px 16px rgba(0,0,0,0.08), 0 2px 6px rgba(0,0,0,0.06)",
       },
       keyframes: {
         "fade-in": { from: { opacity: "0" }, to: { opacity: "1" } },
@@ -78,6 +88,27 @@ const config: Config = {
           "0%, 100%": { transform: "scale(1)" },
           "50%": { transform: "scale(1.05)" },
         },
+        "pop-in": {
+          "0%": { opacity: "0", transform: "scale(0.6)" },
+          "60%": { opacity: "1", transform: "scale(1.08)" },
+          "100%": { opacity: "1", transform: "scale(1)" },
+        },
+        "glow-pulse": {
+          "0%, 100%": { boxShadow: "0 0 0 0 var(--tint-red-wash)" },
+          "50%": { boxShadow: "0 0 0 6px transparent" },
+        },
+        "slide-in-right": {
+          from: { opacity: "0", transform: "translateX(10px)" },
+          to: { opacity: "1", transform: "translateX(0)" },
+        },
+        "slide-in-left": {
+          from: { opacity: "0", transform: "translateX(-10px)" },
+          to: { opacity: "1", transform: "translateX(0)" },
+        },
+        "underline-grow": {
+          from: { transform: "scaleX(0)" },
+          to: { transform: "scaleX(1)" },
+        },
       },
       animation: {
         "fade-in": "fade-in 320ms ease-out both",
@@ -89,6 +120,11 @@ const config: Config = {
         "draw-line": "draw-line 1.8s ease-in-out infinite",
         "bounce-dot": "bounce-dot 1.2s ease-in-out infinite",
         breathe: "breathe 3.2s ease-in-out infinite",
+        "pop-in": "pop-in 380ms cubic-bezier(0.34,1.56,0.64,1) both",
+        "glow-pulse": "glow-pulse 1.8s ease-in-out infinite",
+        "slide-in-right": "slide-in-right 260ms cubic-bezier(0.16,1,0.3,1) both",
+        "slide-in-left": "slide-in-left 260ms cubic-bezier(0.16,1,0.3,1) both",
+        "underline-grow": "underline-grow 260ms cubic-bezier(0.16,1,0.3,1) both",
       },
     },
   },

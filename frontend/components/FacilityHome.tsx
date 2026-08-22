@@ -48,7 +48,7 @@ export function FacilityHome() {
         <StatCard
           icon="chart"
           label="OPD visits today"
-          value={opdVisits}
+          numericValue={opdVisits}
           tone="pink"
           loading={footfallLoading}
           index={0}
@@ -64,7 +64,8 @@ export function FacilityHome() {
         <StatCard
           icon="checkCircle"
           label="Staff present"
-          value={capacity ? capacity.staff.reduce((s, r) => s + r.present, 0) : "—"}
+          numericValue={capacity ? capacity.staff.reduce((s, r) => s + r.present, 0) : undefined}
+          value={capacity ? undefined : "—"}
           tone="brown"
           loading={capacityLoading}
           index={2}
@@ -72,7 +73,7 @@ export function FacilityHome() {
         <StatCard
           icon="alert"
           label="Low-stock products"
-          value={lowStockCount}
+          numericValue={lowStockCount}
           tone={lowStockCount > 0 ? "warning" : "default"}
           loading={inventoryLoading}
           index={3}

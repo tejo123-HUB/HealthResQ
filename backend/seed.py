@@ -10,10 +10,12 @@ Run with: python -m backend.seed
 import random
 from datetime import date, datetime, timedelta, timezone
 
+from backend.agent.triggers import run_proactive_triggers
 from backend.audit.service import log_event
 from backend.comm import models as comm_models
 from backend.config import settings
 from backend.db import Base, SessionLocal, engine
+from backend.intelligence.composition import build_forecast
 from backend.intelligence.graph.build import sync_graph_from_ops
 from backend.intelligence.graph.schema import ensure_graph_ready
 from backend.ops import models
@@ -304,9 +306,11 @@ def run() -> None:
         )
 
         # --- COMM-03 stub graph edges (Direction 4; swapped for Apache AGE once INT-06 ships) -------
-        # One ADMIN_PARENT edge per facility, from its own district — enough for
-        # backend/comm/service.py::sync_unit_mailbox to seal each facility's demo instruction into
-        # its mailbox the moment that facility's operator logs in and registers a key.
+        # One ADMIN_PARENT edge per facility from its own district, plus one COMMAND_TO-equivalent
+        # edge from its own state and country — CMD-08 (Direction 3) needs a command path to exist
+        # at every authority level a recommendation might resolve to (a cross-district movement's
+        # requiredAuthority comes out STATE or NATIONAL, per CMD-02's graph-derived computation),
+        # not just the district level Direction 4 originally seeded for the mailbox-sync demo.
         for f in facilities:
             db.add(
                 comm_models.CommCommandEdge(
@@ -316,6 +320,22 @@ def run() -> None:
                     edge_type=comm_models.GraphEdgeType.ADMIN_PARENT,
                 )
             )
+            db.add(
+                comm_models.CommCommandEdge(
+                    from_level=comm_models.IssuerLevel.STATE,
+                    from_scope_id=f.state_id,
+                    to_facility_id=f.id,
+                    edge_type=comm_models.GraphEdgeType.COMMAND_TO,
+                )
+            )
+            db.add(
+                comm_models.CommCommandEdge(
+                    from_level=comm_models.IssuerLevel.NATIONAL,
+                    from_scope_id=f.country_id,
+                    to_facility_id=f.id,
+                    edge_type=comm_models.GraphEdgeType.COMMAND_TO,
+                )
+            )
 
         log_event(db, actor_user_id=None, action="SEED", entity_type="database", entity_id="seed", details={"facilities": len(facilities)})
 
@@ -323,9 +343,21 @@ def run() -> None:
         # same transaction as everything above, so a failure here rolls back the whole seed too.
         sync_graph_from_ops(db)
 
+        # --- Real forecasts/alerts, then AGT-04's proactive sweep (Direction 3) ---------------------
+        # INT never persists an Alert row until something calls build_forecast — computing one per
+        # operational facility/product here (against the real 90-day history just seeded, not a
+        # hand-typed example) is what gives AGT-04 real CRITICAL alerts to react to, so the demo
+        # dashboards/AI-suggestion pane show a genuine recommendation instead of a fixture.
+        for f in operational_facilities:
+            for name in PRODUCTS:
+                build_forecast(db, f.id, products[name].id)
+        db.flush()
+        drafted_recommendations = run_proactive_triggers(db)
+
         db.commit()
         print(f"Seeded {len(facilities)} facilities ({PHC_COUNT} PHC, {SHC_COUNT} SHC, {WAREHOUSE_COUNT} warehouse), "
               f"{len(PRODUCTS)} products, {HISTORY_DAYS} days of history.")
+        print(f"AGT-04 drafted {len(drafted_recommendations)} recommendation(s) from real seeded data.")
         print(f"Demo login password for every seeded user: {settings.seed_default_password}")
         print("Example usernames: operator.phc-001, district.krishna, state.andhra-pradesh, national.india")
     finally:

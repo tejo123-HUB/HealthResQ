@@ -1,20 +1,24 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useState, type FormEvent } from "react";
 import useSWR from "swr";
 import { AuthGuard } from "@/components/AuthGuard";
 import { BackButton } from "@/components/hig/BackButton";
 import { Button } from "@/components/hig/Button";
 import { Card } from "@/components/hig/Card";
+import { ErrorBanner } from "@/components/hig/ErrorBanner";
+import { ApiError } from "@/lib/api/client";
 import { ops } from "@/lib/api/ops";
 import { command } from "@/lib/api/command";
 import { useAuth } from "@/lib/auth/AuthContext";
 
 /** CMD-07: an authority composes a recommendation directly, restricted to facilities/units in
  * their own scope (real facility list, via GET /facilities — legitimately scoped for a
- * DISTRICT/STATE/NATIONAL caller under OPS-02). The submission itself is a stub — CMD-01's real
- * lifecycle and INT feasibility validation don't exist until Direction 2/3 ship. */
+ * DISTRICT/STATE/NATIONAL caller under OPS-02). Runs the same INT feasibility validation and
+ * CMD-01 lifecycle as an agent-drafted recommendation (origin=HUMAN) before it can be approved. */
 function ActionComposer() {
+  const router = useRouter();
   const { scope } = useAuth();
   const { data: facilities } = useSWR(["facilities", scope?.level, scope?.id], () => ops.listFacilities());
   const { data: products } = useSWR(["products"], () => ops.listProducts());
@@ -23,15 +27,18 @@ function ActionComposer() {
   const [productId, setProductId] = useState("");
   const [quantity, setQuantity] = useState(100);
   const [reason, setReason] = useState("");
-  const [submitted, setSubmitted] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
     setSubmitting(true);
+    setSubmitError(null);
     try {
-      await command.composeAction({ destinationFacilityId, productId, quantity, reason });
-      setSubmitted(true);
+      const recommendation = await command.composeAction({ destinationFacilityId, productId, quantity, reason });
+      router.push(`/recommendations/${recommendation.id}`);
+    } catch (err) {
+      setSubmitError(err instanceof ApiError ? err.message : "That submission couldn't be completed.");
     } finally {
       setSubmitting(false);
     }
@@ -52,7 +59,7 @@ function ActionComposer() {
               required
               value={destinationFacilityId}
               onChange={(e) => setDestinationFacilityId(e.target.value)}
-              className="text-body bg-bg-secondary rounded-hig px-3 py-2 border border-separator"
+              className="text-body bg-bg-secondary rounded-hig px-3 py-2 border border-separator outline-none transition-hig focus:border-tint-blue focus:ring-2 focus:ring-tint-blue-wash"
             >
               <option value="" disabled>
                 Select a facility
@@ -70,7 +77,7 @@ function ActionComposer() {
               required
               value={productId}
               onChange={(e) => setProductId(e.target.value)}
-              className="text-body bg-bg-secondary rounded-hig px-3 py-2 border border-separator"
+              className="text-body bg-bg-secondary rounded-hig px-3 py-2 border border-separator outline-none transition-hig focus:border-tint-blue focus:ring-2 focus:ring-tint-blue-wash"
             >
               <option value="" disabled>
                 Select a resource
@@ -89,7 +96,7 @@ function ActionComposer() {
               min={1}
               value={quantity}
               onChange={(e) => setQuantity(Number(e.target.value))}
-              className="text-body bg-bg-secondary rounded-hig px-3 py-2 border border-separator"
+              className="text-body bg-bg-secondary rounded-hig px-3 py-2 border border-separator outline-none transition-hig focus:border-tint-blue focus:ring-2 focus:ring-tint-blue-wash"
             />
           </label>
           <label className="flex flex-col gap-1">
@@ -98,18 +105,25 @@ function ActionComposer() {
               required
               value={reason}
               onChange={(e) => setReason(e.target.value)}
-              className="text-body bg-bg-secondary rounded-hig px-3 py-2 border border-separator"
+              className="text-body bg-bg-secondary rounded-hig px-3 py-2 border border-separator outline-none transition-hig focus:border-tint-blue focus:ring-2 focus:ring-tint-blue-wash"
               rows={3}
             />
           </label>
-          <Button type="submit" disabled={submitting}>
-            {submitting ? "Submitting…" : "Submit for review"}
+          <Button type="submit" disabled={submitting} className="flex items-center justify-center gap-2">
+            {submitting ? (
+              <>
+                <span className="flex items-center gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-white/80 animate-bounce-dot" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-white/80 animate-bounce-dot [animation-delay:0.15s]" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-white/80 animate-bounce-dot [animation-delay:0.3s]" />
+                </span>
+                Submitting…
+              </>
+            ) : (
+              "Submit for review"
+            )}
           </Button>
-          {submitted && (
-            <p className="text-footnote text-tint-green">
-              Recorded (stub — no real CMD-01 recommendation exists until Direction 2/3 ship).
-            </p>
-          )}
+          {submitError && <ErrorBanner message={submitError} />}
         </form>
       </Card>
     </div>

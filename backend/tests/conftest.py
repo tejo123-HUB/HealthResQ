@@ -9,6 +9,7 @@ from sqlalchemy.orm import Session
 from backend.app import app
 from backend.audit import models as audit_models  # noqa: F401 - registers AuditLog on Base.metadata
 from backend.comm import models as comm_models  # noqa: F401 - registers COMM models on Base.metadata
+from backend.command import models as command_models  # noqa: F401 - registers CMD models on Base.metadata
 from backend.config import settings
 from backend.db import Base, get_db
 from backend.intelligence import models as intelligence_models  # noqa: F401 - registers INT models

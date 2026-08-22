@@ -239,9 +239,10 @@ askAgent(scope: Scope, question: string, context?: { recommendationId?: string }
 }
 ```
 
-Direction 4's side pane calls this per message; Direction 3 doesn't exist yet, so
-`frontend/lib/api/agent.ts` returns canned answers keyed by keyword match until Direction 3 ships —
-same swap-the-client-module pattern as `lib/api/intelligence.ts` and `lib/api/command.ts`.
+Direction 4's side pane calls this per message. Direction 3 has shipped — `frontend/lib/api/agent.ts`
+now calls the real `POST /agent/ask` (`backend/agent/routes.py`) instead of returning a canned,
+keyword-matched reply; same real-backing swap already done for `lib/api/intelligence.ts` and
+`lib/api/command.ts`.
 
 ---
 
@@ -303,9 +304,10 @@ scoped to exactly that token's own scope (no narrowing query param, unlike `OPS-
 ```
 GET  /intelligence/risk-map                                  → RiskMarker[]
 GET  /intelligence/resource-explorer?product_id=...            → ResourceRollup
-POST /intelligence/graph-view   { movements: Movement[] }        → ScopedGraphView
-GET  /intelligence/hex-map?resolution=5                          → HexCell[]
-GET  /intelligence/fhir/locations                                  → FHIR R4 Bundle (see note below)
+GET  /intelligence/resource-explorer/stream?product_id=...       → ResourceExplorerEvent (NDJSON, see note below)
+POST /intelligence/graph-view   { movements: Movement[] }          → ScopedGraphView
+GET  /intelligence/hex-map?resolution=5                              → HexCell[]
+GET  /intelligence/fhir/locations                                      → FHIR R4 Bundle (see note below)
 ```
 
 ```ts
@@ -321,6 +323,15 @@ type ResourceRollup = {
   facilities: { facilityId: string, currentStock: number, forecastDemand: number,
                 projectedStock: number, deficit: number }[]
 }
+
+// NDJSON twin of ResourceRollup — one line per facility as its forecast completes, then a single
+// closing summary line, instead of one response that blocks until every facility in scope is
+// done (a forecast fit is the most expensive thing this call does per facility, and a scope can
+// hold dozens of them). Response content-type is application/x-ndjson, one JSON object per line.
+type ResourceExplorerEvent =
+  | { type: "facility", facilityId: string, currentStock: number, forecastDemand: number,
+      projectedStock: number, deficit: number }
+  | { type: "summary", productId: string, totalCurrentStock: number, totalDeficit: number }
 
 type Movement = { from: string, to: string, quantity: number }
 // Callers pass the `movements` array from `generate_redistribution_options`'s result directly —
@@ -347,8 +358,52 @@ platform integration, not a FHIR server (no `_search`, no writes, `Location` onl
 
 ---
 
-## 8. Change discipline
+## 9. `CMD` REST surface — Direction 3 → Direction 4
+
+Not part of the original Contract Freeze (Section 3 only froze the `Recommendation`/
+`AtomicInstruction` object shapes for Direction 4's stub). Added once built, per the same "edit
+the shapes doc, don't fork it" precedent Section 7 (`INT-13`) already set.
+
+```
+GET  /recommendations?status=...                              → Recommendation[]
+GET  /recommendations/{id}                                       → Recommendation
+POST /recommendations           { destinationFacilityId, productId, quantity, reason }
+                                                                   → Recommendation   (CMD-07)
+POST /recommendations/{id}/decision   { action, movements?, notes?, unresolvedQuantity? }
+                                                                   → Recommendation   (CMD-03/04/05/08)
+GET  /recommendations/{id}/instructions                             → Instruction[]  (CMD-08's
+                                                                       output — the same object
+                                                                       Section 1 calls Instruction)
+GET  /dashboard                                                       → DashboardSummary  (CMD-09)
+GET  /situation-report                                                  → SituationReport  (CMD-06)
+```
+
+Every route requires the caller's normal auth bearer token; `?status=` accepts a comma-separated
+list of `Recommendation.status` values. `/dashboard` and `/situation-report` take no scope
+parameter at all — like `/intelligence/*`, they're always exactly the caller's own JWT scope.
+
+```ts
+type DecisionAction = "APPROVE" | "REJECT" | "MODIFY" | "ESCALATE"
+// `movements` is only read for MODIFY (a human-edited plan, re-validated identically to the
+// original). `unresolvedQuantity` is required, and must be > 0, for ESCALATE.
+
+type DashboardSummary = {
+  scopeLabel: string, facilityCount: number,
+  alertCounts: { normal: number, watch: number, high: number, critical: number },
+  deficitTotal: number, pendingRecommendations: number
+}
+
+type SituationReport = {
+  scopeLevel: "DISTRICT"|"STATE"|"NATIONAL", scopeId: string, narrative: string,
+  facilitiesAtRisk: number, deficitTotal: number, pendingRecommendations: number,
+  executingInstructions: number, generatedAt: string
+}
+```
+
+---
+
+## 10. Change discipline
 
 Any change to a shape above requires a short sync between the owning direction and every "used by" direction listed in `healthresq-development-directions.md`'s interface table — edit this file, don't fork a second copy of a shape.
 
-**Known inconsistency (flagged, not resolved):** Section 1's `Instruction.status` (`ACKNOWLEDGED|READY|DISPATCHED|IN_PROGRESS|COMPLETED|BLOCKED`) is a superset of Section 3's `AtomicInstruction.status` (`ACKNOWLEDGED|IN_PROGRESS|COMPLETED|BLOCKED` — missing `READY`/`DISPATCHED`), even though `healthresq-architecture.md`'s glossary states they're the same object under two names. Direction 1's `atomic_instructions` table (OPS-06/07, built ahead of `CMD-08`) uses the Section 1 superset, since `OPS-06`/`OPS-07`'s feature text explicitly requires the `READY`/`DISPATCHED` transitions. Direction 3 should reconcile Section 3's type to match when building `CMD-08`, rather than the table being narrowed later.
+**Resolved by Direction 3:** Section 1's `Instruction.status` superset (`ACKNOWLEDGED|READY|DISPATCHED|IN_PROGRESS|COMPLETED|BLOCKED`) vs. Section 3's originally-frozen `AtomicInstruction.status` subset (missing `READY`/`DISPATCHED`) — flagged above as an open inconsistency before Direction 3 built `CMD-08`. Resolved by not forking a second type at all: `CMD-08`'s decomposition (`backend/command/service.py::decompose_and_dispatch`) writes the same `backend.ops.models.AtomicInstruction` row Direction 1 already owns, and `GET /recommendations/{id}/instructions` (Section 9, above) serializes it with the same `backend.ops.schemas.Instruction` Section 1 already froze — one object, one schema, matching `healthresq-architecture.md`'s glossary claim exactly, rather than narrowing the table to match Section 3's smaller enum.
