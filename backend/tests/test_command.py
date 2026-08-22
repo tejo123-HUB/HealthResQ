@@ -1,10 +1,10 @@
 import uuid
 from datetime import datetime, timedelta, timezone
 
-from backend.comm import models as comm_models
 from backend.command import service
 from backend.command.models import DecisionAction, RecommendationOrigin, RecommendationStatus
 from backend.intelligence.graph.build import sync_graph_from_ops
+from backend.intelligence.graph.session import run_cypher
 from backend.ops import models
 from backend.ops.inventory import apply_transaction
 from backend.tests.conftest import auth_headers, make_facility, make_user_token
@@ -25,14 +25,16 @@ def _stock(db, facility, product, quantity: int) -> None:
     db.flush()
 
 
-def _command_edge(db, *, level: comm_models.IssuerLevel, scope_id, facility_id) -> None:
-    db.add(
-        comm_models.CommCommandEdge(
-            from_level=level, from_scope_id=scope_id, to_facility_id=facility_id,
-            edge_type=comm_models.GraphEdgeType.ADMIN_PARENT,
-        )
+def _revoke_command_edge(db, *, scope_id, facility_id) -> None:
+    """Simulates a command edge that COMM-03's dispatch-time graph check won't find — e.g. the org
+    hierarchy changed since CMD-02 last computed required authority. There's no more per-edge
+    `enabled` flag (that stub table is gone); this deletes the persisted graph edge directly."""
+    run_cypher(
+        db,
+        "MATCH (a {id: $scopeId})-[r:COMMAND_TO]->(b:Facility {id: $facilityId}) DELETE r",
+        {"scopeId": str(scope_id), "facilityId": str(facility_id)},
+        columns=("result",),
     )
-    db.flush()
 
 
 def _draft_recommendation(db, geo, *, donor, destination, product, quantity=300, status_=RecommendationStatus.PENDING_REVIEW):
@@ -122,9 +124,6 @@ def test_approve_dispatches_one_atomic_instruction_per_distinct_donor(db, geo):
         movements=movements, graph_result=graph_result, origin=RecommendationOrigin.AGENT, agent_explanation=None,
         created_by_user_id=None,
     )
-    _command_edge(db, level=comm_models.IssuerLevel.DISTRICT, scope_id=geo["district_a"].id, facility_id=donor_a.id)
-    _command_edge(db, level=comm_models.IssuerLevel.DISTRICT, scope_id=geo["district_a"].id, facility_id=donor_b.id)
-
     rec, instructions = service.approve_or_modify(db, rec, action=DecisionAction.APPROVE, actor_user_id=None)
 
     assert rec.status == RecommendationStatus.EXECUTING
@@ -149,8 +148,6 @@ def test_approve_merges_movements_sharing_the_same_donor_into_one_instruction(db
         movements=movements, graph_result=graph_result, origin=RecommendationOrigin.AGENT, agent_explanation=None,
         created_by_user_id=None,
     )
-    _command_edge(db, level=comm_models.IssuerLevel.DISTRICT, scope_id=geo["district_a"].id, facility_id=donor.id)
-
     rec, instructions = service.approve_or_modify(db, rec, action=DecisionAction.APPROVE, actor_user_id=None)
 
     assert len(instructions) == 1
@@ -164,7 +161,9 @@ def test_approve_with_no_confirmed_edge_creates_no_instructions_and_stays_approv
     product = _product(db)
     _stock(db, donor, product, 1000)
     rec = _draft_recommendation(db, geo, donor=donor, destination=dest, product=product)
-    # Deliberately no CommCommandEdge seeded.
+    # Simulate the graph edge going missing between CMD-02's approval-time check and COMM-03's
+    # independent dispatch-time check (e.g. org hierarchy changed underneath the recommendation).
+    _revoke_command_edge(db, scope_id=geo["district_a"].id, facility_id=donor.id)
 
     rec, instructions = service.approve_or_modify(db, rec, action=DecisionAction.APPROVE, actor_user_id=None)
 
@@ -200,7 +199,6 @@ def test_modify_within_same_authority_dispatches_immediately(db, geo):
     rec = _draft_recommendation(db, geo, donor=donor_same, destination=dest, product=product, quantity=100)
     assert rec.required_authority == "DISTRICT"
 
-    _command_edge(db, level=comm_models.IssuerLevel.DISTRICT, scope_id=geo["district_a"].id, facility_id=donor_other.id)
     new_movements = [service.MovementIn(donor_other.id, dest.id, 100)]
     rec, instructions = service.approve_or_modify(
         db, rec, action=DecisionAction.MODIFY, actor_user_id=None, movements=new_movements
@@ -226,7 +224,6 @@ def test_modify_that_raises_required_authority_reroutes_instead_of_dispatching(d
     rec = _draft_recommendation(db, geo, donor=donor_same, destination=dest, product=product, quantity=100)
     assert rec.required_authority == "DISTRICT"
 
-    _command_edge(db, level=comm_models.IssuerLevel.STATE, scope_id=geo["state"].id, facility_id=donor_cross.id)
     new_movements = [service.MovementIn(donor_cross.id, dest.id, 100)]
     rec, instructions = service.approve_or_modify(
         db, rec, action=DecisionAction.MODIFY, actor_user_id=None, movements=new_movements
@@ -377,7 +374,6 @@ def test_decision_route_approves_with_correct_authority(client, db, role_authori
     product = _product(db)
     _stock(db, donor, product, 1000)
     rec = _draft_recommendation(db, geo, donor=donor, destination=dest, product=product)
-    _command_edge(db, level=comm_models.IssuerLevel.DISTRICT, scope_id=geo["district_a"].id, facility_id=donor.id)
     token = make_user_token(db, role_authority, models.ScopeLevel.DISTRICT, geo["district_a"].id)
 
     resp = client.post(f"/recommendations/{rec.id}/decision", json={"action": "APPROVE"}, headers=auth_headers(token))

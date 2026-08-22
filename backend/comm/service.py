@@ -63,16 +63,20 @@ def dispatch(
     recipient_facility_id: uuid.UUID,
     instruction: ops_models.AtomicInstruction,
 ) -> DispatchResult:
-    """COMM-03: before any mailbox write, check for a COMMAND_TO/ADMIN_PARENT edge from the
-    issuing scope to the recipient. No edge -> REJECTED_NO_EDGE, nothing written (this is the
-    dispatch-time check; Direction 3's CMD-02 is the independent, deliberately redundant check
-    upstream of this one). No registered public key yet -> QUEUED, nothing written — the frozen
-    dispatch signature's existing QUEUED state covers "can't deliver yet"; `sync_unit_mailbox`
-    retries automatically once a key shows up, no separate pending-dispatch table needed."""
+    """COMM-03: before any mailbox write, check for a COMMAND_TO path from the issuing scope down
+    to the recipient. Issuer levels are DISTRICT/STATE/NATIONAL, and COMMAND_TO only links adjacent
+    authority levels (NATIONAL->STATE->DISTRICT->Facility), so a STATE or NATIONAL issuer reaches
+    the facility over 2-3 hops, not 1 — hence the variable-length path, matching the same pattern
+    INT-06's `cluster_risk_facility_ids` uses for the equivalent facility->authority membership
+    check. No path -> REJECTED_NO_EDGE, nothing written (this is the dispatch-time check;
+    Direction 3's CMD-02 is the independent, deliberately redundant check upstream of this one).
+    No registered public key yet -> QUEUED, nothing written — the frozen dispatch signature's
+    existing QUEUED state covers "can't deliver yet"; `sync_unit_mailbox` retries automatically
+    once a key shows up, no separate pending-dispatch table needed."""
     from backend.intelligence.graph.session import run_cypher
     rows = run_cypher(
         db,
-        "MATCH (a {id: $issuerId})-[r:COMMAND_TO|ADMIN_PARENT]->(b:Facility {id: $recipientId}) RETURN count(r)",
+        "MATCH (a {id: $issuerId})-[:COMMAND_TO*1..3]->(b:Facility {id: $recipientId}) RETURN count(*)",
         {"issuerId": str(issuer_scope_id), "recipientId": str(recipient_facility_id)},
         columns=("count",)
     )
