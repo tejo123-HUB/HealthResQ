@@ -381,6 +381,44 @@ def test_decision_route_approves_with_correct_authority(client, db, role_authori
     assert resp.json()["status"] == "EXECUTING"
 
 
+def test_get_recommendation_route_rejects_wrong_scope(client, db, role_authority, geo):
+    donor = make_facility(db, geo, name="PHC-GET1", ftype=models.FacilityType.PHC, district=geo["district_a"])
+    dest = make_facility(db, geo, name="PHC-GET2", ftype=models.FacilityType.PHC, district=geo["district_a"])
+    product = _product(db)
+    _stock(db, donor, product, 1000)
+    rec = _draft_recommendation(db, geo, donor=donor, destination=dest, product=product)
+    # A different district's authority — not the recommendation's own required scope.
+    token = make_user_token(db, role_authority, models.ScopeLevel.DISTRICT, geo["district_b"].id)
+
+    resp = client.get(f"/recommendations/{rec.id}", headers=auth_headers(token))
+    assert resp.status_code == 403
+
+
+def test_get_recommendation_route_allows_correct_scope(client, db, role_authority, geo):
+    donor = make_facility(db, geo, name="PHC-GET3", ftype=models.FacilityType.PHC, district=geo["district_a"])
+    dest = make_facility(db, geo, name="PHC-GET4", ftype=models.FacilityType.PHC, district=geo["district_a"])
+    product = _product(db)
+    _stock(db, donor, product, 1000)
+    rec = _draft_recommendation(db, geo, donor=donor, destination=dest, product=product)
+    token = make_user_token(db, role_authority, models.ScopeLevel.DISTRICT, geo["district_a"].id)
+
+    resp = client.get(f"/recommendations/{rec.id}", headers=auth_headers(token))
+    assert resp.status_code == 200, resp.text
+    assert resp.json()["id"] == str(rec.id)
+
+
+def test_list_recommendation_instructions_route_rejects_wrong_scope(client, db, role_authority, geo):
+    donor = make_facility(db, geo, name="PHC-GET5", ftype=models.FacilityType.PHC, district=geo["district_a"])
+    dest = make_facility(db, geo, name="PHC-GET6", ftype=models.FacilityType.PHC, district=geo["district_a"])
+    product = _product(db)
+    _stock(db, donor, product, 1000)
+    rec = _draft_recommendation(db, geo, donor=donor, destination=dest, product=product)
+    token = make_user_token(db, role_authority, models.ScopeLevel.DISTRICT, geo["district_b"].id)
+
+    resp = client.get(f"/recommendations/{rec.id}/instructions", headers=auth_headers(token))
+    assert resp.status_code == 403
+
+
 def test_dashboard_route_scoped_to_caller(client, db, role_authority, geo):
     token = make_user_token(db, role_authority, models.ScopeLevel.DISTRICT, geo["district_a"].id)
     resp = client.get("/dashboard", headers=auth_headers(token))
