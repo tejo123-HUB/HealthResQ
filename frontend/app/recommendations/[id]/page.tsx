@@ -1,7 +1,7 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import useSWR from "swr";
 import { AuthGuard } from "@/components/AuthGuard";
 import { BackButton } from "@/components/hig/BackButton";
@@ -16,6 +16,7 @@ import { ApiError } from "@/lib/api/client";
 import { command, type DecisionAction } from "@/lib/api/command";
 import { ops } from "@/lib/api/ops";
 import { useToast } from "@/lib/toast/ToastProvider";
+import { useAuth } from "@/lib/auth/AuthContext";
 
 const ACTION_VERB: Record<DecisionAction, string> = {
   APPROVE: "approved — dispatching now",
@@ -27,6 +28,7 @@ const ACTION_VERB: Record<DecisionAction, string> = {
 function DecisionScreen() {
   const params = useParams<{ id: string }>();
   const toast = useToast();
+  const { logout } = useAuth();
   const {
     data: recommendation,
     isLoading,
@@ -44,6 +46,12 @@ function DecisionScreen() {
   const [escalating, setEscalating] = useState(false);
   const [unresolvedQuantity, setUnresolvedQuantity] = useState(0);
 
+  useEffect(() => {
+    if (error instanceof ApiError && error.status === 401) {
+      logout();
+    }
+  }, [error, logout]);
+
   if (isLoading) {
     return (
       <div className="flex flex-col gap-6 max-w-2xl">
@@ -57,7 +65,7 @@ function DecisionScreen() {
       </div>
     );
   }
-  if (error || !recommendation) {
+  if (error || (!recommendation && !isLoading)) {
     return <ErrorBanner message="Couldn't load this recommendation." onRetry={() => mutate()} />;
   }
 
