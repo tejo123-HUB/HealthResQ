@@ -2,14 +2,16 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import useSWR from "swr";
 import { AgentPane } from "@/components/agent/AgentPane";
 import { FederationPanel } from "@/components/FederationPanel";
-import { ListGroup, ListRow, StatCard } from "@/components/hig/Card";
+import { ListGroup, StatCard } from "@/components/hig/Card";
 import { ErrorBanner } from "@/components/hig/ErrorBanner";
 import { Icon } from "@/components/hig/Icon";
+import { ProportionBar } from "@/components/hig/ProportionBar";
 import { SegmentedControl } from "@/components/hig/SegmentedControl";
-import { SeverityBadge } from "@/components/hig/SeverityBadge";
+import { SeverityBadge, type Severity } from "@/components/hig/SeverityBadge";
 import { ResourceExplorer } from "@/components/ResourceExplorer";
 import { RiskMap } from "@/components/RiskMap";
 import { intelligence } from "@/lib/api/intelligence";
@@ -27,6 +29,7 @@ type Tab = "OVERVIEW" | "RISK_MAP" | "EXPLORER" | "FEDERATION";
  * lib/api/command.ts (CMD-09) — this component doesn't know or care which direction owns which
  * endpoint. */
 export function DashboardScreen({ level, scopeId }: { level: ScopeLevel; scopeId: string }) {
+  const { t } = useTranslation(["dashboard", "nav", "common"]);
   const [tab, setTab] = useState<Tab>("OVERVIEW");
   const {
     data: summary,
@@ -43,11 +46,11 @@ export function DashboardScreen({ level, scopeId }: { level: ScopeLevel; scopeId
   const scope: Scope = { level, id: scopeId };
 
   const options: { value: Tab; label: string }[] = [
-    { value: "OVERVIEW", label: "Overview" },
-    { value: "RISK_MAP", label: "Risk map" },
-    { value: "EXPLORER", label: "Explorer" },
+    { value: "OVERVIEW", label: t("dashboard:tabs.overview") },
+    { value: "RISK_MAP", label: t("dashboard:tabs.riskMap") },
+    { value: "EXPLORER", label: t("dashboard:tabs.explorer") },
   ];
-  if (level === "NATIONAL") options.push({ value: "FEDERATION", label: "Federation" });
+  if (level === "NATIONAL") options.push({ value: "FEDERATION", label: t("dashboard:tabs.federation") });
 
   return (
     <div className="flex flex-col lg:flex-row gap-6 items-start">
@@ -58,7 +61,7 @@ export function DashboardScreen({ level, scopeId }: { level: ScopeLevel; scopeId
             <SegmentedControl value={tab} onChange={setTab} options={options} />
             <Link
               href="/orders/new"
-              aria-label="Compose new action"
+              aria-label={t("nav:composeNewAction")}
               className="w-9 h-9 flex items-center justify-center rounded-hig bg-tint-blue text-white hover:shadow-card-hover active:opacity-70 active:scale-90 transition-hig"
             >
               <Icon name="plus" className="w-4.5 h-4.5" />
@@ -69,11 +72,13 @@ export function DashboardScreen({ level, scopeId }: { level: ScopeLevel; scopeId
         <div key={tab} className="flex flex-col gap-6 animate-fade-in-up">
           {tab === "OVERVIEW" && (
             <>
-              {summaryError && <ErrorBanner message="Couldn't load the scope summary." onRetry={() => retrySummary()} />}
+              {summaryError && (
+                <ErrorBanner message={t("dashboard:scopeSummaryError")} onRetry={() => retrySummary()} />
+              )}
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                 <StatCard
                   icon="building"
-                  label="Facilities in scope"
+                  label={t("dashboard:stats.facilitiesInScope")}
                   numericValue={summary?.facilityCount}
                   tone="brown"
                   loading={summaryLoading}
@@ -81,7 +86,7 @@ export function DashboardScreen({ level, scopeId }: { level: ScopeLevel; scopeId
                 />
                 <StatCard
                   icon="alert"
-                  label="Total deficit"
+                  label={t("dashboard:stats.totalDeficit")}
                   numericValue={summary?.deficitTotal}
                   tone={summary && summary.deficitTotal > 0 ? "warning" : "default"}
                   loading={summaryLoading}
@@ -89,7 +94,7 @@ export function DashboardScreen({ level, scopeId }: { level: ScopeLevel; scopeId
                 />
                 <StatCard
                   icon="flag"
-                  label="Pending recommendations"
+                  label={t("dashboard:stats.pendingRecommendations")}
                   numericValue={summary?.pendingRecommendations}
                   tone="pink"
                   href="/recommendations"
@@ -99,11 +104,32 @@ export function DashboardScreen({ level, scopeId }: { level: ScopeLevel; scopeId
               </div>
 
               {summary && (
-                <ListGroup title="Alerts by severity">
-                  <ListRow label={<SeverityBadge severity="NORMAL" label="Normal" />} value={summary.alertCounts.normal} />
-                  <ListRow label={<SeverityBadge severity="WATCH" label="Watch" />} value={summary.alertCounts.watch} />
-                  <ListRow label={<SeverityBadge severity="HIGH" label="High" />} value={summary.alertCounts.high} />
-                  <ListRow label={<SeverityBadge severity="CRITICAL" label="Critical" />} value={summary.alertCounts.critical} />
+                <ListGroup title={t("dashboard:alertsBySeverity")}>
+                  {(
+                    [
+                      { severity: "CRITICAL", count: summary.alertCounts.critical, bar: "bg-tint-red" },
+                      { severity: "HIGH", count: summary.alertCounts.high, bar: "bg-tint-orange" },
+                      { severity: "WATCH", count: summary.alertCounts.watch, bar: "bg-tint-amber" },
+                      { severity: "NORMAL", count: summary.alertCounts.normal, bar: "bg-label-quaternary" },
+                    ] as { severity: Severity; count: number; bar: string }[]
+                  ).map(({ severity, count, bar }) => {
+                    const max = Math.max(
+                      summary.alertCounts.critical,
+                      summary.alertCounts.high,
+                      summary.alertCounts.watch,
+                      summary.alertCounts.normal,
+                      1
+                    );
+                    return (
+                      <div key={severity} className="flex flex-col gap-1.5 px-3.5 py-2">
+                        <div className="flex items-center justify-between">
+                          <SeverityBadge severity={severity} label={t(`common:severity.${severity}`)} muted={severity === "NORMAL"} />
+                          <span className="text-callout text-label-secondary tabular-nums">{count}</span>
+                        </div>
+                        <ProportionBar value={count} max={max} className={bar} />
+                      </div>
+                    );
+                  })}
                 </ListGroup>
               )}
             </>

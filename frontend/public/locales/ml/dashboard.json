@@ -1,0 +1,61 @@
+{
+  "tabs": {
+    "overview": "അവലോകനം",
+    "riskMap": "റിസ്ക് മാപ്പ്",
+    "explorer": "എക്സ്‌പ്ലോറർ",
+    "federation": "ഫെഡറേഷൻ"
+  },
+  "scopeSummaryError": "സ്കോപ്പ് സംഗ്രഹം ലോഡ് ചെയ്യാൻ കഴിഞ്ഞില്ല.",
+  "alertsBySeverity": "തീവ്രത അനുസരിച്ചുള്ള അലേർട്ടുകൾ",
+  "stats": {
+    "facilitiesInScope": "സ്കോപ്പിലുള്ള സൗകര്യങ്ങൾ",
+    "totalDeficit": "മൊത്തം കുറവ്",
+    "pendingRecommendations": "തീർച്ചപ്പെടുത്താത്ത ശുപാർശകൾ"
+  },
+  "severityWatchShort": "ശ്രദ്ധിക്കുക",
+  "riskMapPulse": "റിസ്ക് മാപ്പ് പൾസ്",
+  "proportionOf": "{{max}} ൽ {{value}}",
+  "sparkline": {
+    "noProjection": "ഇതുവരെ പ്രവചനം ലഭ്യമല്ല.",
+    "projectedStock": "പ്രവചിച്ച സ്റ്റോക്ക്",
+    "dayOffset": "ദിവസം +{{n}}"
+  },
+  "explorer": {
+    "columns": {
+      "facility": "സൗകര്യം",
+      "stock": "സ്റ്റോക്ക്",
+      "demand": "ഡിമാൻഡ്",
+      "projected": "പ്രവചിച്ചത്",
+      "deficit": "കുറവ്"
+    },
+    "showForecastCertainty": "പ്രവചന നിശ്ചയത കാണിക്കുക",
+    "forecastUncertaintyNote": "ഈ സൗകര്യത്തിന് മോഡൽ കുറഞ്ഞ നിശ്ചയതയോടെയാണ് — ഡിമാൻഡ് ഈ കണക്കിന് ചുറ്റും വിശാലമായ പരിധിയിൽ എവിടെയും ആയിരിക്കാം.",
+    "searchResources": "വിഭവങ്ങൾ തിരയുക…",
+    "fullData": "പൂർണ്ണ ഡാറ്റ",
+    "computingForecasts": "പ്രവചനങ്ങൾ കണക്കാക്കുന്നു… {{n}} സൗകര്യങ്ങൾ",
+    "computingForecastsOf": "പ്രവചനങ്ങൾ കണക്കാക്കുന്നു… {{total}} ൽ {{n}}",
+    "facilitiesWithDeficit": "കുറവുള്ള സൗകര്യങ്ങൾ",
+    "largestDeficits": "ഏറ്റവും വലിയ കുറവുകൾ",
+    "largestDeficitsOf": "ഏറ്റവും വലിയ കുറവുകൾ ({{total}} ൽ ആദ്യത്തെ {{limit}})",
+    "tapBarToZoom": "ആ സൗകര്യത്തെ ഫുൾ ഡാറ്റയിൽ സൂം ചെയ്യാൻ ബാറിൽ ടാപ്പ് ചെയ്യുക.",
+    "noDeficits": "കുറവുകളൊന്നുമില്ല — സ്കോപ്പിലുള്ള എല്ലാ സൗകര്യങ്ങൾക്കും അതിന്റെ പ്രവചിച്ച ഡിമാൻഡ് നിറവേറ്റാൻ മതിയായ സ്റ്റോക്ക് ഉണ്ട്.",
+    "clearFilter": "ഫിൽട്ടർ മായ്ക്കുക: {{name}}"
+  },
+  "federation": {
+    "demandTrend": "ഡിമാൻഡ് ട്രെൻഡ്",
+    "volatility": "അസ്ഥിരത",
+    "stockouts": "സ്റ്റോക്ക്ഔട്ടുകൾ",
+    "exitPresentationMode": "അവതരണ മോഡിൽ നിന്ന് പുറത്തുകടക്കുക",
+    "presentationMode": "അവതരണ മോഡ്",
+    "participatingCountries": "പങ്കെടുക്കുന്ന രാജ്യങ്ങൾ",
+    "latestRound": "ഏറ്റവും പുതിയ റൗണ്ട്",
+    "rawRecordsShared": "പങ്കിട്ട അസംസ്‌കൃത PHC-തല രേഖകൾ",
+    "structuralGuaranteeNote": "ഘടനാപരമായ ഉറപ്പ് (INT-10): രേഖപ്പെടുത്തിയ പതിനൊന്ന് അഗ്രഗേറ്റ് ഫീൽഡുകൾ മാത്രമേ ഒരു ദേശീയ നോഡിൽ നിന്ന് പുറത്തുപോകൂ — അസംസ്‌കൃത സൗകര്യമോ രോഗിയുടെ ഡാറ്റയോ ഒരിക്കലും അല്ല.",
+    "demandTrendByRound": "റൗണ്ട് അനുസരിച്ചുള്ള ഡിമാൻഡ് ട്രെൻഡ്",
+    "roundShort": "R{{n}}",
+    "round": "റൗണ്ട് {{n}}",
+    "countryComparisonDescending": "രാജ്യങ്ങളുടെ താരതമ്യം — അവരോഹണ ക്രമത്തിൽ",
+    "countryParticipants": "{{country}} · {{n}} പങ്കാളികൾ",
+    "countryMetrics": "ട്രെൻഡ് {{trend}} · അസ്ഥിരത {{volatility}} · സ്റ്റോക്ക്ഔട്ട് ആവൃത്തി {{stockoutPct}}%"
+  }
+}

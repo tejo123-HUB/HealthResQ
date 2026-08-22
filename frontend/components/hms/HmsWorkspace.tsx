@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import useSWR from "swr";
+import { useTranslation } from "react-i18next";
 import { BedGrid } from "@/components/hms/BedGrid";
 import { OTScheduler } from "@/components/hms/OTScheduler";
 import { ReferralTracker } from "@/components/hms/ReferralTracker";
@@ -16,6 +17,7 @@ import { useToast } from "@/lib/toast/ToastProvider";
 /** OPS-11-13, as a self-contained workspace section (not a top-level nav destination) — mounted
  * inside the facility's single workspace page as the "Hospital" tab. */
 export function HmsWorkspace({ facilityId }: { facilityId: string }) {
+  const { t } = useTranslation(["hms", "common"]);
   const [selectedWardId, setSelectedWardId] = useState<string | null>(null);
   const toast = useToast();
 
@@ -54,9 +56,9 @@ export function HmsWorkspace({ facilityId }: { facilityId: string }) {
       await ops.createAdmission(facilityId, selectedWardId, bed.id);
       mutateBeds();
       mutateAdmissions();
-      toast.success(`Patient admitted into ${bed.code}`);
+      toast.success(t("hms:patientAdmittedInto", { code: bed.code }));
     } catch (err) {
-      reportFailure(err, "Couldn't admit patient — try again.");
+      reportFailure(err, t("hms:couldntAdmitPatient"));
     }
   }
 
@@ -65,15 +67,15 @@ export function HmsWorkspace({ facilityId }: { facilityId: string }) {
       await ops.dischargeAdmission(admission.id);
       mutateBeds();
       mutateAdmissions();
-      toast.success("Patient discharged — bed is free");
+      toast.success(t("hms:patientDischarged"));
     } catch (err) {
-      reportFailure(err, "Couldn't discharge patient — try again.");
+      reportFailure(err, t("hms:couldntDischargePatient"));
     }
   }
 
   return (
     <div className="flex flex-col gap-8">
-      {wardsError && <ErrorBanner message="Couldn't load wards." />}
+      {wardsError && <ErrorBanner message={t("hms:couldntLoadWards")} />}
 
       <div>
         {wardsLoading ? (
@@ -88,7 +90,7 @@ export function HmsWorkspace({ facilityId }: { facilityId: string }) {
 
       {selectedWardId && (
         <section>
-          <h2 className="text-title3 mb-3">Beds</h2>
+          <h2 className="text-title3 mb-3">{t("hms:bedsHeading")}</h2>
           {bedsLoading ? (
             <div className="grid grid-cols-3 sm:grid-cols-5 gap-3">
               {Array.from({ length: 10 }).map((_, i) => (
@@ -102,20 +104,20 @@ export function HmsWorkspace({ facilityId }: { facilityId: string }) {
       )}
 
       <section>
-        <h2 className="text-title3 mb-3">OT scheduling</h2>
+        <h2 className="text-title3 mb-3">{t("hms:otSchedulingHeading")}</h2>
         <OTScheduler
           slots={otSlots ?? []}
           wards={wards ?? []}
           onCreate={async (wardId, start, end) => {
             await ops.createOtSlot(facilityId, wardId, start, end);
             mutateOt();
-            toast.success("OT slot scheduled");
+            toast.success(t("hms:otSlotScheduled"));
           }}
         />
       </section>
 
       <section>
-        <h2 className="text-title3 mb-3">Referrals</h2>
+        <h2 className="text-title3 mb-3">{t("hms:referralsHeading")}</h2>
         <ReferralTracker
           referrals={referrals ?? []}
           facilityId={facilityId}
@@ -123,16 +125,16 @@ export function HmsWorkspace({ facilityId }: { facilityId: string }) {
           onCreate={async (destFacilityId, reason, urgency: ReferralUrgency) => {
             await ops.createReferral({ sourceFacilityId: facilityId, destFacilityId, reason, urgency });
             mutateReferrals();
-            toast.success("Referral sent");
+            toast.success(t("hms:referralSent"));
           }}
           onAdvanceStatus={async (referral) => {
             const next = referral.status === "OPEN" ? "ACKNOWLEDGED" : "CLOSED";
             try {
               await ops.updateReferralStatus(referral.id, next);
               mutateReferrals();
-              toast.success(`Referral marked ${next}`);
+              toast.success(t("hms:referralMarked", { status: t(`common:status.${next}`) }));
             } catch (err) {
-              reportFailure(err, "Couldn't update referral — try again.");
+              reportFailure(err, t("hms:couldntUpdateReferral"));
             }
           }}
         />

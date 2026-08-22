@@ -85,7 +85,7 @@ def test_get_active_alerts_and_scope_summary(db, geo):
     alerts = tools.get_active_alerts(db, {"level": "DISTRICT", "id": str(geo["district_a"].id)})
     assert any(a["facilityId"] == str(facility.id) for a in alerts)
     for alert in alerts:
-        assert set(alert.keys()) == {"facilityId", "productId", "severity"}
+        assert set(alert.keys()) == {"facilityId", "productId", "severity", "daysToStockout"}
 
     summary = tools.get_scope_summary(db, {"level": "DISTRICT", "id": str(geo["district_a"].id)})
     assert set(summary.keys()) == {"facilityCount", "criticalCount", "deficitTotal"}

@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { ConfirmSheet } from "@/components/hig/ConfirmSheet";
 import { Icon } from "@/components/hig/Icon";
 import { SegmentedControl } from "@/components/hig/SegmentedControl";
@@ -8,9 +9,11 @@ import type { Admission, Bed } from "@/lib/api/types";
 
 type Filter = "ALL" | "OCCUPIED" | "AVAILABLE";
 
-/** Occupied beds render red-tint, available beds green-tint, ~12px corners — per the brief's HIG
- * component language for HMS. Tapping a bed opens a one-question confirm sheet before admitting
- * or discharging — a forgiving safety net against a mis-tap changing a real patient's status. */
+/** Occupied beds render a neutral filled tone, available beds a neutral empty tone (`--occ-filled`
+ * / `--occ-empty` — plain occupancy state, not a risk signal, so it no longer borrows the
+ * CRITICAL/SUCCESS severity tokens), ~12px corners — per the brief's HIG component language for
+ * HMS. Tapping a bed opens a one-question confirm sheet before admitting or discharging — a
+ * forgiving safety net against a mis-tap changing a real patient's status. */
 export function BedGrid({
   beds,
   admissionByBedId,
@@ -22,6 +25,7 @@ export function BedGrid({
   onAdmit: (bed: Bed) => void;
   onDischarge: (admission: Admission) => void;
 }) {
+  const { t } = useTranslation("hms");
   const [filter, setFilter] = useState<Filter>("ALL");
   const [pendingBed, setPendingBed] = useState<Bed | null>(null);
 
@@ -48,9 +52,9 @@ export function BedGrid({
         value={filter}
         onChange={setFilter}
         options={[
-          { value: "ALL", label: "All" },
-          { value: "OCCUPIED", label: "Occupied" },
-          { value: "AVAILABLE", label: "Available" },
+          { value: "ALL", label: t("filterAll") },
+          { value: "OCCUPIED", label: t("filterOccupied") },
+          { value: "AVAILABLE", label: t("filterAvailable") },
         ]}
       />
       <div className="grid grid-cols-3 sm:grid-cols-5 gap-3">
@@ -65,13 +69,13 @@ export function BedGrid({
               style={{ animationDelay: `${i * 30}ms` }}
               className={`transition-hig rounded-hig aspect-square flex flex-col items-center justify-center gap-1 min-h-[4.75rem] animate-fade-in-up ${
                 bed.occupied
-                  ? "bg-tint-red-wash text-tint-red hover:bg-tint-red-wash-strong"
-                  : "bg-tint-green-wash text-tint-green hover:brightness-95 active:opacity-70 active:scale-95"
+                  ? "bg-occ-filled-wash text-occ-filled hover:brightness-95"
+                  : "bg-occ-empty-wash text-occ-empty hover:brightness-95 active:opacity-70 active:scale-95"
               } ${disabled ? "opacity-50 cursor-not-allowed" : "hover:-translate-y-0.5 hover:shadow-card"}`}
             >
               <Icon name="bed" className="w-7 h-7" />
               <span className="text-subhead font-semibold">{bed.code}</span>
-              <span className="text-caption1">{bed.occupied ? "Occupied" : "Free"}</span>
+              <span className="text-caption1">{bed.occupied ? t("occupied") : t("free")}</span>
             </button>
           );
         })}
@@ -81,13 +85,13 @@ export function BedGrid({
         open={pendingBed !== null}
         icon={pendingBed?.occupied ? "signOut" : "bed"}
         destructive={pendingBed?.occupied}
-        title={pendingBed?.occupied ? `Discharge ${pendingBed?.code}?` : `Admit patient into ${pendingBed?.code}?`}
-        message={
+        title={
           pendingBed?.occupied
-            ? "This frees the bed for the next patient."
-            : "The bed will be marked occupied right away."
+            ? t("dischargeTitle", { code: pendingBed?.code })
+            : t("admitTitle", { code: pendingBed?.code })
         }
-        confirmLabel={pendingBed?.occupied ? "Discharge" : "Admit"}
+        message={pendingBed?.occupied ? t("dischargeMessage") : t("admitMessage")}
+        confirmLabel={pendingBed?.occupied ? t("discharge") : t("admit")}
         onConfirm={confirm}
         onCancel={() => setPendingBed(null)}
       />

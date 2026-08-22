@@ -27,6 +27,8 @@ class ResourceExplorerRow(TypedDict):
     forecastDemand: float
     projectedStock: float
     deficit: float
+    rangeLow: float
+    rangeHigh: float
 
 
 def _facility_row(db: Session, facility_id: str, product_id: str) -> ResourceExplorerRow:
@@ -38,6 +40,11 @@ def _facility_row(db: Session, facility_id: str, product_id: str) -> ResourceExp
         "forecastDemand": forecast.forecast_demand,
         "projectedStock": forecast.projected_stock,
         "deficit": deficit,
+        # Forecast uncertainty band, already computed by build_forecast — surfaced here so the
+        # Explorer screen can show an on-demand "model less certain" indicator instead of a raw
+        # confidence-interval number.
+        "rangeLow": forecast.range_low,
+        "rangeHigh": forecast.range_high,
     }
 
 

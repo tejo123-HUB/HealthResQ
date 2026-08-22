@@ -1,0 +1,14 @@
+{
+  "aiSuggestion": "AI suggestion",
+  "expandPanel": "Expand assistant panel",
+  "collapsePanel": "Collapse assistant panel",
+  "suggestionAvailable": "AI suggestion available — expand to review",
+  "noSuggestionsExpand": "No pending AI suggestions — expand to ask a question",
+  "noPendingRecommendations": "No pending recommendations right now.",
+  "resourceApproval": "{{resource}} · {{authority}} approval",
+  "reviewFull": "Review full recommendation",
+  "askAboutThis": "Ask about this",
+  "askPlaceholder": "Ask a question…",
+  "askHint": "Ask why this is happening, what the alternatives are, or whether it's safe.",
+  "composeWithAssistant": "Compose with the assistant"
+}

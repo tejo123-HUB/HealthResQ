@@ -247,7 +247,7 @@ def test_escalate_creates_new_recommendation_at_next_authority_and_closes_origin
     rec = _draft_recommendation(db, geo, donor=donor, destination=dest, product=product)
     assert rec.required_authority == "DISTRICT"
 
-    rec, new_rec = service.escalate(db, rec, actor_user_id=None, unresolved_quantity=250)
+    rec, new_rec = service.escalate(db, rec, actor_user_id=None)
 
     assert rec.status == RecommendationStatus.ESCALATED
     assert new_rec.status == RecommendationStatus.PENDING_REVIEW
@@ -260,18 +260,22 @@ def test_escalate_creates_new_recommendation_at_next_authority_and_closes_origin
 
 
 def test_escalate_requires_positive_unresolved_quantity(db, geo):
+    # Phase 13: escalation is a whole-action confirm, not a caller-supplied quantity — the
+    # unresolved amount is now always computed from the recommendation's own movements, so this
+    # covers the case where that computed amount is zero (nothing left to hand up) rather than a
+    # caller passing a bad number.
     donor = make_facility(db, geo, name="PHC-ESC3", ftype=models.FacilityType.PHC)
     dest = make_facility(db, geo, name="PHC-ESC4", ftype=models.FacilityType.PHC)
     product = _product(db)
     _stock(db, donor, product, 1000)
-    rec = _draft_recommendation(db, geo, donor=donor, destination=dest, product=product)
+    rec = _draft_recommendation(db, geo, donor=donor, destination=dest, product=product, quantity=0)
 
     import pytest
     from fastapi import HTTPException
 
     with pytest.raises(HTTPException) as exc_info:
-        service.escalate(db, rec, actor_user_id=None, unresolved_quantity=0)
-    assert exc_info.value.status_code == 400
+        service.escalate(db, rec, actor_user_id=None)
+    assert exc_info.value.status_code == 409
 
 
 def test_cannot_escalate_beyond_national(db, geo):
@@ -287,7 +291,7 @@ def test_cannot_escalate_beyond_national(db, geo):
     from fastapi import HTTPException
 
     with pytest.raises(HTTPException) as exc_info:
-        service.escalate(db, rec, actor_user_id=None, unresolved_quantity=10)
+        service.escalate(db, rec, actor_user_id=None)
     assert exc_info.value.status_code == 409
 
 

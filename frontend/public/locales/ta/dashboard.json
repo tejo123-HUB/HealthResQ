@@ -1,0 +1,61 @@
+{
+  "tabs": {
+    "overview": "மேலோட்டம்",
+    "riskMap": "இடர் வரைபடம்",
+    "explorer": "எக்ஸ்ப்ளோரர்",
+    "federation": "கூட்டமைப்பு"
+  },
+  "scopeSummaryError": "வரம்பு சுருக்கத்தை ஏற்ற முடியவில்லை.",
+  "alertsBySeverity": "தீவிரத்தின்படி எச்சரிக்கைகள்",
+  "stats": {
+    "facilitiesInScope": "வரம்பிலுள்ள வசதிகள்",
+    "totalDeficit": "மொத்த பற்றாக்குறை",
+    "pendingRecommendations": "நிலுவையிலுள்ள பரிந்துரைகள்"
+  },
+  "severityWatchShort": "கவனிக்கவும்",
+  "riskMapPulse": "இடர் வரைபட துடிப்பு",
+  "proportionOf": "{{max}} இல் {{value}}",
+  "sparkline": {
+    "noProjection": "இன்னும் கணிப்பு கிடைக்கவில்லை.",
+    "projectedStock": "கணிக்கப்பட்ட கையிருப்பு",
+    "dayOffset": "நாள் +{{n}}"
+  },
+  "explorer": {
+    "columns": {
+      "facility": "வசதி",
+      "stock": "கையிருப்பு",
+      "demand": "தேவை",
+      "projected": "கணிக்கப்பட்டது",
+      "deficit": "பற்றாக்குறை"
+    },
+    "showForecastCertainty": "முன்னறிவிப்பு உறுதித்தன்மையைக் காட்டு",
+    "forecastUncertaintyNote": "இந்த வசதிக்கான மாதிரி குறைவான உறுதியுடன் உள்ளது — தேவை இந்த மதிப்பீட்டைச் சுற்றி பரந்த வரம்பில் எங்கும் இருக்கலாம்.",
+    "searchResources": "வளங்களைத் தேடு…",
+    "fullData": "முழு தரவு",
+    "computingForecasts": "முன்னறிவிப்புகளை கணக்கிடுகிறது… {{n}} வசதிகள்",
+    "computingForecastsOf": "முன்னறிவிப்புகளை கணக்கிடுகிறது… {{total}} இல் {{n}}",
+    "facilitiesWithDeficit": "பற்றாக்குறை உள்ள வசதிகள்",
+    "largestDeficits": "மிகப்பெரிய பற்றாக்குறைகள்",
+    "largestDeficitsOf": "மிகப்பெரிய பற்றாக்குறைகள் ({{total}} இல் முதல் {{limit}})",
+    "tapBarToZoom": "அந்த வசதியை முழு தரவில் பெரிதாக்க பட்டியை தட்டவும்.",
+    "noDeficits": "பற்றாக்குறைகள் இல்லை — வரம்பிலுள்ள ஒவ்வொரு வசதிக்கும் அதன் கணிக்கப்பட்ட தேவையை பூர்த்தி செய்ய போதுமான கையிருப்பு உள்ளது.",
+    "clearFilter": "வடிப்பானை அழி: {{name}}"
+  },
+  "federation": {
+    "demandTrend": "தேவை போக்கு",
+    "volatility": "நிலையற்ற தன்மை",
+    "stockouts": "கையிருப்பு தீர்வுகள்",
+    "exitPresentationMode": "விளக்கக்காட்சி பயன்முறையிலிருந்து வெளியேறு",
+    "presentationMode": "விளக்கக்காட்சி பயன்முறை",
+    "participatingCountries": "பங்கேற்கும் நாடுகள்",
+    "latestRound": "சமீபத்திய சுற்று",
+    "rawRecordsShared": "பகிரப்பட்ட மூல PHC-நிலை பதிவுகள்",
+    "structuralGuaranteeNote": "கட்டமைப்பு உத்தரவாதம் (INT-10): ஆவணப்படுத்தப்பட்ட பதினொரு தொகுப்பு புலங்கள் மட்டுமே தேசிய முனையை விட்டு வெளியேறும் — மூல வசதி அல்லது நோயாளி தரவு ஒருபோதும் இல்லை.",
+    "demandTrendByRound": "சுற்று வாரியாக தேவை போக்கு",
+    "roundShort": "R{{n}}",
+    "round": "சுற்று {{n}}",
+    "countryComparisonDescending": "நாடுகள் ஒப்பீடு — இறங்கு வரிசையில்",
+    "countryParticipants": "{{country}} · {{n}} பங்கேற்பாளர்கள்",
+    "countryMetrics": "போக்கு {{trend}} · நிலையற்ற தன்மை {{volatility}} · கையிருப்பு தீர்வு அதிர்வெண் {{stockoutPct}}%"
+  }
+}

@@ -1,0 +1,61 @@
+{
+  "tabs": {
+    "overview": "अवलोकन",
+    "riskMap": "जोखिम नक्शा",
+    "explorer": "एक्सप्लोरर",
+    "federation": "फेडरेशन"
+  },
+  "scopeSummaryError": "स्कोप सारांश लोड नहि भ' सकल।",
+  "alertsBySeverity": "गंभीरता सँ अलर्ट",
+  "stats": {
+    "facilitiesInScope": "स्कोपमे सुविधा",
+    "totalDeficit": "कुल कमी",
+    "pendingRecommendations": "लंबित सिफारिश"
+  },
+  "severityWatchShort": "नजरि राखू",
+  "riskMapPulse": "जोखिम नक्शा पल्स",
+  "proportionOf": "{{max}} मेसँ {{value}}",
+  "sparkline": {
+    "noProjection": "अखन धरि कोनो प्रक्षेपण उपलब्ध नहि।",
+    "projectedStock": "प्रक्षेपित स्टॉक",
+    "dayOffset": "दिन +{{n}}"
+  },
+  "explorer": {
+    "columns": {
+      "facility": "सुविधा",
+      "stock": "स्टॉक",
+      "demand": "माँग",
+      "projected": "प्रक्षेपित",
+      "deficit": "कमी"
+    },
+    "showForecastCertainty": "पूर्वानुमान निश्चितता देखाबू",
+    "forecastUncertaintyNote": "एहि सुविधा लेल मॉडल कम निश्चित अछि — माँग एहि अनुमानक आसपास एकटा व्यापक श्रेणीमे कतहु सेहो भ' सकैत अछि।",
+    "searchResources": "संसाधन खोजू...",
+    "fullData": "पूर्ण डेटा",
+    "computingForecasts": "पूर्वानुमान गणना भ' रहल अछि... {{n}} सुविधा",
+    "computingForecastsOf": "पूर्वानुमान गणना भ' रहल अछि... {{total}} मेसँ {{n}}",
+    "facilitiesWithDeficit": "कमी वाला सुविधा",
+    "largestDeficits": "सभसँ पैग कमी",
+    "largestDeficitsOf": "सभसँ पैग कमी ({{total}} मेसँ शीर्ष {{limit}})",
+    "tapBarToZoom": "पूर्ण डेटामे ओहि सुविधापर ज़ूम करबाक लेल बारपर टैप करू।",
+    "noDeficits": "कोनो कमी नहि — स्कोपक हरेक सुविधा लग अपन अनुमानित माँग पूरा करबाक लेल पर्याप्त स्टॉक अछि।",
+    "clearFilter": "फ़िल्टर साफ करू: {{name}}"
+  },
+  "federation": {
+    "demandTrend": "माँग रुझान",
+    "volatility": "अस्थिरता",
+    "stockouts": "स्टॉकआउट",
+    "exitPresentationMode": "प्रस्तुति मोडसँ बाहर निकलू",
+    "presentationMode": "प्रस्तुति मोड",
+    "participatingCountries": "भाग लेनिहार देश",
+    "latestRound": "नवीनतम दौर",
+    "rawRecordsShared": "कच्चा PHC-स्तरीय रिकॉर्ड साझा कएल गेल",
+    "structuralGuaranteeNote": "संरचनात्मक गारंटी (INT-10): सिर्फ एगारह दस्तावेज़ीकृत समग्र क्षेत्र सभटा कोनो राष्ट्रीय नोडसँ बाहर जाइत अछि — कहियो कच्चा सुविधा वा रोगी डेटा नहि।",
+    "demandTrendByRound": "दौर अनुसार माँग रुझान",
+    "roundShort": "R{{n}}",
+    "round": "दौर {{n}}",
+    "countryComparisonDescending": "देश तुलना — घटैत क्रममे",
+    "countryParticipants": "{{country}} · {{n}} प्रतिभागी",
+    "countryMetrics": "रुझान {{trend}} · अस्थिरता {{volatility}} · स्टॉकआउट दर {{stockoutPct}}%"
+  }
+}

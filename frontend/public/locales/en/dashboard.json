@@ -1,0 +1,61 @@
+{
+  "tabs": {
+    "overview": "Overview",
+    "riskMap": "Risk map",
+    "explorer": "Explorer",
+    "federation": "Federation"
+  },
+  "scopeSummaryError": "Couldn't load the scope summary.",
+  "alertsBySeverity": "Alerts by severity",
+  "stats": {
+    "facilitiesInScope": "Facilities in scope",
+    "totalDeficit": "Total deficit",
+    "pendingRecommendations": "Pending recommendations"
+  },
+  "severityWatchShort": "Watch",
+  "riskMapPulse": "risk map pulse",
+  "proportionOf": "{{value}} of {{max}}",
+  "sparkline": {
+    "noProjection": "No projection available yet.",
+    "projectedStock": "Projected stock",
+    "dayOffset": "Day +{{n}}"
+  },
+  "explorer": {
+    "columns": {
+      "facility": "Facility",
+      "stock": "Stock",
+      "demand": "Demand",
+      "projected": "Projected",
+      "deficit": "Deficit"
+    },
+    "showForecastCertainty": "Show forecast certainty",
+    "forecastUncertaintyNote": "Model less certain for this facility — demand could reasonably land anywhere in a wider range around this estimate.",
+    "searchResources": "Search resources…",
+    "fullData": "Full data",
+    "computingForecasts": "Computing forecasts… {{n}} facilities",
+    "computingForecastsOf": "Computing forecasts… {{n}} of {{total}} facilities",
+    "facilitiesWithDeficit": "Facilities with a deficit",
+    "largestDeficits": "Largest deficits",
+    "largestDeficitsOf": "Largest deficits (top {{limit}} of {{total}})",
+    "tapBarToZoom": "Tap a bar to zoom into that facility in Full data.",
+    "noDeficits": "No deficits — every facility in scope has enough stock to cover its forecast demand.",
+    "clearFilter": "Clear filter: {{name}}"
+  },
+  "federation": {
+    "demandTrend": "Demand trend",
+    "volatility": "Volatility",
+    "stockouts": "Stockouts",
+    "exitPresentationMode": "Exit presentation mode",
+    "presentationMode": "Presentation mode",
+    "participatingCountries": "Participating countries",
+    "latestRound": "Latest round",
+    "rawRecordsShared": "Raw PHC-level records shared",
+    "structuralGuaranteeNote": "Structural guarantee (INT-10): only the eleven documented aggregate fields ever leave a national node — never raw facility or patient data.",
+    "demandTrendByRound": "Demand trend by round",
+    "roundShort": "R{{n}}",
+    "round": "Round {{n}}",
+    "countryComparisonDescending": "Country comparison — descending",
+    "countryParticipants": "{{country}} · {{n}} participants",
+    "countryMetrics": "trend {{trend}} · volatility {{volatility}} · stockout freq {{stockoutPct}}%"
+  }
+}

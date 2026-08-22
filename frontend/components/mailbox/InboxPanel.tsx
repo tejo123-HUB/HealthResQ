@@ -1,16 +1,19 @@
 "use client";
 
+import { useTranslation } from "react-i18next";
 import useSWR from "swr";
 import { ListGroup } from "@/components/hig/Card";
 import { ErrorBanner } from "@/components/hig/ErrorBanner";
 import { Skeleton } from "@/components/hig/Skeleton";
 import { instructionSeverity, SeverityBadge } from "@/components/hig/SeverityBadge";
+import { formatDateTime } from "@/lib/i18n/format";
 import { fetchAndDecryptInbox, markReceipt, type DecryptedMessage } from "@/lib/communication/mailboxService";
 
 /** COMM-01/02 mailbox UI: fetches this unit's own sealed mailbox, unseals every message
  * client-side (the server never sees plaintext), and renders the result. A message flagged
  * UNRECOVERABLE_KEY_LOST is shown plainly as lost, never silently hidden (COMM-05). */
 export function InboxPanel({ unitId }: { unitId: string }) {
+  const { t, i18n } = useTranslation(["mailbox", "common"]);
   const { data, mutate, isLoading, error } = useSWR(["comm-inbox", unitId], () => fetchAndDecryptInbox(unitId), {
     refreshInterval: 8000,
   });
@@ -24,13 +27,13 @@ export function InboxPanel({ unitId }: { unitId: string }) {
   if (error) {
     return (
       <div className="mb-6">
-        <ErrorBanner message="Couldn't reach the encrypted mailbox." onRetry={() => mutate()} />
+        <ErrorBanner message={t("mailbox:couldntReachMailbox")} onRetry={() => mutate()} />
       </div>
     );
   }
 
   return (
-    <ListGroup title="Instruction inbox (encrypted)">
+    <ListGroup title={t("mailbox:inboxTitle")}>
       {isLoading &&
         [0, 1].map((i) => (
           <div key={i} className="px-4 py-3 flex items-center justify-between gap-3">
@@ -42,7 +45,7 @@ export function InboxPanel({ unitId }: { unitId: string }) {
           </div>
         ))}
       {data && data.length === 0 && (
-        <div className="px-4 py-3 text-body text-label-secondary">No instructions right now.</div>
+        <div className="px-4 py-3 text-body text-label-secondary">{t("mailbox:noInstructions")}</div>
       )}
       {data?.map((message, i) => (
         <div
@@ -53,15 +56,21 @@ export function InboxPanel({ unitId }: { unitId: string }) {
         >
           <div className="min-w-0">
             {message.raw.status === "UNRECOVERABLE_KEY_LOST" ? (
-              <p className="text-body text-label-tertiary italic">Message lost — device key was reset</p>
+              <p className="text-body text-label-tertiary italic">{t("mailbox:messageLost")}</p>
             ) : message.decryptError || !message.decrypted ? (
-              <p className="text-body text-tint-red">Unable to decrypt this message</p>
+              <p className="text-body text-tint-red">{t("mailbox:unableToDecrypt")}</p>
             ) : (
               <>
-                <p className="text-body truncate">{String(message.decrypted.action)}</p>
+                <p className="text-body truncate" title={String(message.decrypted.action)}>
+                  {String(message.decrypted.action)}
+                </p>
                 <p className="text-footnote text-label-secondary">
-                  Qty {String(message.decrypted.quantity)}
-                  {message.decrypted.deadline ? ` · due ${new Date(String(message.decrypted.deadline)).toLocaleString()}` : ""}
+                  {t("mailbox:qty", { n: String(message.decrypted.quantity) })}
+                  {message.decrypted.deadline
+                    ? ` · ${t("mailbox:due", {
+                        date: formatDateTime(String(message.decrypted.deadline), i18n.language),
+                      })}`
+                    : ""}
                 </p>
               </>
             )}
@@ -69,7 +78,7 @@ export function InboxPanel({ unitId }: { unitId: string }) {
           {message.decrypted && (
             <SeverityBadge
               severity={instructionSeverity(String(message.decrypted.status))}
-              label={String(message.decrypted.status)}
+              label={t(`common:status.${String(message.decrypted.status)}`)}
             />
           )}
         </div>

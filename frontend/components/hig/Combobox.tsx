@@ -1,23 +1,29 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Icon } from "@/components/hig/Icon";
 
 /** Type-to-filter picker for a list too long to render as a row of pills (`SegmentedControl` is
  * fine for 3-6 fixed tabs; a resource catalog can run into the hundreds). Shows the current
  * selection as a closed button; opening it reveals a search box and a scrollable, filtered list —
- * the standard combobox pattern, generalized so it works for any option list, not just products. */
+ * the standard combobox pattern, generalized so it works for any option list, not just products.
+ * A deliberate, pre-existing exception to this app's "no search boxes" policy — appropriate here
+ * specifically because the option list can run into the hundreds (a product catalog), where
+ * tap-to-pick chips stop being usable. */
 export function Combobox<T extends string>({
   options,
   value,
   onChange,
-  placeholder = "Search…",
+  placeholder,
 }: {
   options: { value: T; label: string }[];
   value: T | null;
   onChange: (v: T) => void;
   placeholder?: string;
 }) {
+  const { t } = useTranslation("common");
+  const resolvedPlaceholder = placeholder ?? t("search");
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const containerRef = useRef<HTMLDivElement>(null);
@@ -59,7 +65,9 @@ export function Combobox<T extends string>({
         onClick={() => setOpen((o) => !o)}
         className="w-full flex items-center justify-between gap-2 text-body bg-bg-secondary rounded-hig px-3 min-h-[2.375rem] border border-separator transition-hig hover:bg-fill-thin"
       >
-        <span className="truncate">{selected?.label ?? "Select…"}</span>
+        <span className="truncate" title={selected?.label}>
+          {selected?.label ?? t("select")}
+        </span>
         <Icon name="chevronDown" className={`w-4 h-4 shrink-0 text-label-secondary transition-transform ${open ? "rotate-180" : ""}`} />
       </button>
 
@@ -71,13 +79,13 @@ export function Combobox<T extends string>({
               ref={inputRef}
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder={placeholder}
+              placeholder={resolvedPlaceholder}
               className="flex-1 text-body bg-transparent py-2.5 outline-none"
             />
           </div>
           <div className="max-h-64 overflow-y-auto py-1">
             {filtered.length === 0 && (
-              <p className="px-3 py-2.5 text-footnote text-label-tertiary">No matches.</p>
+              <p className="px-3 py-2.5 text-footnote text-label-tertiary">{t("noMatches")}</p>
             )}
             {filtered.map((o) => (
               <button
@@ -88,7 +96,9 @@ export function Combobox<T extends string>({
                   o.value === value ? "text-tint-blue" : "text-label"
                 }`}
               >
-                <span className="truncate">{o.label}</span>
+                <span className="truncate" title={o.label}>
+                  {o.label}
+                </span>
                 {o.value === value && <Icon name="check" className="w-4 h-4 shrink-0" />}
               </button>
             ))}

@@ -7,6 +7,13 @@ import type { DashboardSummary, Recommendation, SituationReport } from "./types"
 
 export type DecisionAction = "APPROVE" | "REJECT" | "MODIFY" | "ESCALATE";
 
+export type BatchDecisionItem = {
+  recommendationId: string;
+  action: DecisionAction;
+  movements?: { from: string; to: string; quantity: number }[];
+  notes?: string;
+};
+
 export const command = {
   listRecommendations: (status?: string) =>
     api.get<Recommendation[]>(`/recommendations${status ? `?status=${encodeURIComponent(status)}` : ""}`),
@@ -20,19 +27,24 @@ export const command = {
     }
   },
 
-  /** CMD-03/04/08's real approval transaction. `unresolvedQuantity` is required (and must be
-   * positive) for ESCALATE; `movements` is only read for MODIFY. */
+  /** CMD-03/04/08's real approval transaction. `movements` is only read for MODIFY (the
+   * Recalculate form). ESCALATE takes no quantity — it's a whole-action confirm; the backend
+   * computes the full unresolved deficit itself (Phase 13). */
   submitDecision: (
     recommendationId: string,
     action: DecisionAction,
-    opts?: { movements?: { from: string; to: string; quantity: number }[]; notes?: string; unresolvedQuantity?: number }
+    opts?: { movements?: { from: string; to: string; quantity: number }[]; notes?: string }
   ) =>
     api.post<Recommendation>(`/recommendations/${recommendationId}/decision`, {
       action,
       movements: opts?.movements,
       notes: opts?.notes,
-      unresolvedQuantity: opts?.unresolvedQuantity,
     }),
+
+  /** Batch counterpart to `submitDecision` — CMD-09's queue batch-select/approve. Same per-item
+   * authority/validation as a single decision, processed as one transaction server-side. */
+  submitBatchDecision: (items: BatchDecisionItem[]) =>
+    api.post<Recommendation[]>(`/recommendations/batch-decision`, { items }),
 
   /** CMD-07: an authority composes a recommendation directly — runs the same INT feasibility
    * validation and CMD-01 lifecycle as an agent-drafted one (origin=HUMAN). */

@@ -24,7 +24,11 @@ import type {
 
 export const ops = {
   login: (username: string, password: string) =>
-    api.post<{ token: string; scope: Scope }>("/auth/login", { username, password }),
+    api.post<{ token: string; scope: Scope; preferredLocale: string }>("/auth/login", { username, password }),
+
+  getMe: () => api.get<{ preferredLocale: string }>("/auth/me"),
+  updateMyLocale: (preferredLocale: string) =>
+    api.patch<{ preferredLocale: string }>("/auth/me/locale", { preferredLocale }),
 
   getGeography: () => api.get<Country[]>("/geography/hierarchy"),
 

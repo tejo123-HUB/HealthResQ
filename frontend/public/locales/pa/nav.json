@@ -1,0 +1,11 @@
+{
+  "toggleTheme": "ਥੀਮ ਬਦਲੋ",
+  "signOut": "ਸਾਈਨ ਆਊਟ ਕਰੋ",
+  "composeNewAction": "ਨਵੀਂ ਕਾਰਵਾਈ ਬਣਾਓ",
+  "scopeLevel": {
+    "FACILITY": "ਸਹੂਲਤ",
+    "DISTRICT": "ਜ਼ਿਲ੍ਹਾ",
+    "STATE": "ਰਾਜ",
+    "NATIONAL": "ਰਾਸ਼ਟਰੀ"
+  }
+}

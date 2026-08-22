@@ -1,0 +1,11 @@
+{
+  "toggleTheme": "प्रतिरूपं परिवर्तयतु",
+  "signOut": "निर्गच्छतु",
+  "composeNewAction": "नूतनं कार्यं रचयतु",
+  "scopeLevel": {
+    "FACILITY": "सुविधा",
+    "DISTRICT": "जनपदः",
+    "STATE": "राज्यम्",
+    "NATIONAL": "राष्ट्रियम्"
+  }
+}

@@ -1,0 +1,61 @@
+{
+  "tabs": {
+    "overview": "सिंहावलोकन",
+    "riskMap": "जोखिम नक्सा",
+    "explorer": "एक्स्प्लोरर",
+    "federation": "महासंघ"
+  },
+  "scopeSummaryError": "स्कोप सारांश लोड हुन सकेन।",
+  "alertsBySeverity": "गम्भीरता अनुसार अलर्ट",
+  "stats": {
+    "facilitiesInScope": "स्कोपमा सुविधाहरू",
+    "totalDeficit": "कुल घाटा",
+    "pendingRecommendations": "बाँकी सिफारिसहरू"
+  },
+  "severityWatchShort": "निगरानीमा",
+  "riskMapPulse": "जोखिम नक्सा स्पन्दन",
+  "proportionOf": "{{max}} मध्ये {{value}}",
+  "sparkline": {
+    "noProjection": "अहिलेसम्म कुनै प्रक्षेपण उपलब्ध छैन।",
+    "projectedStock": "अनुमानित स्टक",
+    "dayOffset": "दिन +{{n}}"
+  },
+  "explorer": {
+    "columns": {
+      "facility": "सुविधा",
+      "stock": "स्टक",
+      "demand": "माग",
+      "projected": "अनुमानित",
+      "deficit": "घाटा"
+    },
+    "showForecastCertainty": "पूर्वानुमान निश्चितता देखाउनुहोस्",
+    "forecastUncertaintyNote": "यस सुविधाको लागि मोडेल कम निश्चित छ — माग यो अनुमानको वरिपरि फराकिलो दायरामा कतै पनि हुन सक्छ।",
+    "searchResources": "स्रोतहरू खोज्नुहोस्…",
+    "fullData": "पूर्ण डेटा",
+    "computingForecasts": "पूर्वानुमान गणना हुँदैछ… {{n}} सुविधाहरू",
+    "computingForecastsOf": "पूर्वानुमान गणना हुँदैछ… {{total}} मध्ये {{n}} सुविधाहरू",
+    "facilitiesWithDeficit": "घाटा भएका सुविधाहरू",
+    "largestDeficits": "सबैभन्दा ठूला घाटाहरू",
+    "largestDeficitsOf": "सबैभन्दा ठूला घाटाहरू ({{total}} मध्ये शीर्ष {{limit}})",
+    "tapBarToZoom": "पूर्ण डेटामा त्यो सुविधामा जुम गर्न बारमा ट्याप गर्नुहोस्।",
+    "noDeficits": "कुनै घाटा छैन — स्कोपको हरेक सुविधासँग आफ्नो अनुमानित माग धान्न पर्याप्त स्टक छ।",
+    "clearFilter": "फिल्टर हटाउनुहोस्: {{name}}"
+  },
+  "federation": {
+    "demandTrend": "माग प्रवृत्ति",
+    "volatility": "अस्थिरता",
+    "stockouts": "स्टक सकिने घटनाहरू",
+    "exitPresentationMode": "प्रस्तुतीकरण मोडबाट बाहिर निस्कनुहोस्",
+    "presentationMode": "प्रस्तुतीकरण मोड",
+    "participatingCountries": "सहभागी देशहरू",
+    "latestRound": "पछिल्लो चरण",
+    "rawRecordsShared": "साझा गरिएका कच्चा PHC-स्तरीय रेकर्डहरू",
+    "structuralGuaranteeNote": "संरचनात्मक ग्यारेन्टी (INT-10): राष्ट्रिय नोडबाट कहिल्यै पनि एघार दस्ताबेजीकृत सामूहिक फिल्डहरू मात्र बाहिर जान्छन् — कहिल्यै पनि कच्चा सुविधा वा बिरामी डेटा होइन।",
+    "demandTrendByRound": "चरण अनुसार माग प्रवृत्ति",
+    "roundShort": "चरण {{n}}",
+    "round": "चरण {{n}}",
+    "countryComparisonDescending": "देश तुलना — घट्दो क्रममा",
+    "countryParticipants": "{{country}} · {{n}} सहभागीहरू",
+    "countryMetrics": "प्रवृत्ति {{trend}} · अस्थिरता {{volatility}} · स्टक सकिने दर {{stockoutPct}}%"
+  }
+}

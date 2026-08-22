@@ -1,0 +1,14 @@
+{
+  "aiSuggestion": "AI सिफारिस",
+  "expandPanel": "सहायक पेनेलखौ आबुं खालाम",
+  "collapsePanel": "सहायक पेनेलखौ फोजोब",
+  "suggestionAvailable": "AI सिफारिस दं — जाचायनोरै आबुं खालाम",
+  "noSuggestionsExpand": "गोसो दंनाय AI सिफारिस गैया — प्रोशोन सोंनोरै आबुं खालाम",
+  "noPendingRecommendations": "थुबैनो गोसो दंनाय सिफारिस गैया।",
+  "resourceApproval": "{{resource}} · {{authority}} मान्नाय",
+  "reviewFull": "गासै सिफारिसखौ जाचाय",
+  "askAboutThis": "बेनि सायाव सोंगोरो",
+  "askPlaceholder": "प्रोशोन सोंगोरो...",
+  "askHint": "बेयो मानोबादि जायो, गुबुन ओखा मा, एबा बेयो सेफ मानामनि थाखाय सोंगोरो।",
+  "composeWithAssistant": "सहायकजों लिर"
+}

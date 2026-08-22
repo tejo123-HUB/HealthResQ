@@ -10,10 +10,24 @@
 
 import { api } from "./client";
 import { command } from "@/lib/api/command";
-import type { DashboardSummary, ResourceExplorerEvent, ResourceRollup, RiskMarker, ScopeLevel } from "@/lib/api/types";
+import type {
+  DashboardSummary,
+  ForecastPointSeries,
+  HexCell,
+  ResourceExplorerEvent,
+  ResourceRollup,
+  RiskMarker,
+  ScopeLevel,
+} from "@/lib/api/types";
 
 export const intelligence = {
   getRiskMarkers: (): Promise<RiskMarker[]> => api.get<RiskMarker[]>("/intelligence/risk-map"),
+
+  getHexMap: (resolution?: number): Promise<HexCell[]> =>
+    api.get<HexCell[]>(`/intelligence/hex-map${resolution !== undefined ? `?resolution=${resolution}` : ""}`),
+
+  getForecastPoints: (facilityId: string, productId: string): Promise<ForecastPointSeries> =>
+    api.get<ForecastPointSeries>(`/intelligence/forecast-points?facility_id=${facilityId}&product_id=${productId}`),
 
   getResourceExplorer: (productId: string): Promise<ResourceRollup> =>
     api.get<ResourceRollup>(`/intelligence/resource-explorer?product_id=${productId}`),

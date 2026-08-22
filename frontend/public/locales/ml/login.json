@@ -1,0 +1,10 @@
+{
+  "tagline": "നിങ്ങളുടെ സൗകര്യം അല്ലെങ്കിൽ അധികാര അക്കൗണ്ട് ഉപയോഗിച്ച് സൈൻ ഇൻ ചെയ്യുക.",
+  "username": "ഉപയോക്തൃനാമം",
+  "password": "പാസ്‌വേഡ്",
+  "showPassword": "പാസ്‌വേഡ് കാണിക്കുക",
+  "hidePassword": "പാസ്‌വേഡ് മറയ്ക്കുക",
+  "loginFailed": "സൈൻ ഇൻ പരാജയപ്പെട്ടു",
+  "demoAccounts": "ഡെമോ അക്കൗണ്ടുകൾ",
+  "demoAccountsList": "operator.phc-001, district.krishna, state.andhra-pradesh, national.india (പാസ്‌വേഡ് demo-pass-123)."
+}

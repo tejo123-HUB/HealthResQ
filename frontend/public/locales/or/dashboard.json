@@ -1,0 +1,61 @@
+{
+  "tabs": {
+    "overview": "ସମୀକ୍ଷା",
+    "riskMap": "ବିପଦ ମାନଚିତ୍ର",
+    "explorer": "ଏକ୍ସପ୍ଲୋରର",
+    "federation": "ଫେଡେରେସନ"
+  },
+  "scopeSummaryError": "ସ୍କୋପ ସାରାଂଶ ଲୋଡ ହୋଇପାରିଲା ନାହିଁ।",
+  "alertsBySeverity": "ଗୁରୁତ୍ୱ ଅନୁସାରେ ସତର୍କତା",
+  "stats": {
+    "facilitiesInScope": "ସ୍କୋପ ମଧ୍ୟରେ ସୁବିଧାଗୁଡ଼ିକ",
+    "totalDeficit": "ମୋଟ ଅଭାବ",
+    "pendingRecommendations": "ବାକି ସୁପାରିଶ"
+  },
+  "severityWatchShort": "ସତର୍କତା",
+  "riskMapPulse": "ବିପଦ ମାନଚିତ୍ର ସ୍ପନ୍ଦନ",
+  "proportionOf": "{{max}} ମଧ୍ୟରୁ {{value}}",
+  "sparkline": {
+    "noProjection": "ଏପର୍ଯ୍ୟନ୍ତ କୌଣସି ପୂର୍ବାନୁମାନ ଉପଲବ୍ଧ ନାହିଁ।",
+    "projectedStock": "ପ୍ରାକ୍କଳିତ ଷ୍ଟକ",
+    "dayOffset": "ଦିନ +{{n}}"
+  },
+  "explorer": {
+    "columns": {
+      "facility": "ସୁବିଧା",
+      "stock": "ଷ୍ଟକ",
+      "demand": "ଚାହିଦା",
+      "projected": "ପ୍ରାକ୍କଳିତ",
+      "deficit": "ଅଭାବ"
+    },
+    "showForecastCertainty": "ପୂର୍ବାନୁମାନର ନିଶ୍ଚିତତା ଦେଖାନ୍ତୁ",
+    "forecastUncertaintyNote": "ଏହି ସୁବିଧା ପାଇଁ ମଡେଲ କମ୍ ନିଶ୍ଚିତ — ଚାହିଦା ଏହି ଆକଳନ ଚାରିପାଖରେ ଏକ ବ୍ୟାପକ ପରିସର ମଧ୍ୟରେ ଯେକୌଣସି ସ୍ଥାନରେ ପଡ଼ିପାରେ।",
+    "searchResources": "ଉତ୍ସ ଖୋଜନ୍ତୁ…",
+    "fullData": "ସମ୍ପୂର୍ଣ୍ଣ ତଥ୍ୟ",
+    "computingForecasts": "ପୂର୍ବାନୁମାନ ଗଣନା ହେଉଛି… {{n}} ସୁବିଧା",
+    "computingForecastsOf": "ପୂର୍ବାନୁମାନ ଗଣନା ହେଉଛି… {{total}} ମଧ୍ୟରୁ {{n}} ସୁବିଧା",
+    "facilitiesWithDeficit": "ଅଭାବଥିବା ସୁବିଧାଗୁଡ଼ିକ",
+    "largestDeficits": "ସର୍ବବୃହତ ଅଭାବ",
+    "largestDeficitsOf": "ସର୍ବବୃହତ ଅଭାବ ({{total}} ମଧ୍ୟରୁ ଶୀର୍ଷ {{limit}})",
+    "tapBarToZoom": "ସମ୍ପୂର୍ଣ୍ଣ ତଥ୍ୟରେ ସେହି ସୁବିଧାକୁ ଜୁମ୍ କରିବାକୁ ଏକ ବାର ଉପରେ ଟାପ୍ କରନ୍ତୁ।",
+    "noDeficits": "କୌଣସି ଅଭାବ ନାହିଁ — ସ୍କୋପର ପ୍ରତ୍ୟେକ ସୁବିଧା ପାଖରେ ତାହାର ପୂର୍ବାନୁମାନିତ ଚାହିଦା ପୂରଣ କରିବାକୁ ଯଥେଷ୍ଟ ଷ୍ଟକ ଅଛି।",
+    "clearFilter": "ଫିଲ୍ଟର ସଫା କରନ୍ତୁ: {{name}}"
+  },
+  "federation": {
+    "demandTrend": "ଚାହିଦା ଧାରା",
+    "volatility": "ଅସ୍ଥିରତା",
+    "stockouts": "ଷ୍ଟକ ଶେଷ ହେବା ଘଟଣା",
+    "exitPresentationMode": "ଉପସ୍ଥାପନା ମୋଡରୁ ବାହାରକୁ ଯାଆନ୍ତୁ",
+    "presentationMode": "ଉପସ୍ଥାପନା ମୋଡ",
+    "participatingCountries": "ଅଂଶଗ୍ରହଣକାରୀ ଦେଶ",
+    "latestRound": "ସର୍ବଶେଷ ରାଉଣ୍ଡ",
+    "rawRecordsShared": "କଞ୍ଚା PHC-ସ୍ତର ରେକର୍ଡ ଅଂଶୀଦାର ହେଲା",
+    "structuralGuaranteeNote": "ଗଠନମୂଳକ ଗ୍ୟାରେଣ୍ଟି (INT-10): କେବଳ ଦଲିଲଭୁକ୍ତ ଏଗାର ସାମୂହିକ କ୍ଷେତ୍ର ହିଁ ଏକ ଜାତୀୟ ନୋଡରୁ ବାହାରକୁ ଯାଏ — କେବେ ବି କଞ୍ଚା ସୁବିଧା କିମ୍ବା ରୋଗୀ ତଥ୍ୟ ନୁହେଁ।",
+    "demandTrendByRound": "ରାଉଣ୍ଡ ଅନୁସାରେ ଚାହିଦା ଧାରା",
+    "roundShort": "ରା{{n}}",
+    "round": "ରାଉଣ୍ଡ {{n}}",
+    "countryComparisonDescending": "ଦେଶ ତୁଳନା — ଅବରୋହୀ କ୍ରମରେ",
+    "countryParticipants": "{{country}} · {{n}} ଅଂଶଗ୍ରହଣକାରୀ",
+    "countryMetrics": "ଧାରା {{trend}} · ଅସ୍ଥିରତା {{volatility}} · ଷ୍ଟକ-ଆଉଟ ହାର {{stockoutPct}}%"
+  }
+}

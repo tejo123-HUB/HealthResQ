@@ -1,0 +1,11 @@
+{
+  "toggleTheme": "থিম পরিবর্তন করুন",
+  "signOut": "সাইন আউট করুন",
+  "composeNewAction": "নতুন পদক্ষেপ তৈরি করুন",
+  "scopeLevel": {
+    "FACILITY": "সুবিধা",
+    "DISTRICT": "জেলা",
+    "STATE": "রাজ্য",
+    "NATIONAL": "জাতীয়"
+  }
+}

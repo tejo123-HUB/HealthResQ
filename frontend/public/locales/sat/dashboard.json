@@ -1,0 +1,61 @@
+{
+  "tabs": {
+    "overview": "ᱚᱵᱷᱚᱨᱵᱷᱤᱭᱩ",
+    "riskMap": "ᱵᱟᱲ ᱢᱮᱯ",
+    "explorer": "ᱥᱮᱸᱫᱽᱨᱟᱹ",
+    "federation": "ᱯᱷᱮᱰᱨᱮᱥᱚᱱ"
+  },
+  "scopeSummaryError": "ᱥᱠᱚᱯ ᱥᱟᱨᱮᱸᱡ ᱟᱹᱭᱩᱨ ᱵᱟᱭᱲᱟ ᱮᱱᱟ᱾",
+  "alertsBySeverity": "ᱵᱟᱲ ᱢᱟᱸᱡᱷᱤ ᱛᱮ ᱦᱩᱛᱟᱹᱲ",
+  "stats": {
+    "facilitiesInScope": "ᱥᱠᱚᱯ ᱨᱮ ᱢᱮᱱᱟᱜ ᱥᱮᱱᱴᱚᱨᱠᱚ",
+    "totalDeficit": "ᱡᱟᱭᱜᱟ ᱠᱚᱢ",
+    "pendingRecommendations": "ᱧᱮᱞ ᱦᱩᱭᱩᱜ ᱨᱮᱠᱚᱢᱮᱱᱰᱮᱥᱚᱱᱠᱚ"
+  },
+  "severityWatchShort": "ᱦᱟᱴᱤᱭᱟᱨ",
+  "riskMapPulse": "ᱵᱟᱲ ᱢᱮᱯ ᱯᱟᱞᱥ",
+  "proportionOf": "{{max}} ᱨᱮᱭᱟᱜ {{value}}",
+  "sparkline": {
+    "noProjection": "ᱚᱸᱰᱮ ᱯᱨᱚᱡᱮᱠᱥᱚᱱ ᱵᱟᱹᱱᱩᱜᱼᱟ᱾",
+    "projectedStock": "ᱯᱨᱚᱡᱮᱠᱴ ᱟᱠᱟᱱ ᱡᱟᱦᱟᱱ",
+    "dayOffset": "ᱢᱟᱦᱟ +{{n}}"
+  },
+  "explorer": {
+    "columns": {
+      "facility": "ᱥᱮᱱᱴᱚᱨ",
+      "stock": "ᱡᱟᱦᱟᱱ",
+      "demand": "ᱡᱟᱨᱩᱨᱤ",
+      "projected": "ᱯᱨᱚᱡᱮᱠᱴ",
+      "deficit": "ᱠᱚᱢ"
+    },
+    "showForecastCertainty": "ᱯᱩᱨᱵᱟᱹᱱᱩᱢᱟᱱ ᱧᱟᱢᱚᱜ ᱟᱫᱟᱠᱚᱴ ᱩᱫᱩᱜ ᱢᱮ",
+    "forecastUncertaintyNote": "ᱱᱚᱶᱟ ᱥᱮᱱᱴᱚᱨ ᱞᱟᱹᱜᱤᱫ ᱢᱚᱰᱮᱞ ᱟᱹᱰᱤ ᱧᱟᱢᱚᱜ ᱵᱟᱝᱟ — ᱡᱟᱨᱩᱨᱤ ᱡᱟᱦᱟᱸᱭ ᱛᱟᱦᱮᱸᱱᱟ ᱚᱱᱟ ᱴᱷᱤᱠ ᱟᱠᱟᱱ ᱠᱚᱴᱷᱟ ᱠᱷᱚᱱ ᱯᱟᱨᱚᱢ ᱦᱩᱭ ᱫᱟᱲᱮᱭᱟᱜᱼᱟ᱾",
+    "searchResources": "ᱥᱟᱫᱷᱚᱱ ᱥᱮᱸᱫᱽᱨᱟᱹ ᱢᱮ…",
+    "fullData": "ᱯᱩᱨᱟᱹᱣ ᱰᱟᱴᱟ",
+    "computingForecasts": "ᱯᱩᱨᱵᱟᱹᱱᱩᱢᱟᱱ ᱦᱩᱭ ᱠᱟᱱᱟ… ᱥᱮᱱᱴᱚᱨ {{n}}",
+    "computingForecastsOf": "ᱯᱩᱨᱵᱟᱹᱱᱩᱢᱟᱱ ᱦᱩᱭ ᱠᱟᱱᱟ… {{total}} ᱠᱷᱚᱱ {{n}}",
+    "facilitiesWithDeficit": "ᱡᱟᱭᱜᱟ ᱠᱚᱢ ᱢᱮᱱᱟᱜ ᱥᱮᱱᱴᱚᱨᱠᱚ",
+    "largestDeficits": "ᱢᱟᱨᱟᱝ ᱡᱟᱭᱜᱟ ᱠᱚᱢᱠᱚ",
+    "largestDeficitsOf": "ᱢᱟᱨᱟᱝ ᱡᱟᱭᱜᱟ ᱠᱚᱢᱠᱚ ({{total}} ᱠᱷᱚᱱ {{limit}})",
+    "tapBarToZoom": "ᱯᱩᱨᱟᱹᱣ ᱰᱟᱴᱟ ᱨᱮ ᱚᱱᱟ ᱥᱮᱱᱴᱚᱨ ᱧᱮᱞ ᱞᱟᱹᱜᱤᱫ ᱵᱟᱨ ᱨᱮ ᱚᱛᱟᱭ ᱢᱮ᱾",
+    "noDeficits": "ᱡᱟᱭᱜᱟ ᱠᱚᱢ ᱵᱟᱝᱟ — ᱥᱠᱚᱯ ᱨᱮᱭᱟᱜ ᱥᱚᱵ ᱥᱮᱱᱴᱚᱨ ᱨᱮ ᱡᱟᱨᱩᱨᱤ ᱞᱟᱹᱜᱤᱫ ᱡᱟᱦᱟᱱ ᱢᱮᱱᱟᱜᱼᱟ᱾",
+    "clearFilter": "ᱪᱷᱟᱹᱱᱛᱟᱹ ᱵᱟᱹᱰᱮ ᱢᱮ: {{name}}"
+  },
+  "federation": {
+    "demandTrend": "ᱡᱟᱨᱩᱨᱤ ᱨᱮᱭᱟᱜ ᱫᱤᱥᱟ",
+    "volatility": "ᱵᱚᱫᱚᱞ ᱦᱩᱭ",
+    "stockouts": "ᱡᱟᱦᱟᱱ ᱠᱚᱢ",
+    "exitPresentationMode": "ᱦᱩᱫᱤᱧ ᱢᱚᱰ ᱠᱷᱚᱱ ᱚᱰᱚᱠ ᱢᱮ",
+    "presentationMode": "ᱦᱩᱫᱤᱧ ᱢᱚᱰ",
+    "participatingCountries": "ᱢᱮᱱᱟᱜ ᱫᱮᱥᱠᱚ",
+    "latestRound": "ᱱᱟᱶᱟ ᱫᱚ ᱨᱟᱩᱸᱰ",
+    "rawRecordsShared": "PHC ᱨᱮᱭᱟᱜ ᱠᱟᱪᱷᱟ ᱨᱮᱠᱚᱨᱰ ᱦᱟᱹᱴᱤᱡᱽ ᱮᱱᱟ",
+    "structuralGuaranteeNote": "ᱴᱷᱤᱠ ᱜᱮᱨᱮᱱᱴᱤ (INT-10): ᱮᱦᱚᱵ ᱜᱚᱴᱟ ᱟᱜᱨᱮᱜᱮᱴ ᱠᱚᱴᱷᱟᱭ ᱫᱮᱥᱤᱭ ᱱᱚᱰ ᱠᱷᱚᱱ ᱚᱰᱚᱠ ᱠᱟᱱᱟ — ᱠᱟᱪᱷᱟ ᱥᱮᱱᱴᱚᱨ ᱟᱨ ᱦᱟᱹᱥᱩᱭᱟᱹ ᱰᱟᱴᱟ ᱚᱱᱰᱮ ᱵᱟᱭ ᱚᱰᱚᱜᱟ᱾",
+    "demandTrendByRound": "ᱨᱟᱩᱸᱰ ᱢᱟᱸᱡᱷᱤ ᱛᱮ ᱡᱟᱨᱩᱨᱤ ᱨᱮᱭᱟᱜ ᱫᱤᱥᱟ",
+    "roundShort": "R{{n}}",
+    "round": "ᱨᱟᱩᱸᱰ {{n}}",
+    "countryComparisonDescending": "ᱫᱮᱥ ᱛᱩᱞᱚᱱᱟ — ᱢᱟᱨᱟᱝ ᱠᱷᱚᱱ ᱦᱩᱰᱤᱧ",
+    "countryParticipants": "{{country}} · {{n}} ᱢᱮᱱᱟᱜᱠᱚ",
+    "countryMetrics": "ᱫᱤᱥᱟ {{trend}} · ᱵᱚᱫᱚᱞ {{volatility}} · ᱡᱟᱦᱟᱱ ᱠᱚᱢ {{stockoutPct}}%"
+  }
+}

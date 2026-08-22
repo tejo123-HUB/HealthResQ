@@ -1,0 +1,14 @@
+{
+  "aiSuggestion": "AI ਸੁਝਾਅ",
+  "expandPanel": "ਸਹਾਇਕ ਪੈਨਲ ਵਧਾਓ",
+  "collapsePanel": "ਸਹਾਇਕ ਪੈਨਲ ਸੁੰਗੜੋ",
+  "suggestionAvailable": "AI ਸੁਝਾਅ ਉਪਲਬਧ — ਸਮੀਖਿਆ ਲਈ ਵਧਾਓ",
+  "noSuggestionsExpand": "ਕੋਈ ਬਕਾਇਆ AI ਸੁਝਾਅ ਨਹੀਂ — ਸਵਾਲ ਪੁੱਛਣ ਲਈ ਵਧਾਓ",
+  "noPendingRecommendations": "ਇਸ ਵੇਲੇ ਕੋਈ ਬਕਾਇਆ ਸਿਫ਼ਾਰਸ਼ਾਂ ਨਹੀਂ ਹਨ।",
+  "resourceApproval": "{{resource}} · {{authority}} ਮਨਜ਼ੂਰੀ",
+  "reviewFull": "ਪੂਰੀ ਸਿਫ਼ਾਰਸ਼ ਦੀ ਸਮੀਖਿਆ ਕਰੋ",
+  "askAboutThis": "ਇਸ ਬਾਰੇ ਪੁੱਛੋ",
+  "askPlaceholder": "ਇੱਕ ਸਵਾਲ ਪੁੱਛੋ…",
+  "askHint": "ਪੁੱਛੋ ਕਿ ਇਹ ਕਿਉਂ ਹੋ ਰਿਹਾ ਹੈ, ਬਦਲ ਕੀ ਹਨ, ਜਾਂ ਕੀ ਇਹ ਸੁਰੱਖਿਅਤ ਹੈ।",
+  "composeWithAssistant": "ਸਹਾਇਕ ਨਾਲ ਬਣਾਓ"
+}

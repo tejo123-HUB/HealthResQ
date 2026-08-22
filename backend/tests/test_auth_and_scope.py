@@ -16,6 +16,7 @@ def test_login_success_returns_token_and_scope(client, db, role_operator, geo):
     body = resp.json()
     assert body["scope"] == {"level": "FACILITY", "id": str(facility.id)}
     assert body["token"]
+    assert body["preferredLocale"] == "en"
 
 
 def test_login_wrong_password_rejected(client, db, role_operator, geo):
@@ -59,3 +60,27 @@ def test_facility_scoped_user_cannot_write_another_facilitys_footfall(client, db
         json={"date": "2026-01-01", "shift": "DAY", "opdVisits": 1, "admissions": 0, "discharges": 0, "referrals": 0},
     )
     assert resp.status_code == 403
+
+
+def test_me_defaults_to_english_and_updates_own_locale(client, db, role_operator, geo):
+    facility = make_facility(db, geo, name="PHC-locale", ftype=models.FacilityType.PHC)
+    token = make_user_token(db, role_operator, models.ScopeLevel.FACILITY, facility.id)
+
+    resp = client.get("/auth/me", headers=auth_headers(token))
+    assert resp.status_code == 200
+    assert resp.json()["preferredLocale"] == "en"
+
+    resp = client.patch("/auth/me/locale", headers=auth_headers(token), json={"preferredLocale": "hi"})
+    assert resp.status_code == 200
+    assert resp.json()["preferredLocale"] == "hi"
+
+    resp = client.get("/auth/me", headers=auth_headers(token))
+    assert resp.json()["preferredLocale"] == "hi"
+
+
+def test_update_locale_rejects_unsupported_code(client, db, role_operator, geo):
+    facility = make_facility(db, geo, name="PHC-badlocale", ftype=models.FacilityType.PHC)
+    token = make_user_token(db, role_operator, models.ScopeLevel.FACILITY, facility.id)
+
+    resp = client.patch("/auth/me/locale", headers=auth_headers(token), json={"preferredLocale": "xx"})
+    assert resp.status_code == 422

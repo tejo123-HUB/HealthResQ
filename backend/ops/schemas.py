@@ -1,8 +1,10 @@
 from datetime import date, datetime
 from typing import Literal
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, field_validator
 from pydantic.alias_generators import to_camel
+
+from backend.ops.locales import SUPPORTED_LOCALES
 
 
 class CamelModel(BaseModel):
@@ -30,6 +32,24 @@ class LoginRequest(CamelModel):
 class LoginResponse(CamelModel):
     token: str
     scope: Scope
+    # Included directly so the app can render in the right language immediately after login,
+    # without a mandatory second round-trip to GET /auth/me for the common case.
+    preferred_locale: str
+
+
+class MeResponse(CamelModel):
+    preferred_locale: str
+
+
+class UpdateLocaleRequest(CamelModel):
+    preferred_locale: str
+
+    @field_validator("preferred_locale")
+    @classmethod
+    def _known_locale(cls, v: str) -> str:
+        if v not in SUPPORTED_LOCALES:
+            raise ValueError(f"Unsupported locale: {v}")
+        return v
 
 
 # --- Geography (OPS-01) ---------------------------------------------------------------------------

@@ -1,0 +1,61 @@
+{
+  "tabs": {
+    "overview": "ਸੰਖੇਪ ਜਾਣਕਾਰੀ",
+    "riskMap": "ਜੋਖਮ ਨਕਸ਼ਾ",
+    "explorer": "ਐਕਸਪਲੋਰਰ",
+    "federation": "ਫੈਡਰੇਸ਼ਨ"
+  },
+  "scopeSummaryError": "ਸਕੋਪ ਸੰਖੇਪ ਲੋਡ ਨਹੀਂ ਹੋ ਸਕਿਆ।",
+  "alertsBySeverity": "ਗੰਭੀਰਤਾ ਅਨੁਸਾਰ ਚਿਤਾਵਨੀਆਂ",
+  "stats": {
+    "facilitiesInScope": "ਸਕੋਪ ਵਿੱਚ ਸਹੂਲਤਾਂ",
+    "totalDeficit": "ਕੁੱਲ ਘਾਟ",
+    "pendingRecommendations": "ਬਕਾਇਆ ਸਿਫ਼ਾਰਸ਼ਾਂ"
+  },
+  "severityWatchShort": "ਸਾਵਧਾਨੀ",
+  "riskMapPulse": "ਜੋਖਮ ਨਕਸ਼ਾ ਧੜਕਣ",
+  "proportionOf": "{{max}} ਵਿੱਚੋਂ {{value}}",
+  "sparkline": {
+    "noProjection": "ਹਾਲੇ ਕੋਈ ਅਨੁਮਾਨ ਉਪਲਬਧ ਨਹੀਂ ਹੈ।",
+    "projectedStock": "ਅਨੁਮਾਨਿਤ ਸਟਾਕ",
+    "dayOffset": "ਦਿਨ +{{n}}"
+  },
+  "explorer": {
+    "columns": {
+      "facility": "ਸਹੂਲਤ",
+      "stock": "ਸਟਾਕ",
+      "demand": "ਮੰਗ",
+      "projected": "ਅਨੁਮਾਨਿਤ",
+      "deficit": "ਘਾਟ"
+    },
+    "showForecastCertainty": "ਅਨੁਮਾਨ ਦੀ ਨਿਸ਼ਚਿਤਤਾ ਦਿਖਾਓ",
+    "forecastUncertaintyNote": "ਇਸ ਸਹੂਲਤ ਲਈ ਮਾਡਲ ਘੱਟ ਨਿਸ਼ਚਿਤ ਹੈ — ਮੰਗ ਇਸ ਅਨੁਮਾਨ ਦੇ ਆਲੇ-ਦੁਆਲੇ ਇੱਕ ਵਿਸ਼ਾਲ ਸੀਮਾ ਵਿੱਚ ਕਿਤੇ ਵੀ ਹੋ ਸਕਦੀ ਹੈ।",
+    "searchResources": "ਸਰੋਤ ਖੋਜੋ…",
+    "fullData": "ਪੂਰਾ ਡਾਟਾ",
+    "computingForecasts": "ਅਨੁਮਾਨਾਂ ਦੀ ਗਣਨਾ ਹੋ ਰਹੀ ਹੈ… {{n}} ਸਹੂਲਤਾਂ",
+    "computingForecastsOf": "ਅਨੁਮਾਨਾਂ ਦੀ ਗਣਨਾ ਹੋ ਰਹੀ ਹੈ… {{total}} ਵਿੱਚੋਂ {{n}} ਸਹੂਲਤਾਂ",
+    "facilitiesWithDeficit": "ਘਾਟ ਵਾਲੀਆਂ ਸਹੂਲਤਾਂ",
+    "largestDeficits": "ਸਭ ਤੋਂ ਵੱਡੀਆਂ ਘਾਟਾਂ",
+    "largestDeficitsOf": "ਸਭ ਤੋਂ ਵੱਡੀਆਂ ਘਾਟਾਂ ({{total}} ਵਿੱਚੋਂ ਚੋਟੀ ਦੀਆਂ {{limit}})",
+    "tapBarToZoom": "ਪੂਰੇ ਡਾਟੇ ਵਿੱਚ ਉਸ ਸਹੂਲਤ 'ਤੇ ਜ਼ੂਮ ਕਰਨ ਲਈ ਬਾਰ 'ਤੇ ਟੈਪ ਕਰੋ।",
+    "noDeficits": "ਕੋਈ ਘਾਟ ਨਹੀਂ — ਸਕੋਪ ਦੀ ਹਰ ਸਹੂਲਤ ਕੋਲ ਆਪਣੀ ਅਨੁਮਾਨਿਤ ਮੰਗ ਪੂਰੀ ਕਰਨ ਲਈ ਲੋੜੀਂਦਾ ਸਟਾਕ ਹੈ।",
+    "clearFilter": "ਫਿਲਟਰ ਸਾਫ਼ ਕਰੋ: {{name}}"
+  },
+  "federation": {
+    "demandTrend": "ਮੰਗ ਦਾ ਰੁਝਾਨ",
+    "volatility": "ਅਸਥਿਰਤਾ",
+    "stockouts": "ਸਟਾਕ ਖਤਮ ਹੋਣ ਦੀਆਂ ਘਟਨਾਵਾਂ",
+    "exitPresentationMode": "ਪੇਸ਼ਕਾਰੀ ਮੋਡ ਤੋਂ ਬਾਹਰ ਜਾਓ",
+    "presentationMode": "ਪੇਸ਼ਕਾਰੀ ਮੋਡ",
+    "participatingCountries": "ਭਾਗ ਲੈਣ ਵਾਲੇ ਦੇਸ਼",
+    "latestRound": "ਨਵੀਨਤਮ ਦੌਰ",
+    "rawRecordsShared": "ਕੱਚੇ PHC-ਪੱਧਰ ਦੇ ਰਿਕਾਰਡ ਸਾਂਝੇ ਕੀਤੇ ਗਏ",
+    "structuralGuaranteeNote": "ਢਾਂਚਾਗਤ ਗਾਰੰਟੀ (INT-10): ਸਿਰਫ਼ ਦਸਤਾਵੇਜ਼ੀ ਗਿਆਰਾਂ ਸਮੂਹਿਕ ਖੇਤਰ ਹੀ ਇੱਕ ਰਾਸ਼ਟਰੀ ਨੋਡ ਤੋਂ ਬਾਹਰ ਜਾਂਦੇ ਹਨ — ਕਦੇ ਵੀ ਕੱਚਾ ਸਹੂਲਤ ਜਾਂ ਮਰੀਜ਼ ਡਾਟਾ ਨਹੀਂ।",
+    "demandTrendByRound": "ਦੌਰ ਅਨੁਸਾਰ ਮੰਗ ਦਾ ਰੁਝਾਨ",
+    "roundShort": "ਦੌ{{n}}",
+    "round": "ਦੌਰ {{n}}",
+    "countryComparisonDescending": "ਦੇਸ਼ ਤੁਲਨਾ — ਘਟਦੇ ਕ੍ਰਮ ਵਿੱਚ",
+    "countryParticipants": "{{country}} · {{n}} ਭਾਗੀਦਾਰ",
+    "countryMetrics": "ਰੁਝਾਨ {{trend}} · ਅਸਥਿਰਤਾ {{volatility}} · ਸਟਾਕ-ਆਊਟ ਦਰ {{stockoutPct}}%"
+  }
+}

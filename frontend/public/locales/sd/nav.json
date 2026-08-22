@@ -1,0 +1,11 @@
+{
+  "toggleTheme": "थीम बदलियो",
+  "signOut": "साइन आउट कयो",
+  "composeNewAction": "नयों कारवाई ठाहियो",
+  "scopeLevel": {
+    "FACILITY": "सुविधा",
+    "DISTRICT": "जिलो",
+    "STATE": "सूबो",
+    "NATIONAL": "राष्ट्रीय"
+  }
+}

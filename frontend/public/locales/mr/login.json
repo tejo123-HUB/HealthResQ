@@ -1,0 +1,10 @@
+{
+  "tagline": "तुमच्या सुविधा किंवा प्राधिकरण खात्याने साइन इन करा.",
+  "username": "वापरकर्तानाव",
+  "password": "पासवर्ड",
+  "showPassword": "पासवर्ड दाखवा",
+  "hidePassword": "पासवर्ड लपवा",
+  "loginFailed": "साइन इन अयशस्वी",
+  "demoAccounts": "डेमो खाती",
+  "demoAccountsList": "operator.phc-001, district.krishna, state.andhra-pradesh, national.india (पासवर्ड demo-pass-123)."
+}

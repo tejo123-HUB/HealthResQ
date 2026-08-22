@@ -1,0 +1,10 @@
+{
+  "tagline": "તમારા સુવિધા અથવા સત્તાધિકારી ખાતાથી સાઇન ઇન કરો.",
+  "username": "વપરાશકર્તા નામ",
+  "password": "પાસવર્ડ",
+  "showPassword": "પાસવર્ડ બતાવો",
+  "hidePassword": "પાસવર્ડ છુપાવો",
+  "loginFailed": "લોગિન નિષ્ફળ",
+  "demoAccounts": "ડેમો ખાતાં",
+  "demoAccountsList": "operator.phc-001, district.krishna, state.andhra-pradesh, national.india (પાસવર્ડ demo-pass-123)."
+}

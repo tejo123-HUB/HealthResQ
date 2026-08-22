@@ -124,7 +124,12 @@ def _latest_alerts(db: Session, facility_ids: list[str]) -> list[Alert]:
 def get_active_alerts(db: Session, scope: dict) -> list[dict]:
     facility_ids = cluster_risk_facility_ids(db, scope["level"], scope["id"])
     return [
-        {"facilityId": str(a.facility_id), "productId": str(a.product_id), "severity": a.severity.value}
+        {
+            "facilityId": str(a.facility_id),
+            "productId": str(a.product_id),
+            "severity": a.severity.value,
+            "daysToStockout": a.days_to_stockout,
+        }
         for a in _latest_alerts(db, facility_ids)
     ]
 

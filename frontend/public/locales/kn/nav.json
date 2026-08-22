@@ -1,0 +1,11 @@
+{
+  "toggleTheme": "ಥೀಮ್ ಬದಲಿಸಿ",
+  "signOut": "ಸೈನ್ ಔಟ್ ಮಾಡಿ",
+  "composeNewAction": "ಹೊಸ ಕ್ರಿಯೆಯನ್ನು ರಚಿಸಿ",
+  "scopeLevel": {
+    "FACILITY": "ಸೌಲಭ್ಯ",
+    "DISTRICT": "ಜಿಲ್ಲೆ",
+    "STATE": "ರಾಜ್ಯ",
+    "NATIONAL": "ರಾಷ್ಟ್ರೀಯ"
+  }
+}

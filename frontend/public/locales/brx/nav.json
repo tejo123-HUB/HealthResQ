@@ -1,0 +1,11 @@
+{
+  "toggleTheme": "थिम सोलाय",
+  "signOut": "उदांगो",
+  "composeNewAction": "गोदान बिथोन लिरनाय",
+  "scopeLevel": {
+    "FACILITY": "फेसिलिटि",
+    "DISTRICT": "जिल्ला",
+    "STATE": "राज्य",
+    "NATIONAL": "राष्ट्रीय"
+  }
+}

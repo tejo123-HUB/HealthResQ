@@ -1,0 +1,11 @@
+{
+  "toggleTheme": "Toggle theme",
+  "signOut": "Sign out",
+  "composeNewAction": "Compose new action",
+  "scopeLevel": {
+    "FACILITY": "Facility",
+    "DISTRICT": "District",
+    "STATE": "State",
+    "NATIONAL": "National"
+  }
+}

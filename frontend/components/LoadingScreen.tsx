@@ -2,15 +2,16 @@
 
 import Image from "next/image";
 import { useEffect, useState } from "react";
-
-const DEFAULT_MESSAGES = ["Setting up your workspace…", "Checking your connection…", "Almost there…"];
+import { useTranslation } from "react-i18next";
 
 /** Full-screen loading state — shown while auth/scope resolves (AuthGuard) or a route decides
  * where to send the user (app/page.tsx). A plain "Loading…" string reads as broken on first
  * paint; this gives the wait a heartbeat (literally, for a health-resource app) instead. */
 export function LoadingScreen({ message }: { message?: string }) {
+  const { t } = useTranslation("common");
   const [messageIndex, setMessageIndex] = useState(0);
-  const messages = message ? [message] : DEFAULT_MESSAGES;
+  const defaultMessages = t("loadingMessages", { returnObjects: true }) as string[];
+  const messages = message ? [message] : defaultMessages;
 
   useEffect(() => {
     if (messages.length <= 1) return;

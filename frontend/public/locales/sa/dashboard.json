@@ -1,0 +1,61 @@
+{
+  "tabs": {
+    "overview": "सिंहावलोकनम्",
+    "riskMap": "जोखिम-मानचित्रम्",
+    "explorer": "अन्वेषकः",
+    "federation": "सङ्घः"
+  },
+  "scopeSummaryError": "क्षेत्र-सारांशः लोड् कर्तुं न शक्तः।",
+  "alertsBySeverity": "गुरुत्वानुसारं सूचनाः",
+  "stats": {
+    "facilitiesInScope": "क्षेत्रे सुविधाः",
+    "totalDeficit": "सर्वा न्यूनता",
+    "pendingRecommendations": "प्रतीक्षिताः सिफारिशाः"
+  },
+  "severityWatchShort": "निरीक्षणे",
+  "riskMapPulse": "जोखिम-मानचित्र-स्पन्दनम्",
+  "proportionOf": "{{max}} मध्ये {{value}}",
+  "sparkline": {
+    "noProjection": "अद्यापि कोऽपि आकलनः न उपलब्धः।",
+    "projectedStock": "आकलितः संग्रहः",
+    "dayOffset": "दिनम् +{{n}}"
+  },
+  "explorer": {
+    "columns": {
+      "facility": "सुविधा",
+      "stock": "संग्रहः",
+      "demand": "मागः",
+      "projected": "आकलितम्",
+      "deficit": "न्यूनता"
+    },
+    "showForecastCertainty": "पूर्वानुमान-निश्चयतां दर्शयतु",
+    "forecastUncertaintyNote": "अस्याः सुविधायाः कृते प्रतिरूपं न्यूननिश्चितम् अस्ति — मागः अस्य आकलनस्य परितः विस्तृतक्षेत्रे कुत्रापि भवितुम् अर्हति।",
+    "searchResources": "साधनानि अन्विष्यतु…",
+    "fullData": "सम्पूर्णः दत्तांशः",
+    "computingForecasts": "आकलनं गण्यते… {{n}} सुविधाः",
+    "computingForecastsOf": "आकलनं गण्यते… {{total}} मध्ये {{n}} सुविधाः",
+    "facilitiesWithDeficit": "न्यूनतायुक्ताः सुविधाः",
+    "largestDeficits": "बृहत्तमाः न्यूनताः",
+    "largestDeficitsOf": "बृहत्तमाः न्यूनताः ({{total}} मध्ये प्रथमाः {{limit}})",
+    "tapBarToZoom": "सम्पूर्णदत्तांशे तां सुविधां वर्धयितुं दण्डं स्पृशतु।",
+    "noDeficits": "कापि न्यूनता नास्ति — क्षेत्रस्य प्रत्येका सुविधा स्वस्य आकलितमागं पूरयितुं पर्याप्तं संग्रहं धारयति।",
+    "clearFilter": "छानने रिक्तं करोतु: {{name}}"
+  },
+  "federation": {
+    "demandTrend": "माग-प्रवृत्तिः",
+    "volatility": "अस्थिरता",
+    "stockouts": "संग्रह-क्षयाः",
+    "exitPresentationMode": "प्रस्तुति-प्रकारात् निर्गच्छतु",
+    "presentationMode": "प्रस्तुति-प्रकारः",
+    "participatingCountries": "सहभागि-देशाः",
+    "latestRound": "नूतनतमा वृत्तिः",
+    "rawRecordsShared": "साझां कृताः अपरिष्कृताः PHC-स्तरीयाः अभिलेखाः",
+    "structuralGuaranteeNote": "संरचनात्मकं प्रत्याभूतिः (INT-10): राष्ट्रिय-नोडात् केवलम् एकादश प्रलेखिताः सामूहिकाः क्षेत्राः एव बहिः यान्ति — कदापि अपरिष्कृतं सुविधा-दत्तांशं वा रोगि-दत्तांशं न।",
+    "demandTrendByRound": "वृत्त्यनुसारं माग-प्रवृत्तिः",
+    "roundShort": "वृत्तिः {{n}}",
+    "round": "वृत्तिः {{n}}",
+    "countryComparisonDescending": "देश-तुलना — अवरोहक्रमेण",
+    "countryParticipants": "{{country}} · {{n}} सहभागिनः",
+    "countryMetrics": "प्रवृत्तिः {{trend}} · अस्थिरता {{volatility}} · संग्रह-क्षय-दरः {{stockoutPct}}%"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "toggleTheme": "థీమ్‌ను మార్చండి",
+  "signOut": "సైన్ అవుట్ చేయండి",
+  "composeNewAction": "కొత్త చర్యను రాయండి",
+  "scopeLevel": {
+    "FACILITY": "సదుపాయం",
+    "DISTRICT": "జిల్లా",
+    "STATE": "రాష్ట్రం",
+    "NATIONAL": "జాతీయం"
+  }
+}

@@ -8,7 +8,10 @@ html,
 body {
   background-color: var(--bg);
   color: var(--label);
-  font-family: var(--font-sans);
+  /* `--font-sans-active` is set at runtime (lib/i18n/fonts.ts) only for a non-Latin locale's Noto
+     Sans family; falls through to the system stack for English/Latin locales, unchanged from
+     before i18n existed. */
+  font-family: var(--font-sans-active, var(--font-sans));
 }
 
 * {
@@ -73,4 +76,21 @@ body {
   transition-property: opacity, transform, background-color, color, border-color;
   transition-duration: 200ms;
   transition-timing-function: ease-out;
+}
+
+/* Global principle #3: motion respects prefers-reduced-motion everywhere, with no per-component
+   opt-in required. Collapses every CSS animation/transition (including all of tailwind.config.ts's
+   keyframes — breathe, pulse-ring, glow-pulse, pop-in, etc.) to effectively-instant and single-run,
+   so entrance/looping motion never has to be reimplemented per component. JS-driven motion (map
+   pulsing rarity logic, the Compose typing indicator) still needs to check useReducedMotion()
+   itself — this block only covers CSS. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

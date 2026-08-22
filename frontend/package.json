@@ -10,23 +10,27 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@tanstack/react-virtual": "^3.14.10",
+    "i18next": "^26.4.0",
+    "i18next-http-backend": "^4.0.1",
+    "libsodium-wrappers": "^0.7.15",
+    "maplibre-gl": "^4.7.1",
     "next": "^15.1.4",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "swr": "^2.2.5",
-    "libsodium-wrappers": "^0.7.15",
+    "react-i18next": "^17.0.12",
+    "reactflow": "^11.11.4",
     "recharts": "^2.13.3",
-    "maplibre-gl": "^4.7.1",
-    "reactflow": "^11.11.4"
+    "swr": "^2.2.5"
   },
   "devDependencies": {
-    "typescript": "^5.7.2",
+    "@types/libsodium-wrappers": "^0.7.14",
     "@types/node": "^22.10.2",
     "@types/react": "^19.0.2",
     "@types/react-dom": "^19.0.2",
-    "@types/libsodium-wrappers": "^0.7.14",
-    "tailwindcss": "^3.4.17",
+    "autoprefixer": "^10.4.20",
     "postcss": "^8.4.49",
-    "autoprefixer": "^10.4.20"
+    "tailwindcss": "^3.4.17",
+    "typescript": "^5.7.2"
   }
 }

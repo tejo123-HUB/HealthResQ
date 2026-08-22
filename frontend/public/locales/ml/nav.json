@@ -1,0 +1,11 @@
+{
+  "toggleTheme": "തീം മാറ്റുക",
+  "signOut": "സൈൻ ഔട്ട് ചെയ്യുക",
+  "composeNewAction": "പുതിയ പ്രവർത്തനം രചിക്കുക",
+  "scopeLevel": {
+    "FACILITY": "സൗകര്യം",
+    "DISTRICT": "ജില്ല",
+    "STATE": "സംസ്ഥാനം",
+    "NATIONAL": "ദേശീയം"
+  }
+}

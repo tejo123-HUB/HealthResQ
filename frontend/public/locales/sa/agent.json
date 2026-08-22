@@ -1,0 +1,14 @@
+{
+  "aiSuggestion": "AI-सूचनम्",
+  "expandPanel": "सहायक-फलकं विस्तारयतु",
+  "collapsePanel": "सहायक-फलकं संक्षिप्तं करोतु",
+  "suggestionAvailable": "AI-सूचनम् उपलब्धम् — समीक्षायै विस्तारयतु",
+  "noSuggestionsExpand": "कोऽपि प्रतीक्षितः AI-सूचनं नास्ति — प्रश्नार्थं विस्तारयतु",
+  "noPendingRecommendations": "सम्प्रति कापि प्रतीक्षिता सिफारिशा नास्ति।",
+  "resourceApproval": "{{resource}} · {{authority}} स्वीकृतिः",
+  "reviewFull": "सम्पूर्णां सिफारिशां पश्यतु",
+  "askAboutThis": "अस्य विषये पृच्छतु",
+  "askPlaceholder": "प्रश्नं पृच्छतु…",
+  "askHint": "किमर्थम् एतत् भवति, के विकल्पाः सन्ति, अथवा एतत् सुरक्षितम् अस्ति वा इति पृच्छतु।",
+  "composeWithAssistant": "सहायकेन सह रचयतु"
+}

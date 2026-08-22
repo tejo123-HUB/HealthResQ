@@ -1,6 +1,8 @@
 // Severity -> color mapping per the brief's Apple HIG policy: Normal -> label secondary,
-// Watch/High -> orange, Critical -> red, success -> green, primary action -> blue. Used for
-// INT-04 fixture severities, BedGrid occupancy, and instruction/referral status.
+// Watch -> amber, High -> orange, Critical -> red, success -> green, primary action -> blue.
+// Watch and High get genuinely distinct hues (not just wash intensity) so the two never read as
+// the same tier at a glance. Used for INT-04 fixture severities, BedGrid occupancy, and
+// instruction/referral status.
 
 import { Icon } from "@/components/hig/Icon";
 
@@ -8,7 +10,7 @@ export type Severity = "NORMAL" | "WATCH" | "HIGH" | "CRITICAL" | "SUCCESS" | "N
 
 const SEVERITY_CLASSES: Record<Severity, string> = {
   NORMAL: "bg-fill-regular text-label-secondary",
-  WATCH: "bg-tint-orange-wash text-tint-orange",
+  WATCH: "bg-tint-amber-wash text-tint-amber",
   HIGH: "bg-tint-orange-wash-strong text-tint-orange",
   CRITICAL: "bg-tint-red-wash text-tint-red",
   SUCCESS: "bg-tint-green-wash text-tint-green",
@@ -26,7 +28,21 @@ const SEVERITY_ICON: Record<Severity, Parameters<typeof Icon>[0]["name"]> = {
   NEUTRAL: "check",
 };
 
-export function SeverityBadge({ severity, label }: { severity: Severity; label: string }) {
+export function SeverityBadge({
+  severity,
+  label,
+  muted = false,
+}: {
+  severity: Severity;
+  label: string;
+  /** Demotes NORMAL/NEUTRAL to a plain, non-pill treatment — e.g. a severity summary that
+   * orders most-severe-first and shouldn't give "Normal" the same visual weight as a real risk
+   * tier. Has no effect on WATCH/HIGH/CRITICAL/SUCCESS, which always keep full badge chrome. */
+  muted?: boolean;
+}) {
+  if (muted && (severity === "NORMAL" || severity === "NEUTRAL")) {
+    return <span className="text-caption1 text-label-tertiary">{label}</span>;
+  }
   return (
     <span
       key={severity}

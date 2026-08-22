@@ -1,0 +1,10 @@
+{
+  "tagline": "स्वस्य सुविधा अथवा अधिकार खातेन प्रविशतु।",
+  "username": "उपयोक्तृ-नाम",
+  "password": "गुप्तशब्दः",
+  "showPassword": "गुप्तशब्दं दर्शयतु",
+  "hidePassword": "गुप्तशब्दं गोपयतु",
+  "loginFailed": "प्रवेशः असफलः",
+  "demoAccounts": "प्रदर्शन-खातानि",
+  "demoAccountsList": "operator.phc-001, district.krishna, state.andhra-pradesh, national.india (गुप्तशब्दः demo-pass-123)।"
+}

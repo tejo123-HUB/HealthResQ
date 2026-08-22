@@ -1,0 +1,10 @@
+{
+  "tagline": "আপনার সুবিধা বা কর্তৃপক্ষের অ্যাকাউন্ট দিয়ে সাইন ইন করুন।",
+  "username": "ব্যবহারকারীর নাম",
+  "password": "পাসওয়ার্ড",
+  "showPassword": "পাসওয়ার্ড দেখান",
+  "hidePassword": "পাসওয়ার্ড লুকান",
+  "loginFailed": "লগইন ব্যর্থ হয়েছে",
+  "demoAccounts": "ডেমো অ্যাকাউন্ট",
+  "demoAccountsList": "operator.phc-001, district.krishna, state.andhra-pradesh, national.india (পাসওয়ার্ড demo-pass-123)।"
+}

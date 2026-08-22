@@ -117,7 +117,7 @@ export type RiskMarker = {
   facilityName: string;
   facilityType: string;
   worstSeverity: Severity;
-  alerts: { facilityId: string; productId: string; severity: string }[];
+  alerts: { facilityId: string; productId: string; severity: string; daysToStockout: number | null }[];
   location: Location | null;
 };
 
@@ -127,6 +127,11 @@ export type ResourceExplorerFacilityRow = {
   forecastDemand: number;
   projectedStock: number;
   deficit: number;
+  // Forecast uncertainty band (INT-01's model range) — present once the backend surfaces it;
+  // render as an on-demand "model less certain" indicator, never the raw numbers, per the UI
+  // spec's plain-language framing.
+  rangeLow?: number;
+  rangeHigh?: number;
 };
 
 export type ResourceRollup = {
@@ -141,6 +146,25 @@ export type ResourceRollup = {
 export type ResourceExplorerEvent =
   | ({ type: "facility" } & ResourceExplorerFacilityRow)
   | { type: "summary"; productId: string; totalCurrentStock: number; totalDeficit: number };
+
+// GET /intelligence/hex-map — INT-13's H3 hex-aggregated choropleth data, one cell per hex.
+export type HexCell = {
+  hexId: string;
+  resolution: number;
+  facilityCount: number;
+  facilityIds: string[];
+  worstSeverity: Severity;
+  boundary: { lat: number; lng: number }[];
+};
+
+// GET /intelligence/forecast-points — a single facility+product's latest 14-day forward
+// projection (INT-01's ForecastPoint rows), reused as a forward-looking sparkline since no real
+// historical stock series exists yet (see plan Phase 8).
+export type ForecastPointSeries = {
+  facilityId: string;
+  productId: string;
+  points: { dayOffset: number; point: number; low: number; high: number }[];
+};
 
 // --- Command (backend/command) — healthresq-interface-shapes.md §3, plus CMD-09/06's own REST
 // surface (same "edit the shapes doc, don't fork it" precedent as INT-13's §7) -------------------
@@ -213,6 +237,12 @@ export type SealedMessage = {
 };
 export type ReceiptStatus = "ACKNOWLEDGED" | "READ";
 
+export type FederationRoundPoint = {
+  round: number;
+  date: string;
+  demandTrend: number;
+};
+
 export type FederationCountryRow = {
   country: string;
   participants: number;
@@ -221,4 +251,7 @@ export type FederationCountryRow = {
   demandTrend: number;
   volatility: number;
   stockoutFrequency: number;
+  /** demandTrend across the last few federation rounds, ascending by round — for the time-axis
+   * chart. `demandTrend` above stays the latest-round scalar (used for leaderboard sort/StatCards). */
+  demandTrendSeries: FederationRoundPoint[];
 };

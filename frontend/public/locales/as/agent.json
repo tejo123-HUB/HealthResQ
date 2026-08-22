@@ -1,0 +1,14 @@
+{
+  "aiSuggestion": "AI পৰামৰ্শ",
+  "expandPanel": "সহায়ক পেনেল প্ৰসাৰিত কৰক",
+  "collapsePanel": "সহায়ক পেনেল সংকুচিত কৰক",
+  "suggestionAvailable": "AI পৰামৰ্শ উপলব্ধ — পৰ্যালোচনা কৰিবলৈ প্ৰসাৰিত কৰক",
+  "noSuggestionsExpand": "কোনো বাকী থকা AI পৰামৰ্শ নাই — প্ৰশ্ন সুধিবলৈ প্ৰসাৰিত কৰক",
+  "noPendingRecommendations": "এই মুহূৰ্তত কোনো বাকী থকা পৰামৰ্শ নাই।",
+  "resourceApproval": "{{resource}} · {{authority}} অনুমোদন",
+  "reviewFull": "সম্পূৰ্ণ পৰামৰ্শ পৰ্যালোচনা কৰক",
+  "askAboutThis": "এই বিষয়ে সোধক",
+  "askPlaceholder": "এটা প্ৰশ্ন সোধক…",
+  "askHint": "ই কিয় ঘটি আছে, বিকল্পবোৰ কি, বা ই সুৰক্ষিত নেকি সোধক।",
+  "composeWithAssistant": "সহায়কৰ সৈতে ৰচনা কৰক"
+}

@@ -1,0 +1,9 @@
+{
+  "inboxTitle": "Instruction inbox (encrypted)",
+  "couldntReachMailbox": "Couldn't reach the encrypted mailbox.",
+  "noInstructions": "No instructions right now.",
+  "messageLost": "Message lost — device key was reset",
+  "unableToDecrypt": "Unable to decrypt this message",
+  "qty": "Qty {{n}}",
+  "due": "due {{date}}"
+}

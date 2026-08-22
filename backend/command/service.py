@@ -342,26 +342,50 @@ def approve_or_modify(
 # --- CMD-05: escalation workflow -------------------------------------------------------------------
 
 
+def _compute_unresolved_quantity(db: Session, rec: Recommendation) -> float:
+    """The full deficit this recommendation is escalating, computed independently of any caller
+    input (Phase 13's "whole-action escalation" — no human-supplied number). Normally the sum of
+    the recommendation's own suggested movements, since escalation means this authority's entire
+    proposed plan for it is being handed up. A recommendation that was itself created by a prior
+    escalation starts with no movements of its own (`escalate` deliberately leaves the new row's
+    `movements=[]` — "the higher authority must find new sources"), so fall back to the unresolved
+    quantity recorded on that originating `Escalation` row."""
+    total = sum(m.quantity for m in rec.movements)
+    if total > 0:
+        return total
+    parent_escalation = (
+        db.query(Escalation)
+        .filter(Escalation.escalated_recommendation_id == rec.id)
+        .order_by(Escalation.created_at.desc())
+        .first()
+    )
+    return parent_escalation.unresolved_quantity if parent_escalation is not None else 0.0
+
+
 def escalate(
     db: Session,
     rec: Recommendation,
     *,
     actor_user_id: uuid.UUID | None,
-    unresolved_quantity: float,
     notes: str | None = None,
 ) -> tuple[Recommendation, Recommendation]:
     """When the current authority cannot fully resolve a deficit: closes this recommendation at
     ESCALATED and opens a new one at the next authority level along INT-06's ESCALATES_TO edges
     (District -> State -> National), carrying the unresolved deficit forward. Returns
-    (original, escalated) recommendations."""
+    (original, escalated) recommendations. The unresolved quantity is always computed here from
+    the recommendation's own state (see `_compute_unresolved_quantity`) — the human decision route
+    no longer accepts a caller-supplied number for this (Phase 13: escalation is a whole-action
+    confirm, not a quantity entry)."""
     if rec.status not in (RecommendationStatus.PENDING_REVIEW, RecommendationStatus.OUTDATED):
         raise HTTPException(status.HTTP_409_CONFLICT, f"Cannot escalate from {rec.status.value}")
-    if unresolved_quantity <= 0:
-        raise HTTPException(status.HTTP_400_BAD_REQUEST, "unresolvedQuantity must be positive to escalate")
 
     next_authority = NEXT_AUTHORITY.get(rec.required_authority)
     if next_authority is None:
         raise HTTPException(status.HTTP_409_CONFLICT, "Already at NATIONAL authority — nothing higher to escalate to")
+
+    unresolved_quantity = _compute_unresolved_quantity(db, rec)
+    if unresolved_quantity <= 0:
+        raise HTTPException(status.HTTP_409_CONFLICT, "No unresolved quantity to escalate")
 
     rows = run_cypher(
         db,

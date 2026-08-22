@@ -1,0 +1,61 @@
+{
+  "tabs": {
+    "overview": "गिबि नुथाय",
+    "riskMap": "रिस्क मेप",
+    "explorer": "एक्सप्लोरार",
+    "federation": "फेडेरेसन"
+  },
+  "scopeSummaryError": "स्कोप सामारी लाबो हायाखै।",
+  "alertsBySeverity": "गंभीरताजों अलार्ट",
+  "stats": {
+    "facilitiesInScope": "स्कोपाव फेसिलिटिफोर",
+    "totalDeficit": "गासैबो घाटि",
+    "pendingRecommendations": "गोसो दंनाय सिफारिस"
+  },
+  "severityWatchShort": "सोदोब",
+  "riskMapPulse": "रिस्क मेप पल्स",
+  "proportionOf": "{{max}} आवनि {{value}}",
+  "sparkline": {
+    "noProjection": "प्रोजेक्सन गैया दा।",
+    "projectedStock": "प्रोजेक्ट खालामनाय स्टक",
+    "dayOffset": "सान +{{n}}"
+  },
+  "explorer": {
+    "columns": {
+      "facility": "फेसिलिटि",
+      "stock": "स्टक",
+      "demand": "मागनाय",
+      "projected": "प्रोजेक्ट खालामनाय",
+      "deficit": "घाटि"
+    },
+    "showForecastCertainty": "फोरकास्ट निश्चयता दिनथि",
+    "forecastUncertaintyNote": "दे फेसिलिटिनि थाखाय मोडेलआ गोबां निश्चय नङा — मागनाया दानि आंदाजनि सोरगिदिं जायगायाव थांनो हागौ।",
+    "searchResources": "रिसोर्स नागिरना...",
+    "fullData": "गासै डाटा",
+    "computingForecasts": "फोरकास्ट कम्प्युट खालामनाय दं... {{n}} फेसिलिटि",
+    "computingForecastsOf": "फोरकास्ट कम्प्युट खालामनाय दं... {{total}} आवनि {{n}}",
+    "facilitiesWithDeficit": "घाटि दंनाय फेसिलिटिफोर",
+    "largestDeficits": "गोबां जाबारि घाटिफोर",
+    "largestDeficitsOf": "गोबां जाबारि घाटिफोर ({{total}} आवनि गिबि {{limit}})",
+    "tapBarToZoom": "बे फेसिलिटिखौ गासै डाटाआव जुम खालामनोरै बार टाप खालाम।",
+    "noDeficits": "घाटि गैया — स्कोपआवनि गासैबो फेसिलिटिनि फोरकास्ट मागनाय गोरोबनो थां स्टक दं।",
+    "clearFilter": "फिल्टार साफा खालाम: {{name}}"
+  },
+  "federation": {
+    "demandTrend": "मागनायनि ट्रेन्ड",
+    "volatility": "अस्थिरता",
+    "stockouts": "स्टकआउट",
+    "exitPresentationMode": "प्रेजेन्टेसन मोड सो",
+    "presentationMode": "प्रेजेन्टेसन मोड",
+    "participatingCountries": "जग्रा लाबोनाय देशफोर",
+    "latestRound": "जायखि राउन्ड",
+    "rawRecordsShared": "कच्चा PHC-लेभेल रेकर्ड सेयार खालामनाय",
+    "structuralGuaranteeNote": "गथन गारेन्टि (INT-10): गिबि गोमोन गोजाम एग्रिगेट फिल्ड सान राष्ट्रीय नोडखौ छाड़नाय — कच्चा फेसिलिटि एबा रोगिनि डाटा कैयाव नङा।",
+    "demandTrendByRound": "राउन्डजों मागनायनि ट्रेन्ड",
+    "roundShort": "R{{n}}",
+    "round": "राउन्ड {{n}}",
+    "countryComparisonDescending": "देशनि तुलना — गोदान सिनायथिनो",
+    "countryParticipants": "{{country}} · {{n}} जग्रा लाबोग्राफोर",
+    "countryMetrics": "ट्रेन्ड {{trend}} · अस्थिरता {{volatility}} · स्टकआउट फ्रिक्वेन्सि {{stockoutPct}}%"
+  }
+}

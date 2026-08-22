@@ -20,15 +20,18 @@
 
   --tint-blue: #007aff;
   --tint-green: #34c759;
+  --tint-amber: #d19100;
   --tint-orange: #ff9500;
   --tint-red: #ff3b30;
   /* Warm decorative accents (Apple's systemPink/systemYellow/systemBrown) — used only for
      category/visual-interest tinting on non-alert stat cards, never for severity meaning; that
-     stays on orange/red/green above. */
+     stays on amber/orange/red/green above. */
   --tint-pink: #ff2d55;
   --tint-yellow: #ffcc00;
   --tint-brown: #a2845e;
 
+  --tint-amber-wash: rgba(209, 145, 0, 0.15);
+  --tint-amber-wash-strong: rgba(209, 145, 0, 0.28);
   --tint-orange-wash: rgba(255, 149, 0, 0.15);
   --tint-orange-wash-strong: rgba(255, 149, 0, 0.28);
   --tint-red-wash: rgba(255, 59, 48, 0.15);
@@ -44,6 +47,13 @@
   --fill-thick: rgba(255, 255, 255, 0.85);
   --fill-regular: rgba(255, 255, 255, 0.7);
   --fill-thin: rgba(255, 255, 255, 0.55);
+
+  /* Plain categorical/operational state (bed occupancy, pipeline stage) — deliberately decoupled
+     from --tint-red/--tint-green so "occupied"/"in progress" never visually reads as an alarm. */
+  --occ-filled: #8e8e93;
+  --occ-filled-wash: rgba(142, 142, 147, 0.16);
+  --occ-empty: #34c759;
+  --occ-empty-wash: rgba(52, 199, 89, 0.12);
 
   /* Decorative brand accent sampled from logo.png — used only for the loading-screen pulse ring.
      Never used for status/severity meaning; that stays on the --tint-* set above. */
@@ -68,12 +78,15 @@
 
   --tint-blue: #0a84ff;
   --tint-green: #32d74b;
+  --tint-amber: #ffbf0a;
   --tint-orange: #ff9f0a;
   --tint-red: #ff453a;
   --tint-pink: #ff375f;
   --tint-yellow: #ffd60a;
   --tint-brown: #ac8e68;
 
+  --tint-amber-wash: rgba(255, 191, 10, 0.2);
+  --tint-amber-wash-strong: rgba(255, 191, 10, 0.32);
   --tint-orange-wash: rgba(255, 159, 10, 0.2);
   --tint-orange-wash-strong: rgba(255, 159, 10, 0.32);
   --tint-red-wash: rgba(255, 69, 58, 0.2);
@@ -92,4 +105,9 @@
 
   --brand-teal: #2bb3bd;
   --brand-teal-wash: rgba(43, 179, 189, 0.22);
+
+  --occ-filled: #98989d;
+  --occ-filled-wash: rgba(152, 152, 157, 0.22);
+  --occ-empty: #32d74b;
+  --occ-empty-wash: rgba(50, 215, 75, 0.18);
 }

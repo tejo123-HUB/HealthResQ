@@ -1,0 +1,11 @@
+{
+  "toggleTheme": "थिम बदल्नुहोस्",
+  "signOut": "साइन आउट गर्नुहोस्",
+  "composeNewAction": "नयाँ कार्य बनाउनुहोस्",
+  "scopeLevel": {
+    "FACILITY": "सुविधा",
+    "DISTRICT": "जिल्ला",
+    "STATE": "प्रदेश",
+    "NATIONAL": "राष्ट्रिय"
+  }
+}

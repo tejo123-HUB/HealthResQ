@@ -1,0 +1,14 @@
+{
+  "aiSuggestion": "AI सूचना",
+  "expandPanel": "सहाय्यक पॅनेल विस्तृत करा",
+  "collapsePanel": "सहाय्यक पॅनेल संक्षिप्त करा",
+  "suggestionAvailable": "AI सूचना उपलब्ध — पुनरावलोकनासाठी विस्तृत करा",
+  "noSuggestionsExpand": "कोणतीही प्रलंबित AI सूचना नाही — प्रश्न विचारण्यासाठी विस्तृत करा",
+  "noPendingRecommendations": "सध्या कोणतीही प्रलंबित शिफारस नाही.",
+  "resourceApproval": "{{resource}} · {{authority}} मंजुरी",
+  "reviewFull": "संपूर्ण शिफारस पहा",
+  "askAboutThis": "याबद्दल विचारा",
+  "askPlaceholder": "प्रश्न विचारा…",
+  "askHint": "हे का घडत आहे, पर्याय काय आहेत, किंवा हे सुरक्षित आहे का ते विचारा.",
+  "composeWithAssistant": "सहाय्यकासोबत तयार करा"
+}

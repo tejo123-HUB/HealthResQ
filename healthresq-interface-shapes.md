@@ -369,8 +369,14 @@ GET  /recommendations?status=...                              → Recommendation
 GET  /recommendations/{id}                                       → Recommendation
 POST /recommendations           { destinationFacilityId, productId, quantity, reason }
                                                                    → Recommendation   (CMD-07)
-POST /recommendations/{id}/decision   { action, movements?, notes?, unresolvedQuantity? }
+POST /recommendations/{id}/decision   { action, movements?, notes? }
                                                                    → Recommendation   (CMD-03/04/05/08)
+POST /recommendations/batch-decision   { items: [{ recommendationId, action, movements?, notes? }] }
+                                                                   → Recommendation[]  (Phase 13:
+                                                                       queue batch-select/approve —
+                                                                       same per-item decision logic
+                                                                       as the single-id route above,
+                                                                       one transaction for the batch)
 GET  /recommendations/{id}/instructions                             → Instruction[]  (CMD-08's
                                                                        output — the same object
                                                                        Section 1 calls Instruction)
@@ -385,7 +391,10 @@ parameter at all — like `/intelligence/*`, they're always exactly the caller's
 ```ts
 type DecisionAction = "APPROVE" | "REJECT" | "MODIFY" | "ESCALATE"
 // `movements` is only read for MODIFY (a human-edited plan, re-validated identically to the
-// original). `unresolvedQuantity` is required, and must be > 0, for ESCALATE.
+// original). ESCALATE is a whole-action confirm with no caller-supplied quantity — the backend
+// computes the full unresolved deficit itself (`backend/command/service.py::escalate`'s
+// `_compute_unresolved_quantity`, Phase 13). The wire body still accepts a legacy
+// `unresolvedQuantity` field for backward compatibility but it is ignored by the server.
 
 type DashboardSummary = {
   scopeLabel: string, facilityCount: number,

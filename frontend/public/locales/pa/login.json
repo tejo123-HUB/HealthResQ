@@ -1,0 +1,10 @@
+{
+  "tagline": "ਆਪਣੇ ਸਹੂਲਤ ਜਾਂ ਅਧਿਕਾਰੀ ਖਾਤੇ ਨਾਲ ਸਾਈਨ ਇਨ ਕਰੋ।",
+  "username": "ਵਰਤੋਂਕਾਰ ਨਾਮ",
+  "password": "ਪਾਸਵਰਡ",
+  "showPassword": "ਪਾਸਵਰਡ ਦਿਖਾਓ",
+  "hidePassword": "ਪਾਸਵਰਡ ਲੁਕਾਓ",
+  "loginFailed": "ਲਾਗਇਨ ਅਸਫਲ ਰਿਹਾ",
+  "demoAccounts": "ਡੈਮੋ ਖਾਤੇ",
+  "demoAccountsList": "operator.phc-001, district.krishna, state.andhra-pradesh, national.india (ਪਾਸਵਰਡ demo-pass-123)।"
+}

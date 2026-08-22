@@ -1,0 +1,61 @@
+{
+  "tabs": {
+    "overview": "आढावो",
+    "riskMap": "जोखीम नकासो",
+    "explorer": "एक्सप्लोरर",
+    "federation": "फेडरेशन"
+  },
+  "scopeSummaryError": "स्कोप सारांश लोड जावंक ना.",
+  "alertsBySeverity": "तीव्रतेप्रमाण सतर्कता",
+  "stats": {
+    "facilitiesInScope": "स्कोपांतल्यो सुविधा",
+    "totalDeficit": "एकूण उणीव",
+    "pendingRecommendations": "प्रलंबित शिफारशी"
+  },
+  "severityWatchShort": "नदर दवरचें",
+  "riskMapPulse": "जोखीम नकासो पल्स",
+  "proportionOf": "{{max}} पैकी {{value}}",
+  "sparkline": {
+    "noProjection": "आजून प्रक्षेपण उपलब्ध ना.",
+    "projectedStock": "प्रक्षेपित साठो",
+    "dayOffset": "दिस +{{n}}"
+  },
+  "explorer": {
+    "columns": {
+      "facility": "सुविधा",
+      "stock": "साठो",
+      "demand": "मागणी",
+      "projected": "प्रक्षेपित",
+      "deficit": "उणीव"
+    },
+    "showForecastCertainty": "अंदाज निश्चितता दाखय",
+    "forecastUncertaintyNote": "ह्या सुविधेखातीर मॉडेल कमी निश्चित आसा — मागणी ह्या अंदाजाभोवतणी विस्तृत कक्षेंत खंयच्याय जाग्यार पावूं शकता.",
+    "searchResources": "साधनां सोदचीं...",
+    "fullData": "सगळो डेटा",
+    "computingForecasts": "अंदाज गणीत करता... {{n}} सुविधा",
+    "computingForecastsOf": "अंदाज गणीत करता... {{total}} पैकी {{n}}",
+    "facilitiesWithDeficit": "उणीव आशिल्ल्यो सुविधा",
+    "largestDeficits": "व्हड्यांत व्हड उणिवा",
+    "largestDeficitsOf": "व्हड्यांत व्हड उणिवा ({{total}} पैकी वयलीं {{limit}})",
+    "tapBarToZoom": "फुल डेटांत त्या सुविधेर झूम करपाक बार टॅप करचो.",
+    "noDeficits": "कसलीच उणीव ना — स्कोपांतल्या दरेक सुविधेकडेन आपल्या अंदाजित मागणी भरपाक पुरो साठो आसा.",
+    "clearFilter": "फिल्टर काडून उडय: {{name}}"
+  },
+  "federation": {
+    "demandTrend": "मागणी कल",
+    "volatility": "अस्थिरता",
+    "stockouts": "साठो सोंपप",
+    "exitPresentationMode": "सादरीकरण मोडांतल्यान भायर सर",
+    "presentationMode": "सादरीकरण मोड",
+    "participatingCountries": "वांटो घेवपी देश",
+    "latestRound": "अलीकडली फेरी",
+    "rawRecordsShared": "कच्च्या PHC-पातळेवयले रेकॉर्ड वांटले",
+    "structuralGuaranteeNote": "संरचनात्मक हमी (INT-10): फकत अकरा दस्तऐवजीकरण केल्ल्यो एकूण क्षेत्रां खंयच्याय राष्ट्रीय नोडाच्यान भायर सरतात — कधींच कच्चो सुविधा वा रोग्याचो डेटा ना.",
+    "demandTrendByRound": "फेरीप्रमाण मागणी कल",
+    "roundShort": "R{{n}}",
+    "round": "फेरी {{n}}",
+    "countryComparisonDescending": "देश तुळणा — उतरत्या क्रमान",
+    "countryParticipants": "{{country}} · {{n}} सहभागी",
+    "countryMetrics": "कल {{trend}} · अस्थिरता {{volatility}} · साठो सोंपपाची वारंवारता {{stockoutPct}}%"
+  }
+}

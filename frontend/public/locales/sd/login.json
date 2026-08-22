@@ -1,0 +1,10 @@
+{
+  "tagline": "पंहजे सुविधा या अधिकार खाते सां साइन इन कयो।",
+  "username": "यूजरनेम",
+  "password": "पासवर्ड",
+  "showPassword": "पासवर्ड डेखारियो",
+  "hidePassword": "पासवर्ड लुकाओ",
+  "loginFailed": "लॉगइन नाकाम थियो",
+  "demoAccounts": "डेमो खाता",
+  "demoAccountsList": "operator.phc-001, district.krishna, state.andhra-pradesh, national.india (पासवर्ड demo-pass-123)।"
+}

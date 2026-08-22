@@ -1,0 +1,61 @@
+{
+  "tabs": {
+    "overview": "जायजो",
+    "riskMap": "खतरे जो नक्शो",
+    "explorer": "एक्सप्लोरर",
+    "federation": "फेडरेशन"
+  },
+  "scopeSummaryError": "स्कोप खुलासो लोड न थियो।",
+  "alertsBySeverity": "शिद्दत मुताबिक अलर्ट",
+  "stats": {
+    "facilitiesInScope": "स्कोप में सुविधावं",
+    "totalDeficit": "कुल घाटो",
+    "pendingRecommendations": "बाकी सिफारिशवं"
+  },
+  "severityWatchShort": "नजर रखो",
+  "riskMapPulse": "खतरे जे नक्शे जो पल्स",
+  "proportionOf": "{{max}} मां {{value}}",
+  "sparkline": {
+    "noProjection": "हिनी तांई कोई अंदाजो उपलब्ध नाहे।",
+    "projectedStock": "अंदाजी स्टॉक",
+    "dayOffset": "डिं +{{n}}"
+  },
+  "explorer": {
+    "columns": {
+      "facility": "सुविधा",
+      "stock": "स्टॉक",
+      "demand": "मांग",
+      "projected": "अंदाजी",
+      "deficit": "घाटो"
+    },
+    "showForecastCertainty": "अंदाजे जी यकीनीयत डेखारियो",
+    "forecastUncertaintyNote": "हिनी सुविधा लाइ मॉडल घट यकीनी आहे — मांग हिनी अंदाजे जे चौगिर्दे विस्तृत दायरे में कठ बी थी सघे थी।",
+    "searchResources": "साधन गोलियो...",
+    "fullData": "पूरो डेटा",
+    "computingForecasts": "अंदाजो गिणियो पियो वञे... {{n}} सुविधावं",
+    "computingForecastsOf": "अंदाजो गिणियो पियो वञे... {{total}} मां {{n}}",
+    "facilitiesWithDeficit": "घाटे वारियूं सुविधावं",
+    "largestDeficits": "सभनी खां वडा घाटा",
+    "largestDeficitsOf": "सभनी खां वडा घाटा ({{total}} मां मथियूं {{limit}})",
+    "tapBarToZoom": "पूरे डेटा में हिनी सुविधा तां ज़ूम करण लाइ बार तां टैप कयो।",
+    "noDeficits": "कोई घाटो नाहे — स्कोप जी हर सुविधा कां पंहंजी अंदाजी मांग पूरी करण जोगो स्टॉक आहे।",
+    "clearFilter": "फिल्टर साफ कयो: {{name}}"
+  },
+  "federation": {
+    "demandTrend": "मांग जो रुझान",
+    "volatility": "अस्थिरता",
+    "stockouts": "स्टॉक खतम थियण",
+    "exitPresentationMode": "पेशकश मोड मां निकरियो",
+    "presentationMode": "पेशकश मोड",
+    "participatingCountries": "हिस्सो वठण वारा मुल्क",
+    "latestRound": "नवीन दौर",
+    "rawRecordsShared": "कच्चा PHC-सतही रिकॉर्ड साझा कया वेंदा आहन",
+    "structuralGuaranteeNote": "ढांचाजाती गारंटी (INT-10): सिर्फ यारहा दस्तावेजी मुजमूई फील्ड कुहिड़ी बी राष्ट्रीय नोड मां बाहिर वञन था — केड़हिं बी कच्चो सुविधा या मरीज़ डेटा नाहे।",
+    "demandTrendByRound": "दौर मुताबिक मांग जो रुझान",
+    "roundShort": "R{{n}}",
+    "round": "दौर {{n}}",
+    "countryComparisonDescending": "मुल्क तुलना — घटंदड़ तरतीब में",
+    "countryParticipants": "{{country}} · {{n}} हिस्सेदार",
+    "countryMetrics": "रुझान {{trend}} · अस्थिरता {{volatility}} · स्टॉक खतम थियण जी शरह {{stockoutPct}}%"
+  }
+}

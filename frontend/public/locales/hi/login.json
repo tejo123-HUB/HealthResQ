@@ -1,0 +1,10 @@
+{
+  "tagline": "अपने सुविधा या प्राधिकरण खाते से साइन इन करें।",
+  "username": "उपयोगकर्ता नाम",
+  "password": "पासवर्ड",
+  "showPassword": "पासवर्ड दिखाएं",
+  "hidePassword": "पासवर्ड छिपाएं",
+  "loginFailed": "साइन इन विफल",
+  "demoAccounts": "डेमो खाते",
+  "demoAccountsList": "operator.phc-001, district.krishna, state.andhra-pradesh, national.india (पासवर्ड demo-pass-123)।"
+}

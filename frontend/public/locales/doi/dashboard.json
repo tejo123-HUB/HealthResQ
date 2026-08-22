@@ -1,0 +1,61 @@
+{
+  "tabs": {
+    "overview": "जायजा",
+    "riskMap": "जोखिम नक्शा",
+    "explorer": "एक्सप्लोरर",
+    "federation": "फेडरेशन"
+  },
+  "scopeSummaryError": "स्कोप सारांश लोड नेईं होई सकेआ।",
+  "alertsBySeverity": "गंभीरता दे मताबक अलर्ट",
+  "stats": {
+    "facilitiesInScope": "स्कोप च सुविधां",
+    "totalDeficit": "कुल्ल घाटा",
+    "pendingRecommendations": "लंबित सिफारिशां"
+  },
+  "severityWatchShort": "नजर रक्खो",
+  "riskMapPulse": "जोखिम नक्शा पल्स",
+  "proportionOf": "{{max}} च’कोनी {{value}}",
+  "sparkline": {
+    "noProjection": "हाले कोई प्रोजेक्शन उपलब्ध नेईं।",
+    "projectedStock": "प्रोजेक्ट कीता गेदा स्टॉक",
+    "dayOffset": "दिन +{{n}}"
+  },
+  "explorer": {
+    "columns": {
+      "facility": "सुविधा",
+      "stock": "स्टॉक",
+      "demand": "मंग",
+      "projected": "प्रोजेक्ट कीता",
+      "deficit": "घाटा"
+    },
+    "showForecastCertainty": "पूर्वानुमान निश्चितता दस्सो",
+    "forecastUncertaintyNote": "इस सुविधा आस्तै मॉडल घट्ट निश्चित ऐ — मंग इस अनुमान दे आसपास इक व्यापक श्रेणी च कुथैं बी होई सकदी ऐ।",
+    "searchResources": "संसाधन तोपो...",
+    "fullData": "पूरा डेटा",
+    "computingForecasts": "पूर्वानुमान गणना कीता जा करदा... {{n}} सुविधां",
+    "computingForecastsOf": "पूर्वानुमान गणना कीता जा करदा... {{total}} च’कोनी {{n}}",
+    "facilitiesWithDeficit": "घाटे आळियां सुविधां",
+    "largestDeficits": "सबनें थमां बड्डे घाटे",
+    "largestDeficitsOf": "सबनें थमां बड्डे घाटे ({{total}} च’कोनी उप्परली {{limit}})",
+    "tapBarToZoom": "उस सुविधा गी पूरे डेटा च ज़ूम करने आस्तै बार पर टैप करो।",
+    "noDeficits": "कोई घाटा नेईं — स्कोप दी हर सुविधा गी अपनी पूर्वानुमानित मंग पूरी करने आस्तै काफी स्टॉक ऐ।",
+    "clearFilter": "फिल्टर साफ करो: {{name}}"
+  },
+  "federation": {
+    "demandTrend": "मंग रुझान",
+    "volatility": "अस्थिरता",
+    "stockouts": "स्टॉकआउट",
+    "exitPresentationMode": "प्रस्तुति मोड थमां बाहर निकलो",
+    "presentationMode": "प्रस्तुति मोड",
+    "participatingCountries": "भाग लैने आळे देश",
+    "latestRound": "नमां दौर",
+    "rawRecordsShared": "कच्चे PHC-स्तरीय रिकार्ड साझा कीते गे",
+    "structuralGuaranteeNote": "संरचनात्मक गारंटी (INT-10): सिर्फ ग्यारां दस्तावेज़ी एग्रीगेट फील्ड ही कुसै राष्ट्रीय नोड थमां बाहर जांदे न — कदी बी कच्चा सुविधा जां मरीज़ डेटा नेईं।",
+    "demandTrendByRound": "दौरें दे मताबक मंग रुझान",
+    "roundShort": "R{{n}}",
+    "round": "दौर {{n}}",
+    "countryComparisonDescending": "देश तुलना — घटदे क्रम च",
+    "countryParticipants": "{{country}} · {{n}} भागीदार",
+    "countryMetrics": "रुझान {{trend}} · अस्थिरता {{volatility}} · स्टॉकआउट दर {{stockoutPct}}%"
+  }
+}

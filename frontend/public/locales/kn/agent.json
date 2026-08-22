@@ -1,0 +1,14 @@
+{
+  "aiSuggestion": "AI ಸಲಹೆ",
+  "expandPanel": "ಸಹಾಯಕ ಫಲಕವನ್ನು ವಿಸ್ತರಿಸಿ",
+  "collapsePanel": "ಸಹಾಯಕ ಫಲಕವನ್ನು ಕುಗ್ಗಿಸಿ",
+  "suggestionAvailable": "AI ಸಲಹೆ ಲಭ್ಯವಿದೆ — ಪರಿಶೀಲಿಸಲು ವಿಸ್ತರಿಸಿ",
+  "noSuggestionsExpand": "ಬಾಕಿ ಇರುವ AI ಸಲಹೆಗಳಿಲ್ಲ — ಪ್ರಶ್ನೆ ಕೇಳಲು ವಿಸ್ತರಿಸಿ",
+  "noPendingRecommendations": "ಸದ್ಯಕ್ಕೆ ಬಾಕಿ ಇರುವ ಶಿಫಾರಸುಗಳಿಲ್ಲ.",
+  "resourceApproval": "{{resource}} · {{authority}} ಅನುಮೋದನೆ",
+  "reviewFull": "ಪೂರ್ಣ ಶಿಫಾರಸನ್ನು ಪರಿಶೀಲಿಸಿ",
+  "askAboutThis": "ಇದರ ಬಗ್ಗೆ ಕೇಳಿ",
+  "askPlaceholder": "ಪ್ರಶ್ನೆ ಕೇಳಿ…",
+  "askHint": "ಇದು ಏಕೆ ಸಂಭವಿಸುತ್ತಿದೆ, ಪರ್ಯಾಯಗಳು ಯಾವುವು, ಅಥವಾ ಇದು ಸುರಕ್ಷಿತವೇ ಎಂದು ಕೇಳಿ.",
+  "composeWithAssistant": "ಸಹಾಯಕರೊಂದಿಗೆ ರಚಿಸಿ"
+}

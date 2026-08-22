@@ -1,0 +1,10 @@
+{
+  "tagline": "உங்கள் வசதி அல்லது அதிகார கணக்கில் உள்நுழையவும்.",
+  "username": "பயனர்பெயர்",
+  "password": "கடவுச்சொல்",
+  "showPassword": "கடவுச்சொல்லைக் காட்டு",
+  "hidePassword": "கடவுச்சொல்லை மறை",
+  "loginFailed": "உள்நுழைவு தோல்வியடைந்தது",
+  "demoAccounts": "டெமோ கணக்குகள்",
+  "demoAccountsList": "operator.phc-001, district.krishna, state.andhra-pradesh, national.india (கடவுச்சொல் demo-pass-123)."
+}

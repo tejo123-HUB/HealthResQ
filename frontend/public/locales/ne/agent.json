@@ -1,0 +1,14 @@
+{
+  "aiSuggestion": "AI सुझाव",
+  "expandPanel": "सहायक प्यानल विस्तार गर्नुहोस्",
+  "collapsePanel": "सहायक प्यानल संक्षिप्त गर्नुहोस्",
+  "suggestionAvailable": "AI सुझाव उपलब्ध — समीक्षाको लागि विस्तार गर्नुहोस्",
+  "noSuggestionsExpand": "कुनै बाँकी AI सुझाव छैन — प्रश्न सोध्न विस्तार गर्नुहोस्",
+  "noPendingRecommendations": "अहिले कुनै बाँकी सिफारिस छैन।",
+  "resourceApproval": "{{resource}} · {{authority}} स्वीकृति",
+  "reviewFull": "पूरा सिफारिस हेर्नुहोस्",
+  "askAboutThis": "यसको बारेमा सोध्नुहोस्",
+  "askPlaceholder": "प्रश्न सोध्नुहोस्…",
+  "askHint": "यस्तो किन भइरहेको छ, विकल्पहरू के छन्, वा यो सुरक्षित छ कि छैन सोध्नुहोस्।",
+  "composeWithAssistant": "सहायकसँग तयार गर्नुहोस्"
+}

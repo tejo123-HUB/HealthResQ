@@ -1,0 +1,14 @@
+{
+  "aiSuggestion": "AI సూచన",
+  "expandPanel": "అసిస్టెంట్ ప్యానెల్‌ను విస్తరించండి",
+  "collapsePanel": "అసిస్టెంట్ ప్యానెల్‌ను కుదించండి",
+  "suggestionAvailable": "AI సూచన అందుబాటులో ఉంది — సమీక్షించడానికి విస్తరించండి",
+  "noSuggestionsExpand": "పెండింగ్‌లో AI సూచనలు లేవు — ప్రశ్న అడగడానికి విస్తరించండి",
+  "noPendingRecommendations": "ప్రస్తుతం పెండింగ్‌లో సిఫారసులు లేవు.",
+  "resourceApproval": "{{resource}} · {{authority}} ఆమోదం",
+  "reviewFull": "పూర్తి సిఫారసును సమీక్షించండి",
+  "askAboutThis": "దీని గురించి అడగండి",
+  "askPlaceholder": "ప్రశ్న అడగండి…",
+  "askHint": "ఇది ఎందుకు జరుగుతోంది, ప్రత్యామ్నాయాలు ఏమిటి, లేదా ఇది సురక్షితమేనా అని అడగండి.",
+  "composeWithAssistant": "అసిస్టెంట్‌తో కలిసి రాయండి"
+}

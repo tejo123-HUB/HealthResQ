@@ -1,0 +1,61 @@
+{
+  "tabs": {
+    "overview": "అవలోకనం",
+    "riskMap": "రిస్క్ మ్యాప్",
+    "explorer": "ఎక్స్‌ప్లోరర్",
+    "federation": "సమాఖ్య"
+  },
+  "scopeSummaryError": "పరిధి సారాంశాన్ని లోడ్ చేయలేకపోయాము.",
+  "alertsBySeverity": "తీవ్రత ప్రకారం హెచ్చరికలు",
+  "stats": {
+    "facilitiesInScope": "పరిధిలోని సదుపాయాలు",
+    "totalDeficit": "మొత్తం లోటు",
+    "pendingRecommendations": "పెండింగ్‌లో ఉన్న సిఫారసులు"
+  },
+  "severityWatchShort": "జాగ్రత్త",
+  "riskMapPulse": "రిస్క్ మ్యాప్ పల్స్",
+  "proportionOf": "{{max}}లో {{value}}",
+  "sparkline": {
+    "noProjection": "ఇంకా అంచనా అందుబాటులో లేదు.",
+    "projectedStock": "అంచనా వేసిన నిల్వ",
+    "dayOffset": "రోజు +{{n}}"
+  },
+  "explorer": {
+    "columns": {
+      "facility": "సదుపాయం",
+      "stock": "నిల్వ",
+      "demand": "డిమాండ్",
+      "projected": "అంచనా",
+      "deficit": "లోటు"
+    },
+    "showForecastCertainty": "అంచనా నిశ్చయతను చూపించు",
+    "forecastUncertaintyNote": "ఈ సదుపాయానికి మోడల్ తక్కువ నిశ్చయతతో ఉంది — డిమాండ్ ఈ అంచనా చుట్టూ విస్తృత శ్రేణిలో ఎక్కడైనా ఉండవచ్చు.",
+    "searchResources": "వనరులను వెతకండి…",
+    "fullData": "పూర్తి డేటా",
+    "computingForecasts": "అంచనాలు లెక్కిస్తోంది… {{n}} సదుపాయాలు",
+    "computingForecastsOf": "అంచనాలు లెక్కిస్తోంది… {{total}}లో {{n}}",
+    "facilitiesWithDeficit": "లోటు ఉన్న సదుపాయాలు",
+    "largestDeficits": "అతిపెద్ద లోటులు",
+    "largestDeficitsOf": "అతిపెద్ద లోటులు ({{total}}లో టాప్ {{limit}})",
+    "tapBarToZoom": "ఆ సదుపాయాన్ని ఫుల్ డేటాలో జూమ్ చేయడానికి బార్‌ను నొక్కండి.",
+    "noDeficits": "లోటులు లేవు — పరిధిలోని ప్రతి సదుపాయం తన అంచనా డిమాండ్‌ను తీర్చడానికి సరిపడా నిల్వను కలిగి ఉంది.",
+    "clearFilter": "ఫిల్టర్ తీసివేయండి: {{name}}"
+  },
+  "federation": {
+    "demandTrend": "డిమాండ్ ధోరణి",
+    "volatility": "అస్థిరత",
+    "stockouts": "స్టాక్‌అవుట్‌లు",
+    "exitPresentationMode": "ప్రెజెంటేషన్ మోడ్ నుండి నిష్క్రమించు",
+    "presentationMode": "ప్రెజెంటేషన్ మోడ్",
+    "participatingCountries": "పాల్గొంటున్న దేశాలు",
+    "latestRound": "తాజా రౌండ్",
+    "rawRecordsShared": "పంచుకున్న ముడి PHC-స్థాయి రికార్డులు",
+    "structuralGuaranteeNote": "నిర్మాణాత్మక హామీ (INT-10): డాక్యుమెంట్ చేయబడిన పదకొండు అగ్రిగేట్ ఫీల్డ్‌లు మాత్రమే జాతీయ నోడ్‌ను వదిలివెళ్తాయి — ముడి సదుపాయం లేదా రోగి డేటా ఎప్పుడూ కాదు.",
+    "demandTrendByRound": "రౌండ్ వారీగా డిమాండ్ ధోరణి",
+    "roundShort": "R{{n}}",
+    "round": "రౌండ్ {{n}}",
+    "countryComparisonDescending": "దేశాల పోలిక — అవరోహణ క్రమంలో",
+    "countryParticipants": "{{country}} · {{n}} పాల్గొనేవారు",
+    "countryMetrics": "ధోరణి {{trend}} · అస్థిరత {{volatility}} · స్టాక్‌అవుట్ ఫ్రీక్వెన్సీ {{stockoutPct}}%"
+  }
+}

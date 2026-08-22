@@ -1,0 +1,10 @@
+{
+  "tagline": "మీ సదుపాయం లేదా అధికార ఖాతాతో సైన్ ఇన్ చేయండి.",
+  "username": "వినియోగదారు పేరు",
+  "password": "పాస్‌వర్డ్",
+  "showPassword": "పాస్‌వర్డ్ చూపించు",
+  "hidePassword": "పాస్‌వర్డ్ దాచు",
+  "loginFailed": "సైన్ ఇన్ విఫలమైంది",
+  "demoAccounts": "డెమో ఖాతాలు",
+  "demoAccountsList": "operator.phc-001, district.krishna, state.andhra-pradesh, national.india (పాస్‌వర్డ్ demo-pass-123)."
+}

@@ -1,0 +1,61 @@
+{
+  "tabs": {
+    "overview": "आढावा",
+    "riskMap": "जोखीम नकाशा",
+    "explorer": "एक्सप्लोरर",
+    "federation": "फेडरेशन"
+  },
+  "scopeSummaryError": "स्कोप सारांश लोड होऊ शकला नाही.",
+  "alertsBySeverity": "तीव्रतेनुसार अलर्ट",
+  "stats": {
+    "facilitiesInScope": "स्कोपमधील सुविधा",
+    "totalDeficit": "एकूण तूट",
+    "pendingRecommendations": "प्रलंबित शिफारसी"
+  },
+  "severityWatchShort": "निरीक्षणाखाली",
+  "riskMapPulse": "जोखीम नकाशा स्पंदन",
+  "proportionOf": "{{max}} पैकी {{value}}",
+  "sparkline": {
+    "noProjection": "अद्याप कोणतेही अंदाजपत्रक उपलब्ध नाही.",
+    "projectedStock": "अंदाजित साठा",
+    "dayOffset": "दिवस +{{n}}"
+  },
+  "explorer": {
+    "columns": {
+      "facility": "सुविधा",
+      "stock": "साठा",
+      "demand": "मागणी",
+      "projected": "अंदाजित",
+      "deficit": "तूट"
+    },
+    "showForecastCertainty": "अंदाज निश्चितता दाखवा",
+    "forecastUncertaintyNote": "या सुविधेसाठी मॉडेल कमी निश्चित आहे — मागणी या अंदाजाभोवती विस्तृत श्रेणीत कुठेही असू शकते.",
+    "searchResources": "संसाधने शोधा…",
+    "fullData": "संपूर्ण डेटा",
+    "computingForecasts": "अंदाज मोजले जात आहेत… {{n}} सुविधा",
+    "computingForecastsOf": "अंदाज मोजले जात आहेत… {{total}} पैकी {{n}} सुविधा",
+    "facilitiesWithDeficit": "तूट असलेल्या सुविधा",
+    "largestDeficits": "सर्वात मोठ्या तुटी",
+    "largestDeficitsOf": "सर्वात मोठ्या तुटी ({{total}} पैकी शीर्ष {{limit}})",
+    "tapBarToZoom": "पूर्ण डेटामध्ये त्या सुविधेवर झूम करण्यासाठी बारवर टॅप करा.",
+    "noDeficits": "कोणतीही तूट नाही — स्कोपमधील प्रत्येक सुविधेकडे तिच्या अंदाजित मागणीसाठी पुरेसा साठा आहे.",
+    "clearFilter": "फिल्टर साफ करा: {{name}}"
+  },
+  "federation": {
+    "demandTrend": "मागणी कल",
+    "volatility": "अस्थिरता",
+    "stockouts": "साठा संपणे",
+    "exitPresentationMode": "सादरीकरण मोडमधून बाहेर पडा",
+    "presentationMode": "सादरीकरण मोड",
+    "participatingCountries": "सहभागी देश",
+    "latestRound": "नवीनतम फेरी",
+    "rawRecordsShared": "सामायिक केलेल्या कच्च्या PHC-स्तरीय नोंदी",
+    "structuralGuaranteeNote": "संरचनात्मक हमी (INT-10): राष्ट्रीय नोडमधून फक्त अकरा दस्तावेजीकृत एकत्रित फील्ड्सच बाहेर जातात — कधीही कच्चा सुविधा किंवा रुग्ण डेटा नाही.",
+    "demandTrendByRound": "फेरीनुसार मागणी कल",
+    "roundShort": "फेरी {{n}}",
+    "round": "फेरी {{n}}",
+    "countryComparisonDescending": "देश तुलना — उतरत्या क्रमाने",
+    "countryParticipants": "{{country}} · {{n}} सहभागी",
+    "countryMetrics": "कल {{trend}} · अस्थिरता {{volatility}} · साठा संपण्याचे प्रमाण {{stockoutPct}}%"
+  }
+}

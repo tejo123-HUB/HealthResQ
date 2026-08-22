@@ -1,0 +1,14 @@
+{
+  "aiSuggestion": "AI সুপারিশ",
+  "expandPanel": "সহকারী প্যানেল প্রসারিত করুন",
+  "collapsePanel": "সহকারী প্যানেল সংকুচিত করুন",
+  "suggestionAvailable": "AI সুপারিশ উপলব্ধ — পর্যালোচনা করতে প্রসারিত করুন",
+  "noSuggestionsExpand": "কোনো অমীমাংসিত AI সুপারিশ নেই — প্রশ্ন করতে প্রসারিত করুন",
+  "noPendingRecommendations": "এই মুহূর্তে কোনো অমীমাংসিত সুপারিশ নেই।",
+  "resourceApproval": "{{resource}} · {{authority}} অনুমোদন",
+  "reviewFull": "সম্পূর্ণ সুপারিশ পর্যালোচনা করুন",
+  "askAboutThis": "এই বিষয়ে জিজ্ঞাসা করুন",
+  "askPlaceholder": "একটি প্রশ্ন জিজ্ঞাসা করুন…",
+  "askHint": "এটি কেন ঘটছে, বিকল্পগুলি কী, অথবা এটি নিরাপদ কিনা জিজ্ঞাসা করুন।",
+  "composeWithAssistant": "সহকারীর সাথে তৈরি করুন"
+}

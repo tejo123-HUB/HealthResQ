@@ -1,10 +1,12 @@
 "use client";
 
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/hig/Button";
 import { ListGroup } from "@/components/hig/Card";
 import { Icon } from "@/components/hig/Icon";
 import { Skeleton } from "@/components/hig/Skeleton";
 import { instructionSeverity, SeverityBadge } from "@/components/hig/SeverityBadge";
+import { formatDateTime } from "@/lib/i18n/format";
 import type { Instruction, InstructionStatus } from "@/lib/api/types";
 
 // Mirrors backend/ops/instructions.py::ALLOWED_TRANSITIONS' forward path — an operator can move
@@ -19,7 +21,7 @@ const FORWARD: Partial<Record<InstructionStatus, InstructionStatus>> = {
 
 export function InstructionList({
   instructions,
-  title = "Instructions",
+  title,
   loading = false,
   onAdvance,
 }: {
@@ -28,9 +30,12 @@ export function InstructionList({
   loading?: boolean;
   onAdvance: (instruction: Instruction, next: InstructionStatus) => void;
 }) {
+  const { t, i18n } = useTranslation(["hms", "common"]);
+  const resolvedTitle = title ?? t("hms:instructions");
+
   if (loading) {
     return (
-      <ListGroup title={title}>
+      <ListGroup title={resolvedTitle}>
         {[0, 1].map((i) => (
           <div key={i} className="px-4 py-3 flex items-center gap-3">
             <Skeleton className="w-9 h-9 rounded-full shrink-0" />
@@ -45,11 +50,11 @@ export function InstructionList({
   }
 
   return (
-    <ListGroup title={title}>
+    <ListGroup title={resolvedTitle}>
       {instructions.length === 0 && (
         <div className="px-4 py-3 flex items-center gap-2 text-body text-label-secondary">
           <Icon name="checkCircle" className="w-4.5 h-4.5" />
-          Nothing pending.
+          {t("hms:nothingPending")}
         </div>
       )}
       {instructions.map((i, idx) => {
@@ -65,19 +70,21 @@ export function InstructionList({
                 <Icon name="box" className="w-4.5 h-4.5" />
               </div>
               <div className="min-w-0">
-                <p className="text-body truncate">{i.action}</p>
+                <p className="text-body truncate" title={i.action}>
+                  {i.action}
+                </p>
                 <p className="text-footnote text-label-secondary">
-                  Qty {i.quantity}
-                  {i.deadline ? ` · due ${new Date(i.deadline).toLocaleString()}` : ""}
+                  {t("hms:qty", { n: i.quantity })}
+                  {i.deadline ? ` · ${t("hms:due", { date: formatDateTime(i.deadline, i18n.language) })}` : ""}
                 </p>
               </div>
             </div>
             <div className="flex items-center gap-2 shrink-0 flex-wrap">
-              <SeverityBadge severity={instructionSeverity(i.status)} label={i.status} />
+              <SeverityBadge severity={instructionSeverity(i.status)} label={t(`common:status.${i.status}`)} />
               {forward && (
                 <Button variant="secondary" onClick={() => onAdvance(i, forward)} className="flex items-center gap-1.5">
                   <Icon name="check" className="w-4 h-4" />
-                  {forward}
+                  {t(`common:status.${forward}`)}
                 </Button>
               )}
               {i.status !== "COMPLETED" && i.status !== "BLOCKED" && (
@@ -87,7 +94,7 @@ export function InstructionList({
                   className="flex items-center gap-1.5"
                 >
                   <Icon name="alert" className="w-4 h-4" />
-                  Blocked
+                  {t("common:status.BLOCKED")}
                 </Button>
               )}
             </div>

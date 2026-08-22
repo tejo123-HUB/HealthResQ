@@ -1,0 +1,61 @@
+{
+  "tabs": {
+    "overview": "সাৰাংশ",
+    "riskMap": "জোখাৰুৰ মানচিত্ৰ",
+    "explorer": "এক্সপ্ল'ৰাৰ",
+    "federation": "ফেডাৰেচন"
+  },
+  "scopeSummaryError": "স্কোপৰ সাৰাংশ ল'ড কৰিব পৰা নগ'ল।",
+  "alertsBySeverity": "তীব্ৰতা অনুসৰি সতৰ্কবাণী",
+  "stats": {
+    "facilitiesInScope": "স্কোপৰ ভিতৰৰ সুবিধা",
+    "totalDeficit": "মুঠ ঘাটতি",
+    "pendingRecommendations": "বাকী থকা পৰামৰ্শ"
+  },
+  "severityWatchShort": "সতৰ্কতা",
+  "riskMapPulse": "জোখাৰুৰ মানচিত্ৰ স্পন্দন",
+  "proportionOf": "{{max}}ৰ ভিতৰত {{value}}",
+  "sparkline": {
+    "noProjection": "এতিয়াও কোনো পূৰ্বানুমান উপলব্ধ নাই।",
+    "projectedStock": "প্ৰক্ষেপিত মজুত",
+    "dayOffset": "দিন +{{n}}"
+  },
+  "explorer": {
+    "columns": {
+      "facility": "সুবিধা",
+      "stock": "মজুত",
+      "demand": "চাহিদা",
+      "projected": "প্ৰক্ষেপিত",
+      "deficit": "ঘাটতি"
+    },
+    "showForecastCertainty": "পূৰ্বানুমানৰ নিশ্চয়তা দেখুৱাওক",
+    "forecastUncertaintyNote": "এই সুবিধাটোৰ বাবে মডেলটো কম নিশ্চিত — চাহিদাই এই অনুমানৰ চাৰিওফালে এক বিস্তৃত পৰিসৰত যিকোনো ঠাইত পৰিব পাৰে।",
+    "searchResources": "সম্পদ সন্ধান কৰক…",
+    "fullData": "সম্পূৰ্ণ তথ্য",
+    "computingForecasts": "পূৰ্বানুমান গণনা কৰি থকা হৈছে… {{n}}টা সুবিধা",
+    "computingForecastsOf": "পূৰ্বানুমান গণনা কৰি থকা হৈছে… {{total}}টাৰ ভিতৰত {{n}}টা সুবিধা",
+    "facilitiesWithDeficit": "ঘাটতিযুক্ত সুবিধা",
+    "largestDeficits": "আটাইতকৈ ডাঙৰ ঘাটতি",
+    "largestDeficitsOf": "আটাইতকৈ ডাঙৰ ঘাটতি ({{total}}টাৰ ভিতৰত ওপৰৰ {{limit}}টা)",
+    "tapBarToZoom": "সম্পূৰ্ণ তথ্যত সেই সুবিধাটোলৈ জুম কৰিবলৈ এটা বাৰত টিপক।",
+    "noDeficits": "কোনো ঘাটতি নাই — স্কোপৰ প্ৰতিটো সুবিধাত তাৰ পূৰ্বানুমানিত চাহিদা পূৰণ কৰিবলৈ পৰ্যাপ্ত মজুত আছে।",
+    "clearFilter": "ফিল্টাৰ পৰিষ্কাৰ কৰক: {{name}}"
+  },
+  "federation": {
+    "demandTrend": "চাহিদাৰ প্ৰৱণতা",
+    "volatility": "অস্থিৰতা",
+    "stockouts": "মজুত শূন্য হোৱাৰ ঘটনা",
+    "exitPresentationMode": "উপস্থাপন ম'ডৰ পৰা বাহিৰ ওলাওক",
+    "presentationMode": "উপস্থাপন ম'ড",
+    "participatingCountries": "অংশগ্ৰহণকাৰী দেশ",
+    "latestRound": "শেহতীয়া ৰাউণ্ড",
+    "rawRecordsShared": "কেঁচা PHC-স্তৰৰ তথ্য শ্বেয়াৰ কৰা হৈছে",
+    "structuralGuaranteeNote": "গঠনমূলক নিশ্চয়তা (INT-10): কেৱল লিপিবদ্ধ এঘাৰটা সামগ্ৰিক ক্ষেত্ৰহে এটা ৰাষ্ট্ৰীয় ন'ডৰ পৰা বাহিৰ ওলায় — কেতিয়াও কেঁচা সুবিধা বা ৰোগীৰ তথ্য নহয়।",
+    "demandTrendByRound": "ৰাউণ্ড অনুসৰি চাহিদাৰ প্ৰৱণতা",
+    "roundShort": "ৰা{{n}}",
+    "round": "ৰাউণ্ড {{n}}",
+    "countryComparisonDescending": "দেশৰ তুলনা — অৱৰোহী ক্ৰমত",
+    "countryParticipants": "{{country}} · {{n}}জন অংশগ্ৰহণকাৰী",
+    "countryMetrics": "প্ৰৱণতা {{trend}} · অস্থিৰতা {{volatility}} · মজুত শূন্য হোৱাৰ হাৰ {{stockoutPct}}%"
+  }
+}

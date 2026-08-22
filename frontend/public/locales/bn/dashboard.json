@@ -1,0 +1,61 @@
+{
+  "tabs": {
+    "overview": "সংক্ষিপ্ত বিবরণ",
+    "riskMap": "ঝুঁকি মানচিত্র",
+    "explorer": "এক্সপ্লোরার",
+    "federation": "ফেডারেশন"
+  },
+  "scopeSummaryError": "স্কোপ সারসংক্ষেপ লোড করা যায়নি।",
+  "alertsBySeverity": "তীব্রতা অনুযায়ী সতর্কতা",
+  "stats": {
+    "facilitiesInScope": "স্কোপের মধ্যে থাকা সুবিধা",
+    "totalDeficit": "মোট ঘাটতি",
+    "pendingRecommendations": "অমীমাংসিত সুপারিশ"
+  },
+  "severityWatchShort": "সতর্কতা",
+  "riskMapPulse": "ঝুঁকি মানচিত্র স্পন্দন",
+  "proportionOf": "{{max}}-এর মধ্যে {{value}}",
+  "sparkline": {
+    "noProjection": "এখনো কোনো পূর্বাভাস পাওয়া যায়নি।",
+    "projectedStock": "প্রক্ষেপিত মজুদ",
+    "dayOffset": "দিন +{{n}}"
+  },
+  "explorer": {
+    "columns": {
+      "facility": "সুবিধা",
+      "stock": "মজুদ",
+      "demand": "চাহিদা",
+      "projected": "প্রক্ষেপিত",
+      "deficit": "ঘাটতি"
+    },
+    "showForecastCertainty": "পূর্বাভাসের নিশ্চয়তা দেখান",
+    "forecastUncertaintyNote": "এই সুবিধার জন্য মডেল কম নিশ্চিত — চাহিদা এই অনুমানের চারপাশে বিস্তৃত পরিসরে যেকোনো জায়গায় পড়তে পারে।",
+    "searchResources": "সম্পদ খুঁজুন…",
+    "fullData": "সম্পূর্ণ তথ্য",
+    "computingForecasts": "পূর্বাভাস গণনা করা হচ্ছে… {{n}}টি সুবিধা",
+    "computingForecastsOf": "পূর্বাভাস গণনা করা হচ্ছে… {{total}}টির মধ্যে {{n}}টি সুবিধা",
+    "facilitiesWithDeficit": "ঘাটতিযুক্ত সুবিধা",
+    "largestDeficits": "সবচেয়ে বড় ঘাটতি",
+    "largestDeficitsOf": "সবচেয়ে বড় ঘাটতি ({{total}}টির মধ্যে শীর্ষ {{limit}}টি)",
+    "tapBarToZoom": "সম্পূর্ণ তথ্যে সেই সুবিধায় জুম করতে একটি বার আলতো চাপুন।",
+    "noDeficits": "কোনো ঘাটতি নেই — স্কোপের প্রতিটি সুবিধায় তার পূর্বাভাসিত চাহিদা মেটানোর মতো পর্যাপ্ত মজুদ আছে।",
+    "clearFilter": "ফিল্টার সাফ করুন: {{name}}"
+  },
+  "federation": {
+    "demandTrend": "চাহিদার প্রবণতা",
+    "volatility": "অস্থিরতা",
+    "stockouts": "মজুদ শূন্য হওয়ার ঘটনা",
+    "exitPresentationMode": "উপস্থাপনা মোড থেকে বেরিয়ে যান",
+    "presentationMode": "উপস্থাপনা মোড",
+    "participatingCountries": "অংশগ্রহণকারী দেশ",
+    "latestRound": "সর্বশেষ রাউন্ড",
+    "rawRecordsShared": "কাঁচা PHC-স্তরের রেকর্ড শেয়ার করা হয়েছে",
+    "structuralGuaranteeNote": "কাঠামোগত নিশ্চয়তা (INT-10): শুধুমাত্র নথিভুক্ত এগারোটি সমষ্টিগত ক্ষেত্রই একটি জাতীয় নোড থেকে বের হয় — কখনো কাঁচা সুবিধা বা রোগীর তথ্য নয়।",
+    "demandTrendByRound": "রাউন্ড অনুযায়ী চাহিদার প্রবণতা",
+    "roundShort": "রা{{n}}",
+    "round": "রাউন্ড {{n}}",
+    "countryComparisonDescending": "দেশভিত্তিক তুলনা — অবরোহী ক্রমে",
+    "countryParticipants": "{{country}} · {{n}}টি অংশগ্রহণকারী",
+    "countryMetrics": "প্রবণতা {{trend}} · অস্থিরতা {{volatility}} · মজুদ শূন্য হওয়ার হার {{stockoutPct}}%"
+  }
+}

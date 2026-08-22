@@ -1,0 +1,10 @@
+{
+  "tagline": "ನಿಮ್ಮ ಸೌಲಭ್ಯ ಅಥವಾ ಅಧಿಕಾರ ಖಾತೆಯೊಂದಿಗೆ ಸೈನ್ ಇನ್ ಮಾಡಿ.",
+  "username": "ಬಳಕೆದಾರಹೆಸರು",
+  "password": "ಪಾಸ್‌ವರ್ಡ್",
+  "showPassword": "ಪಾಸ್‌ವರ್ಡ್ ತೋರಿಸಿ",
+  "hidePassword": "ಪಾಸ್‌ವರ್ಡ್ ಮರೆಮಾಡಿ",
+  "loginFailed": "ಸೈನ್ ಇನ್ ವಿಫಲವಾಗಿದೆ",
+  "demoAccounts": "ಡೆಮೊ ಖಾತೆಗಳು",
+  "demoAccountsList": "operator.phc-001, district.krishna, state.andhra-pradesh, national.india (ಪಾಸ್‌ವರ್ಡ್ demo-pass-123)."
+}

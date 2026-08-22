@@ -1,0 +1,61 @@
+{
+  "tabs": {
+    "overview": "अवलोकन",
+    "riskMap": "जोखिम मानचित्र",
+    "explorer": "खोजकर्ता",
+    "federation": "फ़ेडरेशन"
+  },
+  "scopeSummaryError": "स्कोप सारांश लोड नहीं हो सका।",
+  "alertsBySeverity": "गंभीरता के अनुसार अलर्ट",
+  "stats": {
+    "facilitiesInScope": "स्कोप में सुविधाएं",
+    "totalDeficit": "कुल कमी",
+    "pendingRecommendations": "लंबित सिफ़ारिशें"
+  },
+  "severityWatchShort": "निगरानी में",
+  "riskMapPulse": "जोखिम मानचित्र स्पंदन",
+  "proportionOf": "{{max}} में से {{value}}",
+  "sparkline": {
+    "noProjection": "अभी तक कोई प्रक्षेपण उपलब्ध नहीं है।",
+    "projectedStock": "अनुमानित स्टॉक",
+    "dayOffset": "दिन +{{n}}"
+  },
+  "explorer": {
+    "columns": {
+      "facility": "सुविधा",
+      "stock": "स्टॉक",
+      "demand": "मांग",
+      "projected": "अनुमानित",
+      "deficit": "कमी"
+    },
+    "showForecastCertainty": "पूर्वानुमान निश्चितता दिखाएं",
+    "forecastUncertaintyNote": "इस सुविधा के लिए मॉडल कम निश्चित है — मांग इस अनुमान के आसपास एक व्यापक सीमा में कहीं भी हो सकती है।",
+    "searchResources": "संसाधन खोजें…",
+    "fullData": "पूर्ण डेटा",
+    "computingForecasts": "पूर्वानुमान गणना हो रही है… {{n}} सुविधाएं",
+    "computingForecastsOf": "पूर्वानुमान गणना हो रही है… {{total}} में से {{n}} सुविधाएं",
+    "facilitiesWithDeficit": "कमी वाली सुविधाएं",
+    "largestDeficits": "सबसे बड़ी कमियां",
+    "largestDeficitsOf": "सबसे बड़ी कमियां ({{total}} में से शीर्ष {{limit}})",
+    "tapBarToZoom": "पूर्ण डेटा में उस सुविधा को ज़ूम करने के लिए बार पर टैप करें।",
+    "noDeficits": "कोई कमी नहीं — स्कोप की हर सुविधा के पास अपनी अनुमानित मांग पूरी करने के लिए पर्याप्त स्टॉक है।",
+    "clearFilter": "फ़िल्टर हटाएं: {{name}}"
+  },
+  "federation": {
+    "demandTrend": "मांग रुझान",
+    "volatility": "अस्थिरता",
+    "stockouts": "स्टॉक समाप्ति",
+    "exitPresentationMode": "प्रस्तुति मोड से बाहर निकलें",
+    "presentationMode": "प्रस्तुति मोड",
+    "participatingCountries": "भाग लेने वाले देश",
+    "latestRound": "नवीनतम दौर",
+    "rawRecordsShared": "साझा किए गए कच्चे PHC-स्तरीय रिकॉर्ड",
+    "structuralGuaranteeNote": "संरचनात्मक गारंटी (INT-10): किसी राष्ट्रीय नोड से केवल ग्यारह दस्तावेज़ीकृत समग्र फ़ील्ड ही कभी बाहर जाती हैं — कभी भी कच्चा सुविधा या रोगी डेटा नहीं।",
+    "demandTrendByRound": "दौर के अनुसार मांग रुझान",
+    "roundShort": "दौर {{n}}",
+    "round": "दौर {{n}}",
+    "countryComparisonDescending": "देश तुलना — अवरोही क्रम में",
+    "countryParticipants": "{{country}} · {{n}} सहभागी",
+    "countryMetrics": "रुझान {{trend}} · अस्थिरता {{volatility}} · स्टॉक समाप्ति दर {{stockoutPct}}%"
+  }
+}

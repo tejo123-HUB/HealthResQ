@@ -1,0 +1,14 @@
+{
+  "aiSuggestion": "AI सुझाव",
+  "expandPanel": "मददगार पैनल खोलियो",
+  "collapsePanel": "मददगार पैनल समेटियो",
+  "suggestionAvailable": "AI सुझाव मौजूद आहे — जायजे लाइ खोलियो",
+  "noSuggestionsExpand": "कोई बाकी AI सुझाव नाहे — सवाल पुछण लाइ खोलियो",
+  "noPendingRecommendations": "हिनी वक्त कोई बाकी सिफारिश नाहे।",
+  "resourceApproval": "{{resource}} · {{authority}} मंजूरी",
+  "reviewFull": "पूरी सिफारिश जो जायजो कयो",
+  "askAboutThis": "हिनी बारे में पुछियो",
+  "askPlaceholder": "सवाल पुछियो...",
+  "askHint": "पुछियो त हि किएं थी रहियो आहे, बदल क्या आहन, या हि सलामत आहे या ना।",
+  "composeWithAssistant": "मददगार सां ठाहियो"
+}

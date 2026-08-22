@@ -1,0 +1,11 @@
+{
+  "toggleTheme": "থীম সলনি কৰক",
+  "signOut": "ছাইন আউট কৰক",
+  "composeNewAction": "নতুন কাৰ্য ৰচনা কৰক",
+  "scopeLevel": {
+    "FACILITY": "সুবিধা",
+    "DISTRICT": "জিলা",
+    "STATE": "ৰাজ্য",
+    "NATIONAL": "ৰাষ্ট্ৰীয়"
+  }
+}

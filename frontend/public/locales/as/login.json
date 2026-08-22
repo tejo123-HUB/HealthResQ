@@ -1,0 +1,10 @@
+{
+  "tagline": "আপোনাৰ সুবিধা বা কৰ্তৃপক্ষৰ একাউণ্টেৰে ছাইন ইন কৰক।",
+  "username": "ব্যৱহাৰকাৰীৰ নাম",
+  "password": "পাছৱৰ্ড",
+  "showPassword": "পাছৱৰ্ড দেখুৱাওক",
+  "hidePassword": "পাছৱৰ্ড লুকাওক",
+  "loginFailed": "লগইন বিফল হ'ল",
+  "demoAccounts": "ডেম' একাউণ্ট",
+  "demoAccountsList": "operator.phc-001, district.krishna, state.andhra-pradesh, national.india (পাছৱৰ্ড demo-pass-123)।"
+}

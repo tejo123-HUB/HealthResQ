@@ -1,0 +1,14 @@
+{
+  "aiSuggestion": "AI ᱵᱟᱛᱟᱣ",
+  "expandPanel": "ᱥᱟᱦᱟᱭᱠᱟᱨᱤ ᱯᱮᱱᱮᱞ ᱢᱟᱨᱟᱝ ᱢᱮ",
+  "collapsePanel": "ᱥᱟᱦᱟᱭᱠᱟᱨᱤ ᱯᱮᱱᱮᱞ ᱦᱩᱰᱤᱧ ᱢᱮ",
+  "suggestionAvailable": "AI ᱵᱟᱛᱟᱣ ᱢᱮᱱᱟᱜᱟ — ᱧᱮᱞ ᱞᱟᱹᱜᱤᱫ ᱢᱟᱨᱟᱝ ᱢᱮ",
+  "noSuggestionsExpand": "ᱚᱸᱰᱮ ᱧᱮᱞ ᱦᱩᱭᱩᱜ AI ᱵᱟᱛᱟᱣ ᱵᱟᱹᱱᱩᱜᱼᱟ — ᱠᱩᱠᱞᱤ ᱦᱟᱛᱟᱣ ᱞᱟᱹᱜᱤᱫ ᱢᱟᱨᱟᱝ ᱢᱮ",
+  "noPendingRecommendations": "ᱚᱸᱰᱮ ᱧᱮᱞ ᱦᱩᱭᱩᱜ ᱨᱮᱠᱚᱢᱮᱱᱰᱮᱥᱚᱱ ᱵᱟᱹᱱᱩᱜᱼᱟ᱾",
+  "resourceApproval": "{{resource}} · {{authority}} ᱨᱮᱭᱟᱜ ᱢᱟᱱᱟᱛ",
+  "reviewFull": "ᱯᱩᱨᱟᱹᱣ ᱨᱮᱠᱚᱢᱮᱱᱰᱮᱥᱚᱱ ᱧᱮᱞ ᱢᱮ",
+  "askAboutThis": "ᱱᱚᱶᱟ ᱵᱟᱵᱚᱛ ᱠᱩᱠᱞᱤ ᱢᱮ",
+  "askPlaceholder": "ᱢᱤᱫ ᱠᱩᱠᱞᱤ ᱚᱞ ᱢᱮ…",
+  "askHint": "ᱪᱮᱫ ᱞᱟᱹᱜᱤᱫ ᱦᱩᱭ ᱠᱟᱱᱟ, ᱪᱮᱫ ᱮᱴᱠᱟᱱ ᱦᱚᱨᱟ ᱢᱮᱱᱟᱜᱟ, ᱟᱨ ᱵᱟᱭᱭᱟᱲ ᱦᱚᱭ ᱠᱤ ᱵᱟᱝ ᱚᱱᱟ ᱠᱩᱠᱞᱤ ᱢᱮ᱾",
+  "composeWithAssistant": "ᱥᱟᱦᱟᱭᱠᱟᱨᱤ ᱥᱟᱶᱛᱮ ᱛᱮᱭᱟᱨ ᱢᱮ"
+}

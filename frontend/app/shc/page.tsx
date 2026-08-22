@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { AuthGuard } from "@/components/AuthGuard";
 import { FacilityHome } from "@/components/FacilityHome";
 import { HmsWorkspace } from "@/components/hms/HmsWorkspace";
@@ -12,6 +13,7 @@ type Tab = "OVERVIEW" | "HOSPITAL";
 /** SHC's one workspace — Overview (OPS-06) and Hospital (OPS-11-13) are tabs on the same page,
  * not separate nav destinations: an operator has exactly one place to be. */
 function Workspace() {
+  const { t } = useTranslation("hms");
   const { facility } = useAuth();
   const [tab, setTab] = useState<Tab>("OVERVIEW");
 
@@ -23,8 +25,8 @@ function Workspace() {
           value={tab}
           onChange={setTab}
           options={[
-            { value: "OVERVIEW", label: "Overview" },
-            { value: "HOSPITAL", label: "Hospital" },
+            { value: "OVERVIEW", label: t("overviewTab") },
+            { value: "HOSPITAL", label: t("hospitalTab") },
           ]}
         />
       </div>

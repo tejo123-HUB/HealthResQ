@@ -1,0 +1,14 @@
+{
+  "aiSuggestion": "AI ભલામણ",
+  "expandPanel": "સહાયક પેનલ વિસ્તૃત કરો",
+  "collapsePanel": "સહાયક પેનલ સંકોચો",
+  "suggestionAvailable": "AI ભલામણ ઉપલબ્ધ — સમીક્ષા માટે વિસ્તૃત કરો",
+  "noSuggestionsExpand": "કોઈ બાકી AI ભલામણ નથી — પ્રશ્ન પૂછવા વિસ્તૃત કરો",
+  "noPendingRecommendations": "અત્યારે કોઈ બાકી ભલામણો નથી.",
+  "resourceApproval": "{{resource}} · {{authority}} મંજૂરી",
+  "reviewFull": "સંપૂર્ણ ભલામણ સમીક્ષા કરો",
+  "askAboutThis": "આ વિશે પૂછો",
+  "askPlaceholder": "એક પ્રશ્ન પૂછો…",
+  "askHint": "આ કેમ થઈ રહ્યું છે, વિકલ્પો શું છે, અથવા તે સુરક્ષિત છે કે નહીં તે પૂછો.",
+  "composeWithAssistant": "સહાયક સાથે બનાવો"
+}

@@ -1,0 +1,61 @@
+{
+  "tabs": {
+    "overview": "ઝાંખી",
+    "riskMap": "જોખમ નકશો",
+    "explorer": "એક્સપ્લોરર",
+    "federation": "ફેડરેશન"
+  },
+  "scopeSummaryError": "સ્કોપ સારાંશ લોડ કરી શકાયો નહીં.",
+  "alertsBySeverity": "તીવ્રતા પ્રમાણે ચેતવણીઓ",
+  "stats": {
+    "facilitiesInScope": "સ્કોપમાંની સુવિધાઓ",
+    "totalDeficit": "કુલ ઘટ",
+    "pendingRecommendations": "બાકી ભલામણો"
+  },
+  "severityWatchShort": "સાવચેતી",
+  "riskMapPulse": "જોખમ નકશો સ્પંદન",
+  "proportionOf": "{{max}} માંથી {{value}}",
+  "sparkline": {
+    "noProjection": "હજી કોઈ અંદાજ ઉપલબ્ધ નથી.",
+    "projectedStock": "અંદાજિત સ્ટોક",
+    "dayOffset": "દિવસ +{{n}}"
+  },
+  "explorer": {
+    "columns": {
+      "facility": "સુવિધા",
+      "stock": "સ્ટોક",
+      "demand": "માંગ",
+      "projected": "અંદાજિત",
+      "deficit": "ઘટ"
+    },
+    "showForecastCertainty": "અંદાજની નિશ્ચિતતા બતાવો",
+    "forecastUncertaintyNote": "આ સુવિધા માટે મોડેલ ઓછું નિશ્ચિત છે — માંગ આ અંદાજની આસપાસના વ્યાપક રેન્જમાં ગમે ત્યાં હોઈ શકે છે.",
+    "searchResources": "સંસાધનો શોધો…",
+    "fullData": "સંપૂર્ણ ડેટા",
+    "computingForecasts": "અંદાજોની ગણતરી થઈ રહી છે… {{n}} સુવિધાઓ",
+    "computingForecastsOf": "અંદાજોની ગણતરી થઈ રહી છે… {{total}} માંથી {{n}} સુવિધાઓ",
+    "facilitiesWithDeficit": "ઘટ ધરાવતી સુવિધાઓ",
+    "largestDeficits": "સૌથી મોટી ઘટ",
+    "largestDeficitsOf": "સૌથી મોટી ઘટ ({{total}} માંથી ટોચની {{limit}})",
+    "tapBarToZoom": "સંપૂર્ણ ડેટામાં તે સુવિધા પર ઝૂમ કરવા માટે બાર પર ટેપ કરો.",
+    "noDeficits": "કોઈ ઘટ નથી — સ્કોપની દરેક સુવિધા પાસે તેની અંદાજિત માંગ પૂરી કરવા માટે પૂરતો સ્ટોક છે.",
+    "clearFilter": "ફિલ્ટર સાફ કરો: {{name}}"
+  },
+  "federation": {
+    "demandTrend": "માંગનું વલણ",
+    "volatility": "અસ્થિરતા",
+    "stockouts": "સ્ટોક ખૂટવાના બનાવો",
+    "exitPresentationMode": "પ્રેઝન્ટેશન મોડમાંથી બહાર નીકળો",
+    "presentationMode": "પ્રેઝન્ટેશન મોડ",
+    "participatingCountries": "ભાગ લેતા દેશો",
+    "latestRound": "તાજેતરનો રાઉન્ડ",
+    "rawRecordsShared": "કાચા PHC-સ્તરના રેકોર્ડ શેર કરાયા",
+    "structuralGuaranteeNote": "માળખાકીય ખાતરી (INT-10): ફક્ત નોંધાયેલા અગિયાર સામૂહિક ક્ષેત્રો જ રાષ્ટ્રીય નોડમાંથી બહાર જાય છે — ક્યારેય કાચો સુવિધા કે દર્દી ડેટા નહીં.",
+    "demandTrendByRound": "રાઉન્ડ પ્રમાણે માંગનું વલણ",
+    "roundShort": "રા{{n}}",
+    "round": "રાઉન્ડ {{n}}",
+    "countryComparisonDescending": "દેશની સરખામણી — ઉતરતા ક્રમમાં",
+    "countryParticipants": "{{country}} · {{n}} સહભાગીઓ",
+    "countryMetrics": "વલણ {{trend}} · અસ્થિરતા {{volatility}} · સ્ટોક-આઉટ દર {{stockoutPct}}%"
+  }
+}

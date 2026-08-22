@@ -1,0 +1,11 @@
+{
+  "toggleTheme": "થીમ બદલો",
+  "signOut": "સાઇન આઉટ કરો",
+  "composeNewAction": "નવી ક્રિયા બનાવો",
+  "scopeLevel": {
+    "FACILITY": "સુવિધા",
+    "DISTRICT": "જિલ્લો",
+    "STATE": "રાજ્ય",
+    "NATIONAL": "રાષ્ટ્રીય"
+  }
+}

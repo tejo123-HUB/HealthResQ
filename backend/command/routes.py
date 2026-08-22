@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from backend.audit.service import log_event
 from backend.command import service
 from backend.command.models import DecisionAction, Recommendation, RecommendationOrigin, RecommendationStatus
-from backend.command.schemas import ComposeActionIn, DecisionIn
+from backend.command.schemas import ComposeActionIn, DecisionActionLiteral, DecisionIn, Movement
 from backend.command.schemas import DashboardSummary as DashboardSummarySchema
 from backend.command.schemas import Recommendation as RecommendationSchema
 from backend.command.schemas import SituationReport as SituationReportSchema
@@ -15,6 +15,7 @@ from backend.intelligence.tools import generate_redistribution_options
 from backend.ops import models as ops_models
 from backend.ops.deps import CurrentUser, enforce_scope, get_current_user, get_facility_or_404
 from backend.ops.instructions import instruction_out
+from backend.ops.schemas import CamelModel
 from backend.ops.schemas import Instruction as InstructionSchema
 
 router = APIRouter(tags=["command"])
@@ -47,6 +48,57 @@ def _require_own_scope_authority(user: CurrentUser, rec: Recommendation) -> None
     scope above it and not a narrower one below it, matching "each authority's own dashboard"."""
     if user.scope_level.value != rec.required_authority or str(user.scope_id) != str(rec.scope_id):
         raise HTTPException(status.HTTP_403_FORBIDDEN, "Not this recommendation's required authority")
+
+
+class BatchDecisionItem(CamelModel):
+    """One entry of a batch decision — the same fields `DecisionIn` takes for a single
+    recommendation, plus which recommendation it targets."""
+
+    recommendation_id: str
+    action: DecisionActionLiteral
+    movements: list[Movement] | None = None
+    notes: str | None = None
+
+
+class BatchDecisionIn(CamelModel):
+    items: list[BatchDecisionItem]
+
+
+def _apply_decision(
+    db: Session,
+    user: CurrentUser,
+    rec: Recommendation,
+    *,
+    action: str,
+    movements_in: list[Movement] | None,
+    notes: str | None,
+) -> Recommendation:
+    """The single-decision logic (CMD-03/04/05/08) shared by the single-item and batch decision
+    routes: verify the acting user is exactly this recommendation's required authority, apply the
+    decision, and audit-log it. Callers control the transaction boundary (no `db.commit()` here),
+    so the batch route can run every item in one transaction."""
+    _require_own_scope_authority(user, rec)
+
+    if action == "REJECT":
+        rec = service.reject(db, rec, actor_user_id=user.id, notes=notes)
+    elif action == "ESCALATE":
+        rec, _new_rec = service.escalate(db, rec, actor_user_id=user.id, notes=notes)
+    else:
+        decision_action = DecisionAction.APPROVE if action == "APPROVE" else DecisionAction.MODIFY
+        movements = (
+            [service.MovementIn(uuid.UUID(m.from_), uuid.UUID(m.to), m.quantity) for m in movements_in]
+            if movements_in is not None
+            else None
+        )
+        rec, _instructions = service.approve_or_modify(
+            db, rec, action=decision_action, actor_user_id=user.id, movements=movements, notes=notes
+        )
+
+    log_event(
+        db, actor_user_id=user.id, action=f"CMD_DECISION_{action}", entity_type="recommendation",
+        entity_id=str(rec.id), details={"status": rec.status.value},
+    )
+    return rec
 
 
 @router.get("/recommendations", response_model=list[RecommendationSchema])
@@ -144,31 +196,41 @@ def submit_decision(
     rec = service.get_recommendation(db, recommendation_id)
     if rec is None:
         raise HTTPException(status.HTTP_404_NOT_FOUND, "Recommendation not found")
-    _require_own_scope_authority(user, rec)
 
-    if body.action == "REJECT":
-        rec = service.reject(db, rec, actor_user_id=user.id, notes=body.notes)
-    elif body.action == "ESCALATE":
-        if body.unresolved_quantity is None or body.unresolved_quantity <= 0:
-            raise HTTPException(status.HTTP_400_BAD_REQUEST, "unresolvedQuantity is required and must be positive to escalate")
-        rec, _new_rec = service.escalate(db, rec, actor_user_id=user.id, unresolved_quantity=body.unresolved_quantity, notes=body.notes)
-    else:
-        action = DecisionAction.APPROVE if body.action == "APPROVE" else DecisionAction.MODIFY
-        movements = (
-            [service.MovementIn(uuid.UUID(m.from_), uuid.UUID(m.to), m.quantity) for m in body.movements]
-            if body.movements is not None
-            else None
-        )
-        rec, _instructions = service.approve_or_modify(
-            db, rec, action=action, actor_user_id=user.id, movements=movements, notes=body.notes
-        )
-
-    log_event(
-        db, actor_user_id=user.id, action=f"CMD_DECISION_{body.action}", entity_type="recommendation",
-        entity_id=str(rec.id), details={"status": rec.status.value},
-    )
+    rec = _apply_decision(db, user, rec, action=body.action, movements_in=body.movements, notes=body.notes)
     db.commit()
     return recommendation_out(rec)
+
+
+@router.post("/recommendations/batch-decision", response_model=list[RecommendationSchema])
+def batch_submit_decision(
+    body: BatchDecisionIn,
+    db: Session = Depends(get_db),
+    user: CurrentUser = Depends(get_current_user),
+) -> list[RecommendationSchema]:
+    """CMD-09's queue batch-select/approve: the same per-item authority check, decision logic, and
+    audit log as `POST /recommendations/{id}/decision` (`_apply_decision`, above), run once per
+    item and committed as a single transaction — if any item fails (wrong authority, bad id,
+    infeasible plan, ...) nothing in the batch commits, matching how every other decision in this
+    module only ever commits at the route layer."""
+    if not body.items:
+        raise HTTPException(status.HTTP_400_BAD_REQUEST, "items must not be empty")
+
+    results: list[Recommendation] = []
+    for item in body.items:
+        try:
+            rec_id = uuid.UUID(item.recommendation_id)
+        except ValueError as exc:
+            raise HTTPException(status.HTTP_400_BAD_REQUEST, f"Invalid recommendationId: {item.recommendation_id}") from exc
+        rec = service.get_recommendation(db, rec_id)
+        if rec is None:
+            raise HTTPException(status.HTTP_404_NOT_FOUND, f"Recommendation not found: {item.recommendation_id}")
+
+        rec = _apply_decision(db, user, rec, action=item.action, movements_in=item.movements, notes=item.notes)
+        results.append(rec)
+
+    db.commit()
+    return [recommendation_out(r) for r in results]
 
 
 @router.get("/recommendations/{recommendation_id}/instructions", response_model=list[InstructionSchema])

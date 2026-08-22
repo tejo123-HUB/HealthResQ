@@ -1,0 +1,11 @@
+{
+  "toggleTheme": "थीम बदलचें",
+  "signOut": "साइन आउट करचें",
+  "composeNewAction": "नवी कारवाय रचचें",
+  "scopeLevel": {
+    "FACILITY": "सुविधा",
+    "DISTRICT": "जिल्हो",
+    "STATE": "राज्य",
+    "NATIONAL": "राष्ट्रीय"
+  }
+}

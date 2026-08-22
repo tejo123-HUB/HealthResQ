@@ -1,0 +1,11 @@
+{
+  "toggleTheme": "ꯊꯤꯝ ꯍꯣꯡꯗꯣꯛꯄ",
+  "signOut": "ꯊꯣꯛꯅꯧ",
+  "composeNewAction": "ꯑꯅꯧꯕ ꯋꯥꯔꯦꯞ ꯁꯦꯝꯒꯠꯄ",
+  "scopeLevel": {
+    "FACILITY": "ꯁꯦꯟꯇꯔ",
+    "DISTRICT": "ꯗꯤꯁꯇꯔꯤꯛꯠ",
+    "STATE": "ꯁꯇꯦꯠ",
+    "NATIONAL": "ꯅꯦꯁꯅꯦꯜ"
+  }
+}

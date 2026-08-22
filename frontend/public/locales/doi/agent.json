@@ -1,0 +1,14 @@
+{
+  "aiSuggestion": "AI सुझाऽ",
+  "expandPanel": "सहायक पैनल गी फैलाओ",
+  "collapsePanel": "सहायक पैनल गी समेटो",
+  "suggestionAvailable": "AI सुझाऽ उपलब्ध ऐ — समीक्षा आस्तै फैलाओ",
+  "noSuggestionsExpand": "कोई लंबित AI सुझाऽ नेईं — सवाल पुच्छने आस्तै फैलाओ",
+  "noPendingRecommendations": "हुण कोई लंबित सिफारिश नेईं।",
+  "resourceApproval": "{{resource}} · {{authority}} मंजूरी",
+  "reviewFull": "पूरी सिफारिश दी समीक्षा करो",
+  "askAboutThis": "इस बारै च पुच्छो",
+  "askPlaceholder": "सवाल पुच्छो...",
+  "askHint": "पुच्छो जे एह् क्यूं होआ करदा ऐ, बदल क्या न, जां एह् सुरक्षित ऐ जां नेईं।",
+  "composeWithAssistant": "सहायक कन्नै बनाओ"
+}

@@ -1,0 +1,14 @@
+{
+  "aiSuggestion": "AI सुचोवणी",
+  "expandPanel": "सहायक पॅनल विस्तारीत करचें",
+  "collapsePanel": "सहायक पॅनल आकुंचित करचें",
+  "suggestionAvailable": "AI सुचोवणी उपलब्ध — फेरविचारखातीर विस्तारीत करचें",
+  "noSuggestionsExpand": "कसलीच प्रलंबित AI सुचोवणी ना — प्रस्न विचारपाक विस्तारीत करचें",
+  "noPendingRecommendations": "आतां कसलीच प्रलंबित शिफारस ना.",
+  "resourceApproval": "{{resource}} · {{authority}} मंजुरी",
+  "reviewFull": "पुराय शिफारस फेरविचार करचें",
+  "askAboutThis": "हाचेविशीं विचार",
+  "askPlaceholder": "प्रस्न विचार...",
+  "askHint": "हें कित्याक घडटा, विकल्प कितें आसात, वा हें सुरक्षीत आसा वा ना हें विचार.",
+  "composeWithAssistant": "सहायकाकडेन रचचें"
+}

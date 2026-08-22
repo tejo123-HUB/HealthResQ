@@ -1,0 +1,61 @@
+{
+  "tabs": {
+    "overview": "ಅವಲೋಕನ",
+    "riskMap": "ಅಪಾಯ ನಕ್ಷೆ",
+    "explorer": "ಎಕ್ಸ್‌ಪ್ಲೋರರ್",
+    "federation": "ಒಕ್ಕೂಟ"
+  },
+  "scopeSummaryError": "ವ್ಯಾಪ್ತಿ ಸಾರಾಂಶವನ್ನು ಲೋಡ್ ಮಾಡಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ.",
+  "alertsBySeverity": "ತೀವ್ರತೆಯ ಪ್ರಕಾರ ಎಚ್ಚರಿಕೆಗಳು",
+  "stats": {
+    "facilitiesInScope": "ವ್ಯಾಪ್ತಿಯಲ್ಲಿನ ಸೌಲಭ್ಯಗಳು",
+    "totalDeficit": "ಒಟ್ಟು ಕೊರತೆ",
+    "pendingRecommendations": "ಬಾಕಿ ಇರುವ ಶಿಫಾರಸುಗಳು"
+  },
+  "severityWatchShort": "ಗಮನಿಸಿ",
+  "riskMapPulse": "ಅಪಾಯ ನಕ್ಷೆ ಪಲ್ಸ್",
+  "proportionOf": "{{max}} ರಲ್ಲಿ {{value}}",
+  "sparkline": {
+    "noProjection": "ಇನ್ನೂ ಅಂದಾಜು ಲಭ್ಯವಿಲ್ಲ.",
+    "projectedStock": "ಅಂದಾಜಿತ ದಾಸ್ತಾನು",
+    "dayOffset": "ದಿನ +{{n}}"
+  },
+  "explorer": {
+    "columns": {
+      "facility": "ಸೌಲಭ್ಯ",
+      "stock": "ದಾಸ್ತಾನು",
+      "demand": "ಬೇಡಿಕೆ",
+      "projected": "ಅಂದಾಜಿತ",
+      "deficit": "ಕೊರತೆ"
+    },
+    "showForecastCertainty": "ಮುನ್ಸೂಚನೆ ಖಚಿತತೆಯನ್ನು ತೋರಿಸಿ",
+    "forecastUncertaintyNote": "ಈ ಸೌಲಭ್ಯಕ್ಕೆ ಮಾದರಿ ಕಡಿಮೆ ಖಚಿತವಾಗಿದೆ — ಬೇಡಿಕೆ ಈ ಅಂದಾಜಿನ ಸುತ್ತ ವಿಶಾಲ ವ್ಯಾಪ್ತಿಯಲ್ಲಿ ಎಲ್ಲಿಯಾದರೂ ಇರಬಹುದು.",
+    "searchResources": "ಸಂಪನ್ಮೂಲಗಳನ್ನು ಹುಡುಕಿ…",
+    "fullData": "ಪೂರ್ಣ ಡೇಟಾ",
+    "computingForecasts": "ಮುನ್ಸೂಚನೆಗಳನ್ನು ಲೆಕ್ಕಾಚಾರ ಮಾಡುತ್ತಿದೆ… {{n}} ಸೌಲಭ್ಯಗಳು",
+    "computingForecastsOf": "ಮುನ್ಸೂಚನೆಗಳನ್ನು ಲೆಕ್ಕಾಚಾರ ಮಾಡುತ್ತಿದೆ… {{total}} ರಲ್ಲಿ {{n}}",
+    "facilitiesWithDeficit": "ಕೊರತೆಯಿರುವ ಸೌಲಭ್ಯಗಳು",
+    "largestDeficits": "ಅತಿದೊಡ್ಡ ಕೊರತೆಗಳು",
+    "largestDeficitsOf": "ಅತಿದೊಡ್ಡ ಕೊರತೆಗಳು ({{total}} ರಲ್ಲಿ ಟಾಪ್ {{limit}})",
+    "tapBarToZoom": "ಆ ಸೌಲಭ್ಯವನ್ನು ಪೂರ್ಣ ಡೇಟಾದಲ್ಲಿ ಜೂಮ್ ಮಾಡಲು ಬಾರ್ ಅನ್ನು ಟ್ಯಾಪ್ ಮಾಡಿ.",
+    "noDeficits": "ಕೊರತೆಗಳಿಲ್ಲ — ವ್ಯಾಪ್ತಿಯಲ್ಲಿನ ಪ್ರತಿ ಸೌಲಭ್ಯವು ತನ್ನ ಅಂದಾಜಿತ ಬೇಡಿಕೆಯನ್ನು ಪೂರೈಸಲು ಸಾಕಷ್ಟು ದಾಸ್ತಾನು ಹೊಂದಿದೆ.",
+    "clearFilter": "ಫಿಲ್ಟರ್ ತೆರವುಗೊಳಿಸಿ: {{name}}"
+  },
+  "federation": {
+    "demandTrend": "ಬೇಡಿಕೆ ಪ್ರವೃತ್ತಿ",
+    "volatility": "ಅಸ್ಥಿರತೆ",
+    "stockouts": "ದಾಸ್ತಾನು ಖಾಲಿಯಾಗುವಿಕೆ",
+    "exitPresentationMode": "ಪ್ರಸ್ತುತಿ ಮೋಡ್‌ನಿಂದ ನಿರ್ಗಮಿಸಿ",
+    "presentationMode": "ಪ್ರಸ್ತುತಿ ಮೋಡ್",
+    "participatingCountries": "ಭಾಗವಹಿಸುವ ದೇಶಗಳು",
+    "latestRound": "ಇತ್ತೀಚಿನ ಸುತ್ತು",
+    "rawRecordsShared": "ಹಂಚಿಕೊಂಡ ಕಚ್ಚಾ PHC-ಮಟ್ಟದ ದಾಖಲೆಗಳು",
+    "structuralGuaranteeNote": "ರಚನಾತ್ಮಕ ಖಾತರಿ (INT-10): ದಾಖಲಿತ ಹನ್ನೊಂದು ಒಟ್ಟುಗೂಡಿಸಿದ ಕ್ಷೇತ್ರಗಳು ಮಾತ್ರ ರಾಷ್ಟ್ರೀಯ ನೋಡ್ ಅನ್ನು ಬಿಟ್ಟುಹೋಗುತ್ತವೆ — ಕಚ್ಚಾ ಸೌಲಭ್ಯ ಅಥವಾ ರೋಗಿಯ ಡೇಟಾ ಎಂದಿಗೂ ಅಲ್ಲ.",
+    "demandTrendByRound": "ಸುತ್ತಿನ ಪ್ರಕಾರ ಬೇಡಿಕೆ ಪ್ರವೃತ್ತಿ",
+    "roundShort": "R{{n}}",
+    "round": "ಸುತ್ತು {{n}}",
+    "countryComparisonDescending": "ದೇಶಗಳ ಹೋಲಿಕೆ — ಇಳಿಕೆ ಕ್ರಮದಲ್ಲಿ",
+    "countryParticipants": "{{country}} · {{n}} ಭಾಗವಹಿಸುವವರು",
+    "countryMetrics": "ಪ್ರವೃತ್ತಿ {{trend}} · ಅಸ್ಥಿರತೆ {{volatility}} · ದಾಸ್ತಾನು ಖಾಲಿ ಆವರ್ತನೆ {{stockoutPct}}%"
+  }
+}

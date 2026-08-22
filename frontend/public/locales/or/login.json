@@ -1,0 +1,10 @@
+{
+  "tagline": "ଆପଣଙ୍କ ସୁବିଧା କିମ୍ବା କର୍ତ୍ତୃପକ୍ଷ ଖାତା ସହିତ ସାଇନ୍ ଇନ୍ କରନ୍ତୁ।",
+  "username": "ବ୍ୟବହାରକାରୀ ନାମ",
+  "password": "ପାସୱାର୍ଡ",
+  "showPassword": "ପାସୱାର୍ଡ ଦେଖାନ୍ତୁ",
+  "hidePassword": "ପାସୱାର୍ଡ ଲୁଚାନ୍ତୁ",
+  "loginFailed": "ଲଗଇନ୍ ବିଫଳ ହେଲା",
+  "demoAccounts": "ଡେମୋ ଖାତାଗୁଡ଼ିକ",
+  "demoAccountsList": "operator.phc-001, district.krishna, state.andhra-pradesh, national.india (ପାସୱାର୍ଡ demo-pass-123)।"
+}

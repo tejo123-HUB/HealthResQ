@@ -1,0 +1,10 @@
+{
+  "tagline": "Sign in with your facility or authority account.",
+  "username": "Username",
+  "password": "Password",
+  "showPassword": "Show password",
+  "hidePassword": "Hide password",
+  "loginFailed": "Login failed",
+  "demoAccounts": "Demo accounts",
+  "demoAccountsList": "operator.phc-001, district.krishna, state.andhra-pradesh, national.india (password demo-pass-123)."
+}

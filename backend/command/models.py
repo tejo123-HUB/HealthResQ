@@ -92,6 +92,13 @@ class Recommendation(Base):
     parent_recommendation_id: Mapped[uuid.UUID | None] = mapped_column(
         UUID(as_uuid=True), ForeignKey("recommendations.id"), nullable=True
     )
+    # Phase 14 (Compose): correlates every DRAFT one Compose chat session produced, so the
+    # frontend can fetch "just this conversation's candidates" instead of every outstanding DRAFT
+    # in scope. Generated once per Compose session by `backend/agent/routes.py`'s `POST
+    # /agent/ask` (client- or server-supplied) and threaded through
+    # `backend/agent/tools.py::draft_recommendation`; null for anything created outside a Compose
+    # chat (AGT-04 triggers, CMD-07 human-composed actions).
+    conversation_id: Mapped[str | None] = mapped_column(String, nullable=True, index=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, default=_now)
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, default=_now, onupdate=_now)
 

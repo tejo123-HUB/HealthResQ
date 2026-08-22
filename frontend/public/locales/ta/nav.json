@@ -1,0 +1,11 @@
+{
+  "toggleTheme": "தீமை மாற்று",
+  "signOut": "வெளியேறு",
+  "composeNewAction": "புதிய செயலை உருவாக்கு",
+  "scopeLevel": {
+    "FACILITY": "வசதி",
+    "DISTRICT": "மாவட்டம்",
+    "STATE": "மாநிலம்",
+    "NATIONAL": "தேசியம்"
+  }
+}

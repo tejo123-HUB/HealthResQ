@@ -11,6 +11,7 @@ summarize a whole scope (`get_scope_summary`, `get_active_alerts`) never take a 
 from the model at all; they always use the caller's own scope, the same "no widening" rule
 `/intelligence/*` and `/dashboard` already enforce at the HTTP layer."""
 
+import contextvars
 import uuid
 from typing import Any, Callable
 
@@ -27,6 +28,29 @@ from backend.ops.instructions import instruction_out
 class ToolError(Exception):
     """Raised by a tool on bad input or an out-of-scope target. The controller catches this and
     forces AGT-05's abstention path rather than letting an exception become a fabricated answer."""
+
+
+# --- Phase 14 (Compose) conversation correlation --------------------------------------------------
+#
+# `draft_recommendation` needs to tag every DRAFT it persists with the Compose session that
+# produced it, but `conversation_id` is deliberately absent from `TOOL_SPECS`/the function's own
+# argument surface — it's plumbing, not something the model should see or choose. A ContextVar
+# lets `backend/agent/routes.py` bind it for the duration of one `/agent/ask` call without
+# `backend/agent/controller.py` (which does `fn(db, user, **call.args)` generically for every
+# tool) needing to know this one tool takes an extra, non-model-supplied argument.
+_conversation_id_var: "contextvars.ContextVar[str | None]" = contextvars.ContextVar(
+    "agent_conversation_id", default=None
+)
+
+
+def set_conversation_context(conversation_id: str | None) -> contextvars.Token:
+    """Binds the current Compose session id; call `reset_conversation_context` with the returned
+    token when the request is done (routes.py does this in a try/finally around `controller.ask`)."""
+    return _conversation_id_var.set(conversation_id)
+
+
+def reset_conversation_context(token: contextvars.Token) -> None:
+    _conversation_id_var.reset(token)
 
 
 def _facility_or_error(db: Session, facility_id: str) -> ops_models.Facility:
@@ -208,6 +232,7 @@ def draft_recommendation(
         created_by_user_id=None,
         status_=RecommendationStatus.DRAFT,
     )
+    rec.conversation_id = _conversation_id_var.get()
     db.flush()
     return {
         "recommendationId": str(rec.id),

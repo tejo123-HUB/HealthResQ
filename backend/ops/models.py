@@ -158,6 +158,9 @@ class User(Base):
     username: Mapped[str] = mapped_column(String, nullable=False, unique=True)
     password_hash: Mapped[str] = mapped_column(String, nullable=False)
     role_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("roles.id"), nullable=False)
+    # BCP 47 primary-language subtag, validated against ops.locales.SUPPORTED_LOCALES on write —
+    # not a DB enum, so adding a supported language later is a one-line change, not a migration.
+    preferred_locale: Mapped[str] = mapped_column(String, nullable=False, server_default="en")
 
     role: Mapped["Role"] = relationship()
     scopes: Mapped[list["UserScope"]] = relationship(back_populates="user")

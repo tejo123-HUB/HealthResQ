@@ -1,0 +1,11 @@
+{
+  "toggleTheme": "ଥିମ୍ ବଦଳାନ୍ତୁ",
+  "signOut": "ସାଇନ୍ ଆଉଟ୍ କରନ୍ତୁ",
+  "composeNewAction": "ନୂଆ କାର୍ଯ୍ୟ ସୃଷ୍ଟି କରନ୍ତୁ",
+  "scopeLevel": {
+    "FACILITY": "ସୁବିଧା",
+    "DISTRICT": "ଜିଲ୍ଲା",
+    "STATE": "ରାଜ୍ୟ",
+    "NATIONAL": "ଜାତୀୟ"
+  }
+}
