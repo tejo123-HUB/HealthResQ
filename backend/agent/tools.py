@@ -287,7 +287,7 @@ def draft_instruction(db: Session, user: CurrentUser, from_facility_id: str, to_
     edge = get_required_authority(db, from_facility_id, to_facility_id)
     resource_name = product.name if product else product_id
     return {
-        "recipientFacilityId": from_facility_id,
+        "recipientFacilityId": to_facility_id,
         "productId": product_id,
         "action": f"Dispatch {int(round(quantity))} {resource_name} to {to_facility.name}",
         "quantity": quantity,
