@@ -38,6 +38,21 @@ services:
     command: >
       sh -c "alembic upgrade head && uvicorn backend.app:app --host 0.0.0.0 --port 8000"
 
+  web:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        # Inlined into the browser bundle at build time (Next.js NEXT_PUBLIC_* convention), so this
+        # must be an address the browser itself can reach — the API's host-mapped port, not the
+        # compose-internal service name "api".
+        NEXT_PUBLIC_API_BASE_URL: ${NEXT_PUBLIC_API_BASE_URL:-http://localhost:8000}
+    restart: unless-stopped
+    depends_on:
+      - api
+    ports:
+      - "${WEB_PORT:-3000}:3000"
+
   # INT-14: dedicated self-hosted graph-database upgrade path, behind GRAPH_BACKEND=memgraph.
   # Profile-gated — `docker compose up` never starts this by default (AGENTS.md's "no new
   # deployable process by default" rule); only `docker compose --profile memgraph up` does.

@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  output: "standalone",
   webpack: (config) => {
     // libsodium-wrappers' ESM build ("module" field) does a broken relative import
     // ("./libsodium.mjs") that only exists in the sibling `libsodium` package, not alongside
