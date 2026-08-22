@@ -102,3 +102,28 @@ def get_fhir_locations(
     ids = cluster_risk_facility_ids(db, user.scope_level.value, str(user.scope_id))
     facilities = [ports.get_facility(db, uuid.UUID(fid)) for fid in ids]
     return fhir_export.export_locations_bundle([f for f in facilities if f is not None])
+
+
+@router.get("/federation")
+def get_federation_profile(
+    db: Session = Depends(get_db),
+    user: CurrentUser = Depends(get_current_user),
+) -> list[dict]:
+    from backend.intelligence.models import FederationRound, FederationMetric
+    latest_round = db.query(FederationRound).order_by(FederationRound.round_number.desc()).first()
+    if not latest_round:
+        return []
+
+    metrics = db.query(FederationMetric).filter(FederationMetric.round_id == latest_round.id).all()
+    return [
+        {
+            "country": m.country,
+            "participants": m.samples,
+            "latestRound": latest_round.created_at.strftime("%Y-%m-%d"),
+            "rawRecordsShared": 0,
+            "demandTrend": m.demand_trend,
+            "volatility": m.volatility,
+            "stockoutFrequency": m.stockout_frequency,
+        }
+        for m in metrics
+    ]
