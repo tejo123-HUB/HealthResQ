@@ -57,12 +57,11 @@ These aren't style preferences — several map directly to `AGT-05`/`COMM-01`–
 
 Match `healthresq-interface-shapes.md` exactly for anything crossing the four module groups (`ops`/`intelligence`/`agent`+`command`/`comm`+`frontend`). Don't invent a field or rename one locally "for now" — edit the shapes doc first if a real change is needed, then update every consumer listed in `healthresq-development-directions.md`'s interface table.
 
-Two stubs currently exist in this codebase, both intentionally minimal, both with a known swap-out point (`healthresq-development-directions.md` Section 0):
+All core modules and interfaces across the four directions are fully implemented and integrated:
+- `intelligence.forecast_resource` runs the full multi-model statistical forecasting pipeline (`INT-01`–`03`), auto-selecting between SARIMA, Bayesian structural time series, and decomposable additive models.
+- `comm.dispatch()` is the hardened `COMM-01`–`05` implementation with live Apache AGE graph-edge checks (`COMM-03`) and client-side envelope encryption (`COMM-02`).
 
-- `intelligence.forecast_resource` may currently be a canned two-response stub. Don't extend it with more scenarios or branching — either use it as-is or replace it with the real implementation. If you need a different tool function's output, it isn't stubbed; implement it for real.
-- `comm.dispatch()` may currently be a no-op plaintext version (writes a row, no encryption, no graph check). Don't build against its current lack of encryption as if it were permanent — it must be replaced with the hardened `COMM-01`–`03` implementation before this is done, same signature throughout.
-
-If you're not sure whether something is still a stub, check for a `# STUB —` comment at the top of the file. Every stub in this repo carries one. Don't add a stub without one.
+Every stub in this repo must carry a `# STUB —` comment at the top of the file. No active stubs currently remain in the codebase; preserve this convention whenever introducing a new stub during future development.
 
 ---
 
