@@ -20,6 +20,7 @@ from backend.intelligence import ports
 from backend.intelligence.graph.queries import cluster_risk_facility_ids
 from backend.intelligence.interop import fhir_export
 from backend.intelligence.visualization import graph_view, hex_map, resource_explorer, risk_map
+from backend.ops import models
 from backend.ops.deps import CurrentUser, get_current_user
 
 router = APIRouter(prefix="/intelligence", tags=["intelligence"])
@@ -102,3 +103,34 @@ def get_fhir_locations(
     ids = cluster_risk_facility_ids(db, user.scope_level.value, str(user.scope_id))
     facilities = [ports.get_facility(db, uuid.UUID(fid)) for fid in ids]
     return fhir_export.export_locations_bundle([f for f in facilities if f is not None])
+
+
+@router.get("/federation")
+def get_federation_profile(
+    db: Session = Depends(get_db),
+    user: CurrentUser = Depends(get_current_user),
+) -> list[dict]:
+    """National-dashboard-only, unlike every other endpoint in this router: federation aggregates
+    span every country's data, not the caller's own scope, so there's no per-scope filter to apply
+    — only NATIONAL callers may see cross-country data at all."""
+    if user.scope_level != models.ScopeLevel.NATIONAL:
+        raise HTTPException(status.HTTP_403_FORBIDDEN, "Federation data is a national-authority view")
+
+    from backend.intelligence.models import FederationRound, FederationMetric
+    latest_round = db.query(FederationRound).order_by(FederationRound.round_number.desc()).first()
+    if not latest_round:
+        return []
+
+    metrics = db.query(FederationMetric).filter(FederationMetric.round_id == latest_round.id).all()
+    return [
+        {
+            "country": m.country,
+            "participants": m.samples,
+            "latestRound": latest_round.created_at.strftime("%Y-%m-%d"),
+            "rawRecordsShared": 0,
+            "demandTrend": m.demand_trend,
+            "volatility": m.volatility,
+            "stockoutFrequency": m.stockout_frequency,
+        }
+        for m in metrics
+    ]

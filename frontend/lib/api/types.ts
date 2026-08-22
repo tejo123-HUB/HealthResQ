@@ -212,3 +212,13 @@ export type SealedMessage = {
   instructionId: string | null;
 };
 export type ReceiptStatus = "ACKNOWLEDGED" | "READ";
+
+export type FederationCountryRow = {
+  country: string;
+  participants: number;
+  latestRound: string;
+  rawRecordsShared: 0;
+  demandTrend: number;
+  volatility: number;
+  stockoutFrequency: number;
+};

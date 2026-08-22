@@ -126,6 +126,48 @@ def test_fhir_locations_returns_valid_bundle(client, db, role_authority, geo):
     assert any(e["resource"]["id"] == str(facility.id) for e in body["entry"])
 
 
+def test_federation_rejects_non_national_scope(client, db, role_authority, geo):
+    token = make_user_token(db, role_authority, models.ScopeLevel.DISTRICT, geo["district_a"].id)
+    resp = client.get("/intelligence/federation", headers=auth_headers(token))
+    assert resp.status_code == 403
+
+
+def test_federation_returns_latest_round_for_national_scope(client, db, role_authority, geo):
+    from backend.intelligence.models import FederationMetric, FederationRound
+
+    round_1 = FederationRound(round_number=1)
+    round_2 = FederationRound(round_number=2)
+    db.add_all([round_1, round_2])
+    db.flush()
+    db.add(
+        FederationMetric(
+            round_id=round_1.id, country="India", resource="ORS", samples=10,
+            weekly_seasonal_index=1.0, monthly_seasonal_index=1.0, demand_trend=1.0,
+            consumption_per_1000_visits=1.0, volatility=0.1, lead_time_mean=1.0,
+            lead_time_variance=1.0, forecast_mae=1.0, forecast_bias=0.0, stockout_frequency=0.05,
+            surge_multiplier=1.0,
+        )
+    )
+    db.add(
+        FederationMetric(
+            round_id=round_2.id, country="Brazil", resource="ORS", samples=8,
+            weekly_seasonal_index=1.0, monthly_seasonal_index=1.0, demand_trend=1.04,
+            consumption_per_1000_visits=1.0, volatility=0.18, lead_time_mean=1.0,
+            lead_time_variance=1.0, forecast_mae=1.0, forecast_bias=0.0, stockout_frequency=0.06,
+            surge_multiplier=1.0,
+        )
+    )
+    db.flush()
+
+    token = make_user_token(db, role_authority, models.ScopeLevel.NATIONAL, geo["country"].id)
+    resp = client.get("/intelligence/federation", headers=auth_headers(token))
+    assert resp.status_code == 200
+    body = resp.json()
+    assert len(body) == 1
+    assert body[0]["country"] == "Brazil"
+    assert body[0]["rawRecordsShared"] == 0
+
+
 def test_graph_view_rejects_malformed_movement(client, db, role_authority, geo):
     token = make_user_token(db, role_authority, models.ScopeLevel.DISTRICT, geo["district_a"].id)
     resp = client.post(

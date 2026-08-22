@@ -1,5 +1,6 @@
-import { FIXTURE_FEDERATION_ROWS, type FederationCountryRow } from "@/lib/fixtures/federation";
+import { api } from './client';
+import type { FederationCountryRow } from '@/lib/api/types';
 
 export const federation = {
-  getProfile: async (): Promise<FederationCountryRow[]> => FIXTURE_FEDERATION_ROWS,
+  getProfile: async (): Promise<FederationCountryRow[]> => api.get<FederationCountryRow[]>('/intelligence/federation'),
 };
